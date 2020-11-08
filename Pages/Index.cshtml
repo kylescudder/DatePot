@@ -1,383 +1,49 @@
 ﻿@page
-@model FilmPot.Pages.IndexModel
+@model DatePot.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
 }
-<div class="row">
-    <div class="col-12">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFilmModal" data-adder="Rhiann">Add film by Rhiann</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFilmModal" data-adder="Kyle">Add film by Kyle</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddGenreModal">Add genre</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddDirectorModal">Add director</button>
-        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#RandomFilmModal">Give me a film</button>
-    </div>
-</div>
-<div class="row pt-4">
-    <div class="col-12">
-        <table id="ClientSearchTable" class="table table-striped table-borderless ClientSearchTable">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>Release Date</th>
-                    <th>Added Date</th>
-                    <th>Genre</th>
-                    <th>Watched</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Films)
-                {
-                    <tr>
-                        <td>
-                            @item.FilmName
-                        </td>
-                        <td>
-                            @item.ReleaseDate
-                        </td>
-                        <td>
-                            @item.AddedDate
-                        </td>
-                        <td>
-                            @item.GenreText
-                        </td>
-                        <td>
-                            @item.Watched
-                        </td>
-                        <td>
-                            <a asp-page="/View" asp-route-Id="@item.FilmID">View</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="modal fade" id="RandomFilmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="row pb-5">
+    <a href="/FilmPot" class="col-6 offset-3 section" style="background-color:#ffccff">
+        <div class="row">
+            <div class="col-9">
+                <p class="ml-4 pt-3">Film Date</p>
             </div>
-            <form method="post" asp-page-handler="AddFilm">
-                @if (Model.RandomFilm.Count > 0)
-                {
-                    <div class="modal-body">
-                        @foreach (var item in Model.RandomFilm)
-                        {
-
-                            <input value="@item.FilmID" type="hidden" name="FilmID" />
-                            <p>
-                                Tonight you guys are going to watch <strong>@item.FilmName</strong>, and it is @item.AddersName's pick. Sorry
-                                @if (item.AddersName == "Rhiann")
-                                {
-                                    <text>Kyle</text>
-                                }
-                                else
-                                {
-                                    <text>Rhiann</text>
-                                }
-                            </p>
-                        }
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" onclick="return AnotherRandom();">No, another!!</button>
-                        <input type="submit" value="Let's watch it!" class="btn btn-primary" />
-                    </div>
-                }
-                else
-                {
-                    <div class="modal-body">
-                        <p>Looks like you are out of unwatched films. Add more to films to the list and try again!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Will do boss</button>
-                    </div>
-                }
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="AddFilmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post">
-                <div class="modal-body">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div lcass="form-group">
-                        <div class="row">
-                            <div class="col-12">
-                                <label asp-for="NewFilm.AddersName" class="control-label"></label>
-                                <input asp-for="NewFilm.AddersName" class="form-control adders-name" required="required" type="text" />
-                                <span asp-validation-for="NewFilm.AddersName" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <label asp-for="NewFilm.FilmName" class="control-label"></label>
-                                <input asp-for="NewFilm.FilmName" class="form-control" required="required" type="text" />
-                                <span asp-validation-for="NewFilm.FilmName" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <label asp-for="NewFilm.ReleaseDate" class="control-label"></label>
-                                <input asp-for="NewFilm.ReleaseDate" class="form-control" required="required" type="date" />
-                                <span asp-validation-for="NewFilm.ReleaseDate" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <label asp-for="NewFilm.AddedDate" class="control-label"></label>
-                                <input asp-for="NewFilm.AddedDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control AddedDate" required="required" type="date" />
-                                <span asp-validation-for="NewFilm.AddedDate" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <label asp-for="NewFilm.GenreID" class="control-label"></label>
-                                <select asp-for="NewFilm.GenreID" asp-items="Model.Genre" class="form-control form-control-chosen" required="required"></select>
-                                <span asp-validation-for="NewFilm.GenreID" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="row pt-2">
-                            <div class="col-3">
-                                <label asp-for="NewFilm.Watched" class="control-label"></label>
-                            </div>
-                            <div class="col-9">
-                                <input asp-for="NewFilm.Watched" class="form-control" />
-                                <span asp-validation-for="NewFilm.Watched" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Add" class="btn btn-primary" />
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="AddGenreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add genre</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" asp-page-handler="Genre">
-                <div class="modal-body">
-                    <div lcass="form-group">
-                        <div class="row">
-                            <div class="col-12">
-                                <label asp-for="NewGenre.GenreText" class="control-label"></label>
-                                <input asp-for="NewGenre.GenreText" class="form-control" required="required" type="text" />
-                                <span asp-validation-for="NewGenre.GenreText" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Add" class="btn btn-primary" />
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="GenreDupeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p class="genreDupeText"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Right you are my boy!</button>
+            <div class="col-3">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle mt-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                </svg>
             </div>
         </div>
-    </div>
+    </a>
 </div>
-<div class="modal fade" id="DirectorDupeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="row pb-5">
+    <a href="" class="col-6 offset-3 section" style="background-color:#9ec9ed">
+        <div class="row">
+            <div class="col-9">
+                <p class="ml-4 pt-3">Food Date</p>
             </div>
-            <div class="modal-body">
-                <p class="directorDupeText"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Right you are my boy!</button>
+            <div class="col-3">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle mt-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                </svg>
             </div>
         </div>
-    </div>
+    </a>
 </div>
-<div class="modal fade" id="AddDirectorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add director</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="row pb-5">
+    <a href="" class="col-6 offset-3 section" style="background-color:#f9f19a">
+        <div class="row">
+            <div class="col-9">
+                <p class="ml-4 pt-3">Activity Date</p>
             </div>
-            <form method="post" asp-page-handler="Director">
-                <div class="modal-body">
-                    <div lcass="form-group">
-                        <div class="row">
-                            <div class="col-12">
-                                <label asp-for="NewDirector.DirectorText" class="control-label"></label>
-                                <input asp-for="NewDirector.DirectorText" class="form-control" required="required" type="text" />
-                                <span asp-validation-for="NewDirector.DirectorText" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Add" class="btn btn-primary" />
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="FilmWatched" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">All done</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-12">
-                        <p>All sorted, this film has been marked as watched. Enjoy! 😁📽</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <div class="col-3">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle mt-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                </svg>
             </div>
         </div>
-    </div>
+    </a>
 </div>
-@section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.form-control-chosen').chosen();
-            const urlParams = new URLSearchParams(window.location.search);
-            const redirectParam = urlParams.get('create');
-            if (redirectParam == "yes") {
-                $('#AddFilmModal').modal();
-            }
-            const redirectParamDupeCheck = urlParams.get('redirect');
-            const redirectParamDupeCheckValue = urlParams.get('value');
-            if (redirectParamDupeCheck == "genredupe") {
-                $('#GenreDupeModal').modal();
-                $('#GenreDupeModal').find('.modal-title').text('You sure about ' + redirectParamDupeCheckValue + ' mate?')
-                $('#GenreDupeModal').find('.genreDupeText').text('You have tried to add ' + redirectParamDupeCheckValue + ' which already exists');
-            } else if (redirectParamDupeCheck == "directordupe") {
-                $('#DirectorDupeModal').modal();
-                $('#DirectorDupeModal').find('.modal-title').text('You sure about ' + redirectParamDupeCheckValue + ' mate?')
-                $('#DirectorDupeModal').find('.directorDupeText').text('You have tried to add ' + redirectParamDupeCheckValue + ' which already exists');
-            } else if (redirectParamDupeCheck == "RandomFilm") {
-                $('#RandomFilmModal').modal();
-            } else if (redirectParamDupeCheck == "FilmWatched") {
-                $('#FilmWatched').modal();
-            }
-
-            $('#ClientSearchTable').dataTable({
-                "aoColumns": [
-                    { "sType": "html" },
-                    {
-                        "type": "date",
-                        "render": function (data, type, row) {
-                            if (type === 'display' || type === 'filter') {
-                                if (data !== null && data !== '') {
-                                    var isoDate = new Date(data).toISOString();
-                                    return moment(isoDate).format('DD/MM/YYYY');
-                                } else {
-                                    return 'Not recorded';
-                                }
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        "type": "date",
-                        "render": function (data, type, row) {
-                            if (type === 'display' || type === 'filter') {
-                                if (data !== null && data !== '') {
-                                    var isoDate = new Date(data).toISOString();
-                                    return moment(isoDate).format('DD/MM/YYYY');
-                                } else {
-                                    return 'Not recorded';
-                                }
-                            }
-                            return data;
-                        }
-                    },
-                    { "sType": "html" },
-                    { "sType": "html" },
-                    { "sType": "html" }
-                ],
-                "columnDefs": [
-                    { "targets": 0 },
-                    { "targets": 1 },
-                    { "targets": 2 },
-                    { "targets": 3 },
-                    { "targets": 4 },
-                    { orderable: false, "targets": 5 }
-                ],
-                "pagingType": "numbers",
-                "paging": false,
-                "order": [0, 'desc'],
-                "language": {
-                    "emptyTable": "No data available in table"
-                },
-                stateSave: true
-            });
-        });
-        $('#AddFilmModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('adder') // Extract info from data-* attributes
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            var modal = $(this)
-            if (recipient == undefined) {
-                modal.find('.modal-title').text('Please add a film')
-            } else {
-                modal.find('.modal-title').text('Film added by ' + recipient)
-            }
-            modal.find('.modal-body .adders-name').val(recipient)
-        })
-        function AnotherRandom() {
-            window.location.replace("Index?redirect=RandomFilm");
-        }
-    </script>
-}

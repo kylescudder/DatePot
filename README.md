@@ -27,3 +27,4 @@ Build using .NET Core and for use with a MySQL database.
 If you want to use this for you and yours nothing would make me happier.
 
 MIT © kylescudder
+

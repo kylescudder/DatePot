@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FilmPot.Migrations
+namespace DatePot.Migrations
 {
     public partial class InitialCreate : Migration
     {

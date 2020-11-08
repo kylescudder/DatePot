@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace FilmPot.Areas.Identity.Pages.Account.Manage
+namespace DatePot.Areas.Identity.Pages.Account.Manage
 {
     public class EnableAuthenticatorModel : PageModel
     {
@@ -148,7 +148,7 @@ namespace FilmPot.Areas.Identity.Pages.Account.Manage
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("FilmPot"),
+                _urlEncoder.Encode("DatePot"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }
