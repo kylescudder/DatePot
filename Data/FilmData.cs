@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using static FilmPot.Models.Films;
+using static DatePot.Models.Films;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
-namespace FilmPot.Data
+namespace DatePot.Data
 {
     public class FilmData
     {
