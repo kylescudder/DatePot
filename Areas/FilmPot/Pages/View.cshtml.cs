@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
-using static FilmPot.Models.Films;
-using static FilmPot.Data.FilmData;
-using FilmPot.Data;
+using static DatePot.Models.Films;
+using static DatePot.Data.FilmData;
+using DatePot.Data;
 
-namespace FilmPot.Pages
+namespace DatePot.Pages
 {
     public class ViewModel : PageModel
     {

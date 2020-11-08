@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
-namespace FilmPot.Models
+namespace DatePot.Models
 {
     public class Films
     {
