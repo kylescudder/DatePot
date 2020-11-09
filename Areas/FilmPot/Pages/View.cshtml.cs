@@ -14,7 +14,7 @@ using static DatePot.Models.Films;
 using static DatePot.Data.FilmData;
 using DatePot.Data;
 
-namespace DatePot.Pages
+namespace DatePot.Areas.FilmPot.Pages
 {
     public class ViewModel : PageModel
     {

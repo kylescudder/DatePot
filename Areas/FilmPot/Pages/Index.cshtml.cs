@@ -15,7 +15,7 @@ using MySqlConnector;
 using static DatePot.Models.Films;
 using static DatePot.Data.FilmData;
 
-namespace DatePot.Areas.DatePot.Pages
+namespace DatePot.Areas.FilmPot.Pages
 {
     public class IndexModel : PageModel
     {
@@ -108,9 +108,6 @@ namespace DatePot.Areas.DatePot.Pages
                     return RedirectToPage("./Index");
                 }
                 return RedirectToPage("./Index", new { @redirect = "directordupe", @value = Request.Form["NewDirector.DirectorText"].ToString() });
-
-
-                return RedirectToPage("./Index");
             }
             catch (Exception ex)
             {
