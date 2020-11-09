@@ -10,9 +10,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
-using static DatePot.Models.Films;
-using static DatePot.Data.FilmData;
-using DatePot.Data;
+using static DatePot.Areas.FilmPot.Models.Films;
+using DatePot.Areas.FilmPot.Data;
 
 namespace DatePot.Areas.FilmPot.Pages
 {

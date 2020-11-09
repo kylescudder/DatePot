@@ -5,8 +5,14 @@
 }
 <div class="row">
     <div class="col-12">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFilmModal" data-adder="Rhiann">Add film by Rhiann</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFilmModal" data-adder="Kyle">Add film by Kyle</button>
+        @if (Model.Users.Count > 0)
+        {
+            @foreach (var item in Model.Users)
+            {
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFilmModal" data-adder="@item.UserName">Add film by @item.UserName</button>
+            }
+        }
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddGenreModal">Add genre</button>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddDirectorModal">Add director</button>
         <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#RandomFilmModal">Give me a film</button>
@@ -14,13 +20,14 @@
 </div>
 <div class="row pt-4">
     <div class="col-12">
-        <table id="ClientSearchTable" class="table table-striped table-borderless ClientSearchTable">
+        <table id="FilmTable" class="table table-striped table-borderless ClientSearchTable">
             <thead class="thead-dark">
                 <tr>
                     <th>Name</th>
                     <th>Release Date</th>
                     <th>Added Date</th>
                     <th>Genre</th>
+                    <th>Who?</th>
                     <th>Watched</th>
                     <th></th>
                 </tr>
@@ -40,6 +47,9 @@
                         </td>
                         <td>
                             @item.GenreText
+                        </td>
+                        <td>
+                            @item.UserName
                         </td>
                         <td>
                             @item.Watched
@@ -311,7 +321,7 @@
                 $('#FilmWatched').modal();
             }
 
-            $('#ClientSearchTable').dataTable({
+            $('#FilmTable').dataTable({
                 "aoColumns": [
                     { "sType": "html" },
                     {
@@ -344,6 +354,7 @@
                     },
                     { "sType": "html" },
                     { "sType": "html" },
+                    { "sType": "html" },
                     { "sType": "html" }
                 ],
                 "columnDefs": [
@@ -352,7 +363,8 @@
                     { "targets": 2 },
                     { "targets": 3 },
                     { "targets": 4 },
-                    { orderable: false, "targets": 5 }
+                    { "targets": 5 },
+                    { orderable: false, "targets": 6 }
                 ],
                 "pagingType": "numbers",
                 "paging": false,

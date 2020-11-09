@@ -4,16 +4,14 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
-using DatePot.Data;
-using DatePot.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MySqlConnector;
-using static DatePot.Models.Films;
-using static DatePot.Data.FilmData;
+using static DatePot.Areas.ActivityPot.Models.Activitys;
+using DatePot.Areas.ActivityPot.Data;
 
 namespace DatePot.Areas.ActivityPot.Pages
 {
@@ -26,8 +24,9 @@ namespace DatePot.Areas.ActivityPot.Pages
             _logger = logger;
             _config = config;
         }
-        FilmData fd = new FilmData();
+        ActivityData fd = new ActivityData();
         public List<FilmList> Films { get; set; }
+        public List<UserList> Users { get; set; }
         public List<SelectListItem> Genre { get; set; }
         [BindProperty]
         public NewFilm NewFilm { get; set; }
@@ -35,7 +34,7 @@ namespace DatePot.Areas.ActivityPot.Pages
         public NewDirector NewDirector { get; set; }
         public List<RandomFilm> RandomFilm { get; set; }
         public ActionResult OnGet()
-        {
+         {
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
@@ -44,6 +43,7 @@ namespace DatePot.Areas.ActivityPot.Pages
             {
                 string cs = _config.GetConnectionString("Default");
                 Films = fd.GetFilmList(cs);
+                Users = fd.GetUserList(cs);
                 var genres = fd.GetGenreList(cs);
 
                 Genre = new List<SelectListItem>();
@@ -108,9 +108,6 @@ namespace DatePot.Areas.ActivityPot.Pages
                     return RedirectToPage("./Index");
                 }
                 return RedirectToPage("./Index", new { @redirect = "directordupe", @value = Request.Form["NewDirector.DirectorText"].ToString() });
-
-
-                return RedirectToPage("./Index");
             }
             catch (Exception ex)
             {

@@ -81,9 +81,12 @@ else
                 <div class="form-group">
                     <div class="row">
                         <div class="col-12">
-                            <label asp-for="UpdateFilmDetails.AddersName" class="control-label"></label>
+                            @*<label asp-for="UpdateFilmDetails.AddersName" class="control-label"></label>
                             <input asp-for="UpdateFilmDetails.AddersName" class="form-control adders-name" value="@Model.FilmDetails.AddersName" required="required" type="text" />
-                            <span asp-validation-for="UpdateFilmDetails.AddersName" class="text-danger"></span>
+                            <span asp-validation-for="UpdateFilmDetails.AddersName" class="text-danger"></span>*@
+                            <label asp-for="UpdateFilmDetails.AddedByID" class="control-label"></label>
+                            <select asp-for="UpdateFilmDetails.AddedByID" asp-items="Model.Users" class="form-control form-control-chosen" value="@Model.FilmDetails.AddedByID" required="required"></select>
+                            <span asp-validation-for="UpdateFilmDetails.AddedByID" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row">

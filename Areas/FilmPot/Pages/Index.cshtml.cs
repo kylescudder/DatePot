@@ -4,16 +4,14 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
-using DatePot.Data;
-using DatePot.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MySqlConnector;
-using static DatePot.Models.Films;
-using static DatePot.Data.FilmData;
+using static DatePot.Areas.FilmPot.Models.Films;
+using DatePot.Areas.FilmPot.Data;
 
 namespace DatePot.Areas.FilmPot.Pages
 {
