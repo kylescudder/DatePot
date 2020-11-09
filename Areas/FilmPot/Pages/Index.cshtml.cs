@@ -28,6 +28,7 @@ namespace DatePot.Areas.FilmPot.Pages
         }
         FilmData fd = new FilmData();
         public List<FilmList> Films { get; set; }
+        public List<UserList> Users { get; set; }
         public List<SelectListItem> Genre { get; set; }
         [BindProperty]
         public NewFilm NewFilm { get; set; }
@@ -35,7 +36,7 @@ namespace DatePot.Areas.FilmPot.Pages
         public NewDirector NewDirector { get; set; }
         public List<RandomFilm> RandomFilm { get; set; }
         public ActionResult OnGet()
-        {
+         {
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
@@ -44,6 +45,7 @@ namespace DatePot.Areas.FilmPot.Pages
             {
                 string cs = _config.GetConnectionString("Default");
                 Films = fd.GetFilmList(cs);
+                Users = fd.GetUserList(cs);
                 var genres = fd.GetGenreList(cs);
 
                 Genre = new List<SelectListItem>();
