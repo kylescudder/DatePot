@@ -13,6 +13,7 @@ namespace DatePot.Models
         public class FilmIndex
         {
             public List<FilmList> FilmList { get; set; }
+            public List<UserList> UserList { get; set; }
         }
         public class FilmList
         {
@@ -28,7 +29,15 @@ namespace DatePot.Models
             public string GenreText { get; set; }
             public int GenreID { get; set; }
             public string Watched { get; set; }
+            public string UserName { get; set; }
             public List<RandomFilm> RandomFilm { get; set; }
+        }
+        public class UserList
+        {
+            [Key]
+            public int UserID { get; set; }
+            [Display(Name = "Name")]
+            public string UserName { get; set; }
         }
         public class NewFilm
         {

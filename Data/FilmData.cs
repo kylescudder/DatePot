@@ -84,14 +84,6 @@ namespace DatePot.Data
         }
         public void UpdateFilm(string cs, UpdateFilmDetails updatefiledetails)
         {
-            if (updatefiledetails.AddersName == "Kyle")
-            {
-                updatefiledetails.AddedByID = 1;
-            }
-            else
-            {
-                updatefiledetails.AddedByID = 2;
-            }
             using var con = new MySqlConnection(cs);
             con.Open();
 
@@ -155,11 +147,33 @@ namespace DatePot.Data
                 ws.AddedDate = reader.GetString("AddedDate");
                 ws.GenreText = reader.GetString("GenreText");
                 ws.Watched = reader.GetString("Watched");
+                ws.UserName = reader.GetString("UserName");
                 wsl.Add(ws);
             }
             reader.Close();
             return (List<FilmList>)wsl;
         }
+        public List<UserList> GetUserList(string cs)
+        {
+
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            string sql = "CALL spGetUserList";
+            using var cmd = new MySqlCommand(sql, con);
+            IList<UserList> wsl = new List<UserList>();
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var ws = new UserList();
+                ws.UserID = reader.GetInt32("UserID");
+                ws.UserName = reader.GetString("UserName");
+                wsl.Add(ws);
+            }
+            reader.Close();
+            return (List<UserList>)wsl;
+        }
+
         public int AddFilm(string cs, NewFilm newfilm)
         {
             int AddedByID = 0;

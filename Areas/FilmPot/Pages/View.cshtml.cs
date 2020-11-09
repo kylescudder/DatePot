@@ -33,6 +33,7 @@ namespace DatePot.Pages
         //public string Genre { get; set; }
         public List<SelectListItem> Genres { get; set; }
         public List<SelectListItem> Directors { get; set; }
+        public List<SelectListItem> Users { get; set; }
         public async Task<IActionResult> OnGet()
         {
             if (!User.Identity.IsAuthenticated)
@@ -45,23 +46,17 @@ namespace DatePot.Pages
                 FilmDetails = fd.GetFilmDetails(cs, Id).FirstOrDefault();
                 if (FilmDetails != null)
                 {
-                    if (FilmDetails.AddedByID == 1)
-                    {
-                        FilmDetails.AddersName = "Kyle";
-                    }
-                    else
-                    {
-                        FilmDetails.AddersName = "Rhiann";
-                    }
                     if (FilmDetails != null)
                     {
                         var genres = fd.GetGenreList(cs);
                         var directors = fd.GetDirectorsList(cs);
+                        var users = fd.GetUserList(cs);
 
                         //Genre = genres.Where(x => x.GenreID == FilmDetails.GenreID).FirstOrDefault()?.GenreText;
 
                         Genres = new List<SelectListItem>();
                         Directors = new List<SelectListItem>();
+                        Users = new List<SelectListItem>();
 
                         genres.ForEach(x =>
                         {
@@ -83,6 +78,17 @@ namespace DatePot.Pages
                             else
                             {
                                 Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName });
+                            }
+                        });
+                        users.ForEach(x =>
+                        {
+                            if (FilmDetails.AddedByID == x.UserID)
+                            {
+                                Users.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.UserName, Selected = true });
+                            }
+                            else
+                            {
+                                Users.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.UserName });
                             }
                         });
                     }

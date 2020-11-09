@@ -5,8 +5,14 @@
 }
 <div class="row">
     <div class="col-12">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFilmModal" data-adder="Rhiann">Add film by Rhiann</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFilmModal" data-adder="Kyle">Add film by Kyle</button>
+        @if (Model.Users.Count > 0)
+        {
+            @foreach (var item in Model.Users)
+            {
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFilmModal" data-adder="@item.UserName">Add film by @item.UserName</button>
+            }
+        }
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddGenreModal">Add genre</button>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddDirectorModal">Add director</button>
         <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#RandomFilmModal">Give me a film</button>
