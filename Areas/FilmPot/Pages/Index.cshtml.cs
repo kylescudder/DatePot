@@ -62,18 +62,21 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public ActionResult OnPost()
+        public async Task<JsonResult> OnPost(string AddersName, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, List<int>Genres)
         {
             try
             {
-                if (ModelState.IsValid == false)
-                {
-                    return Page();
-                }
                 string cs = _config.GetConnectionString("Default");
-                int FilmID = fd.AddFilm(cs, NewFilm);
+                int FilmID = fd.AddFilm(cs, AddersName, AddedDate, FilmName, ReleaseDate, Watched, Runtime);
+                foreach (var item in Genres)
+                {
+                    fd.AddFilmGenres(cs, FilmID, Convert.ToInt32(item));
 
-                return RedirectToPage("./View", new { Id = FilmID });
+                }
+
+                JsonResult result = null;
+                result = new JsonResult(FilmID);
+                return result;
             }
             catch (Exception ex)
             {

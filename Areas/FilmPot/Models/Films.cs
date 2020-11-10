@@ -27,9 +27,9 @@ namespace DatePot.Areas.FilmPot.Models
             public string AddedDate { get; set; }
             [Display(Name = "Genre")]
             public string GenreText { get; set; }
-            public int GenreID { get; set; }
             public string Watched { get; set; }
             public string UserName { get; set; }
+            public int Runtime { get; set; }
             public List<RandomFilm> RandomFilm { get; set; }
         }
         public class UserList
@@ -55,13 +55,13 @@ namespace DatePot.Areas.FilmPot.Models
             public DateTime ReleaseDate { get; set; }
             [Range(1, int.MaxValue, ErrorMessage = "Please select a genre from the list")]
             [DisplayName("Genre")]
-            public int GenreID { get; set; }
             public bool Watched { get; set; }
             public List<Genres> Genres { get; set; }
             [Required]
             [DataType(DataType.Date)]
             [DisplayName("Date Added")]
             public DateTime AddedDate { get; set; }
+            public int Runtime { get; set; }
         }
         public class Genres
         {
@@ -81,14 +81,22 @@ namespace DatePot.Areas.FilmPot.Models
             public string FilmName { get; set; }
             [Display(Name = "Release Date")]
             public DateTime ReleaseDate { get; set; }
-            [Display(Name = "Genre")]
-            public int GenreID { get; set; }
+            public DateTime AddedDate { get; set; }
             public bool Watched { get; set; }
             public int AddedByID { get; set; }
             [DisplayName("Added by")]
             public string AddersName { get; set; }
-            [DisplayName("Director")]
-            public int DirectorID { get; set; }
+            public int Runtime { get; set; }
+        }
+        public class FilmGenres
+        {
+            public int FilmGenreID { get; set; }
+            public string GenreText { get; set; }
+        }
+        public class FilmDirectors
+        {
+            public int FilmDirectorID { get; set; }
+            public string DirectorText { get; set; }
         }
         public class UpdateFilmDetails: FilmDetails
         {

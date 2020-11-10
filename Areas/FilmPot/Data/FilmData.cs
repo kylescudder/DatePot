@@ -31,10 +31,10 @@ namespace DatePot.Areas.FilmPot.Data
                     ws.FilmID = reader.GetInt32("FilmID");
                     ws.FilmName = reader.GetString("FilmName");
                     ws.ReleaseDate = reader.GetDateTime("ReleaseDate");
-                    ws.GenreID = reader.GetInt32("GenreID");
-                    ws.DirectorID = reader.GetInt32("DirectorID");
+                    ws.AddedDate = reader.GetDateTime("AddedDate");
                     ws.Watched = reader.GetBoolean("Watched");
                     ws.AddedByID = reader.GetInt32("AddedByID");
+                    ws.Runtime = reader.GetInt32("Runtime");
                     wsl.Add(ws);
                 }
                 reader.Close();
@@ -42,6 +42,61 @@ namespace DatePot.Areas.FilmPot.Data
 
             }
         }
+        public List<FilmGenres> GetFilmGenres(string cs, int FilmID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spGetFilmGenres"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                IList<FilmGenres> wsl = new List<FilmGenres>();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var ws = new FilmGenres();
+                    ws.FilmGenreID = reader.GetInt32("FilmGenreID");
+                    ws.GenreText = reader.GetString("GenreText");
+
+                    wsl.Add(ws);
+                }
+                reader.Close();
+                return (List<FilmGenres>)wsl;
+
+            }
+        }
+        public List<FilmDirectors> GetFilmDirectors(string cs, int FilmID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spGetFilmDirectors"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                IList<FilmDirectors> wsl = new List<FilmDirectors>();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var ws = new FilmDirectors();
+                    ws.FilmDirectorID = reader.GetInt32("FilmDirectorID");
+                    ws.DirectorText = reader.GetString("DirectorText");
+
+                    wsl.Add(ws);
+                }
+                reader.Close();
+                return (List<FilmDirectors>)wsl;
+
+            }
+        }
+
         public List<Genres> GetGenreList(string cs)
         {
             using var con = new MySqlConnection(cs);
@@ -82,7 +137,7 @@ namespace DatePot.Areas.FilmPot.Data
             con.Close();
             return (List<Directors>)wsl;
         }
-        public void UpdateFilm(string cs, UpdateFilmDetails updatefiledetails)
+        public void UpdateFilm(string cs, int FilmID, int AddedByID, string FilmName, DateTime ReleaseDate, DateTime AddedDate, bool Watched, int Runtime)
         {
             using var con = new MySqlConnection(cs);
             con.Open();
@@ -93,19 +148,19 @@ namespace DatePot.Areas.FilmPot.Data
                 cmd.CommandText = "spUpdateFilm"; // The name of the Stored Proc
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@FilmID", updatefiledetails.FilmID);
-                cmd.Parameters.AddWithValue("@FilmName", updatefiledetails.FilmName);
-                cmd.Parameters.AddWithValue("@ReleaseDate", updatefiledetails.ReleaseDate);
-                cmd.Parameters.AddWithValue("@GenreID", updatefiledetails.GenreID);
+                cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                cmd.Parameters.AddWithValue("@FilmName", FilmName);
+                cmd.Parameters.AddWithValue("@ReleaseDate", ReleaseDate);
+                cmd.Parameters.AddWithValue("@AddedDate", AddedDate);
                 MySqlParameter paramWatched = new MySqlParameter
                 {
                     ParameterName = "@Watched",
                     MySqlDbType = MySqlDbType.Bit,
-                    Value = updatefiledetails.Watched
+                    Value = Watched
                 };
                 cmd.Parameters.Add(paramWatched);
-                cmd.Parameters.AddWithValue("@AddedByID", updatefiledetails.AddedByID);
-                cmd.Parameters.AddWithValue("@DirectorID", updatefiledetails.DirectorID);
+                cmd.Parameters.AddWithValue("@AddedByID", AddedByID);
+                cmd.Parameters.AddWithValue("@Runtime", Runtime);
                 cmd.ExecuteNonQuery();
 
                 con.Close();
@@ -148,6 +203,7 @@ namespace DatePot.Areas.FilmPot.Data
                 ws.GenreText = reader.GetString("GenreText");
                 ws.Watched = reader.GetString("Watched");
                 ws.UserName = reader.GetString("UserName");
+                ws.Runtime = reader.GetInt32("Runtime");
                 wsl.Add(ws);
             }
             reader.Close();
@@ -174,10 +230,10 @@ namespace DatePot.Areas.FilmPot.Data
             return (List<UserList>)wsl;
         }
 
-        public int AddFilm(string cs, NewFilm newfilm)
+        public int AddFilm(string cs, string AddersName, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime)
         {
             int AddedByID = 0;
-            if (newfilm.AddersName == "Kyle")
+            if (AddersName == "Kyle")
             {
                 AddedByID = 1;
             }
@@ -191,12 +247,12 @@ namespace DatePot.Areas.FilmPot.Data
                 cmd.CommandText = "spAddFilm"; // The name of the Stored Proc
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@FilmName", newfilm.FilmName);
-                cmd.Parameters.AddWithValue("@ReleaseDate", newfilm.ReleaseDate);
-                cmd.Parameters.AddWithValue("@AddedDate", newfilm.AddedDate);
-                cmd.Parameters.AddWithValue("@GenreID", newfilm.GenreID);
-                cmd.Parameters.AddWithValue("@Watched", newfilm.Watched);
+                cmd.Parameters.AddWithValue("@FilmName", FilmName);
+                cmd.Parameters.AddWithValue("@ReleaseDate", ReleaseDate);
+                cmd.Parameters.AddWithValue("@AddedDate", AddedDate);
+                cmd.Parameters.AddWithValue("@Watched", Watched);
                 cmd.Parameters.AddWithValue("@AddedByID", AddedByID);
+                cmd.Parameters.AddWithValue("@Runtime", Runtime);
                 cmd.Parameters.Add("@FilmID", MySqlDbType.Int32);
                 cmd.Parameters["@FilmID"].Direction = ParameterDirection.Output; // from System.Data
                 cmd.ExecuteNonQuery();
@@ -204,6 +260,72 @@ namespace DatePot.Areas.FilmPot.Data
                 var lParam = (Int32)obj;    // more useful datatype
                 con.Close();
                 return lParam;
+            }
+        }
+        public void AddFilmGenres(string cs, int FilmID, int GenreID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spAddFilmGenres"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                cmd.Parameters.AddWithValue("@GenreID", GenreID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+        public void AddFilmDirectors(string cs, int FilmID, int DirectorID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spAddFilmDirectors"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                cmd.Parameters.AddWithValue("@DirectorID", DirectorID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+        public void DeleteFilmGenre(string cs, int FilmGenreID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spDeleteFilmGenre"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@FilmGenresID", FilmGenreID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+        public void DeleteFilmDirector(string cs, int FilmDirectorID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spDeleteFilmDirector"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@FilmDirectorsID", FilmDirectorID);
+                cmd.ExecuteNonQuery();
+                con.Close();
             }
         }
         public void AddGenre(string cs, string GenreText)
