@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
-using static DatePot.Areas.FoodPot.Models.Foods;
+using static DatePot.Areas.FoodPot.Models.Identity;
 using DatePot.Areas.FoodPot.Data;
 
 namespace DatePot.Areas.FoodPot.Pages

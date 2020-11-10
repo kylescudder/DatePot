@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using static DatePot.Areas.FoodPot.Models.Foods;
+using static DatePot.Areas.FoodPot.Models.Identity;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
