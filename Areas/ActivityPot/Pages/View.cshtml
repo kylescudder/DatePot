@@ -1,0 +1,136 @@
+﻿@page
+@model DatePot.Areas.ActivityPot.Pages.ViewModel
+@{
+    ViewData["Title"] = "View";
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.form-control-chosen').chosen();
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectParam = urlParams.get('redirect');
+            if (redirectParam == "update") {
+                setTimeout(function () {
+                    $(".savedAlert").modal();
+                    $('.modal-backdrop').removeClass("modal-backdrop");
+                    setTimeout(function () {
+                        $(".savedAlert").modal('hide');
+                    }, 1000);
+                }, 250);
+            }
+        });
+    </script>
+}
+<div class="modal fade savedAlert" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="alert alert-success text-center" role="alert">
+            Saved successful!
+        </div>
+    </div>
+</div>
+
+@if (Model.FilmDetails is null)
+{
+    <h4>That film has not been found.</h4>
+    <h5>Would you like to create a film instead?</h5>
+    <a class="btn btn-primary" asp-page="/Index" asp-route-create="yes">Yes please!</a>
+    <a class="btn btn-secondary" asp-page="/Index">No thank you</a>
+}
+else
+{
+    <div class="row">
+        <div class="col-6">
+            <h1>Film Details</h1>
+        </div>
+        <div class="col-6">
+            <a class="btn btn-primary float-right" asp-page="/Index">Back</a>
+            <button type="button" class="btn btn-danger float-right mr-2" data-toggle="modal" data-target="#ArchiveFilm">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-archive-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15h9.286zM5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8H.8z" />
+                </svg>
+            </button>
+            <form method="post" asp-page-handler="Archive">
+                <input asp-for="UpdateFilmDetails.FilmID" value="@Model.FilmDetails.FilmID" type="hidden" />
+                <div class="modal fade ArchiveFilm" id="ArchiveFilm" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Archive Film?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to do this?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Yes I am sure!</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">I am big dumb</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card bg-light mb-2">
+        <div class="card-body">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="UpdateFilmDetails.FilmID" value="@Model.FilmDetails.FilmID" type="hidden" />
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            @*<label asp-for="UpdateFilmDetails.AddersName" class="control-label"></label>
+                            <input asp-for="UpdateFilmDetails.AddersName" class="form-control adders-name" value="@Model.FilmDetails.AddersName" required="required" type="text" />
+                            <span asp-validation-for="UpdateFilmDetails.AddersName" class="text-danger"></span>*@
+                            <label asp-for="UpdateFilmDetails.AddedByID" class="control-label"></label>
+                            <select asp-for="UpdateFilmDetails.AddedByID" asp-items="Model.Users" class="form-control form-control-chosen" value="@Model.FilmDetails.AddedByID" required="required"></select>
+                            <span asp-validation-for="UpdateFilmDetails.AddedByID" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="UpdateFilmDetails.FilmName" class="control-label"></label>
+                            <input asp-for="UpdateFilmDetails.FilmName" class="form-control" value="@Model.FilmDetails.FilmName" required="required" type="text" />
+                            <span asp-validation-for="UpdateFilmDetails.FilmName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="UpdateFilmDetails.ReleaseDate" class="control-label"></label>
+                            <input asp-for="UpdateFilmDetails.ReleaseDate" class="form-control" value="@Model.FilmDetails.ReleaseDate.ToString("yyyy-MM-dd")" required="required" type="date" />
+                            <span asp-validation-for="UpdateFilmDetails.ReleaseDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="UpdateFilmDetails.GenreID" class="control-label"></label>
+                            <select asp-for="UpdateFilmDetails.GenreID" asp-items="Model.Genres" class="form-control form-control-chosen" value="@Model.FilmDetails.GenreID" required="required"></select>
+                            <span asp-validation-for="UpdateFilmDetails.GenreID" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="UpdateFilmDetails.DirectorID" class="control-label"></label>
+                            <select asp-for="UpdateFilmDetails.DirectorID" asp-items="Model.Directors" class="form-control form-control-chosen" value="@Model.FilmDetails.DirectorID" required="required"></select>
+                            <span asp-validation-for="UpdateFilmDetails.DirectorID" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-3">
+                            <label asp-for="UpdateFilmDetails.Watched" class="control-label"></label>
+                        </div>
+                        <div class="col-9">
+                            <input asp-for="UpdateFilmDetails.Watched" checked="@Model.FilmDetails.Watched" class="form-control" />
+                            <span asp-validation-for="UpdateFilmDetails.Watched" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+}

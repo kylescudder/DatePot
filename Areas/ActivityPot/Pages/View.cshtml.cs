@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
-using static DatePot.Areas.FilmPot.Models.Films;
-using DatePot.Areas.FilmPot.Data;
+using static DatePot.Areas.ActivityPot.Models.Activitys;
+using DatePot.Areas.ActivityPot.Data;
 
-namespace DatePot.Areas.FilmPot.Pages
+namespace DatePot.Areas.ActivityPot.Pages
 {
     public class ViewModel : PageModel
     {
@@ -22,15 +22,13 @@ namespace DatePot.Areas.FilmPot.Pages
         {
             _config = config;
         }
-        FilmData fd = new FilmData();
+        ActivityData fd = new ActivityData();
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
         [BindProperty]
         public UpdateFilmDetails UpdateFilmDetails { get; set; }
 
         public FilmDetails FilmDetails { get; set; }
-        public List<FilmGenres> FilmGenres { get; set; }
-        public List<FilmDirectors> FilmDirectors { get; set; }
         //public string Genre { get; set; }
         public List<SelectListItem> Genres { get; set; }
         public List<SelectListItem> Directors { get; set; }
@@ -58,19 +56,28 @@ namespace DatePot.Areas.FilmPot.Pages
                         Genres = new List<SelectListItem>();
                         Directors = new List<SelectListItem>();
                         Users = new List<SelectListItem>();
-                        FilmGenres = new List<FilmGenres>();
-                        FilmDirectors = new List<FilmDirectors>();
-
-                        FilmGenres = fd.GetFilmGenres(cs, Id);
-                        FilmDirectors = fd.GetFilmDirectors(cs, Id);
 
                         genres.ForEach(x =>
                         {
-                            Genres.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText });
+                            if (FilmDetails.GenreID == x.GenreID)
+                            {
+                                Genres.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText, Selected = true });
+                            }
+                            else
+                            {
+                                Genres.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText });
+                            }
                         });
                         directors.ForEach(x =>
                         {
-                            Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName });
+                            if (FilmDetails.DirectorID == x.DirectorID)
+                            {
+                                Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName, Selected = true });
+                            }
+                            else
+                            {
+                                Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName });
+                            }
                         });
                         users.ForEach(x =>
                         {
@@ -93,72 +100,24 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<JsonResult> OnPost(int FilmID, int AddedByID, string FilmName, DateTime ReleaseDate, DateTime AddedDate, bool Watched, int Runtime, List<int> Genre, List<int> Director)
+        public async Task<IActionResult> OnPost()
         {
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                fd.UpdateFilm(cs, FilmID, AddedByID, FilmName, ReleaseDate, AddedDate, Watched, Runtime);
-
-                foreach (var item in Genre)
+                if (ModelState.IsValid == false)
                 {
-                    if (item != 0)
-                    {
-                        fd.AddFilmGenres(cs, FilmID, Convert.ToInt32(item));
-                    }
-
+                    return Page();
                 }
-                foreach (var item in Director)
-                {
-                    if (item != 0)
-                    {
-                        fd.AddFilmDirectors(cs, FilmID, Convert.ToInt32(item));
-                    }
-
-                }
-
-                JsonResult result = null;
-                result = new JsonResult(FilmID);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
-        public async Task<JsonResult> OnPostDeleteGenre(int FilmGenreID, int FilmID)
-        {
-            try
-            {
                 string cs = _config.GetConnectionString("Default");
-                fd.DeleteFilmGenre(cs, FilmGenreID);
+                fd.UpdateFilm(cs, UpdateFilmDetails);
 
-                JsonResult result = null;
-                result = new JsonResult(FilmID);
-                return result;
+                return RedirectToPage("./View", new { @Id = UpdateFilmDetails.FilmID, @redirect = "update" });
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<JsonResult> OnPostDeleteDirector(int FilmDirectorID, int FilmID)
-        {
-            try
-            {
-                string cs = _config.GetConnectionString("Default");
-                fd.DeleteFilmDirector(cs, FilmDirectorID);
-
-                JsonResult result = null;
-                result = new JsonResult(FilmID);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
-
         public async Task<IActionResult> OnPostArchive()
         {
             try

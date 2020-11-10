@@ -1,5 +1,5 @@
 ﻿@page
-@model DatePot.Areas.FilmPot.Pages.IndexModel
+@model DatePot.Areas.ActivityPot.Pages.IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
@@ -28,7 +28,6 @@
                     <th>Added Date</th>
                     <th>Genre</th>
                     <th>Who?</th>
-                    <th>Runtime</th>
                     <th>Watched</th>
                     <th></th>
                 </tr>
@@ -36,32 +35,29 @@
             <tbody>
                 @foreach (var item in Model.Films)
                 {
-                <tr>
-                    <td>
-                        @item.FilmName
-                    </td>
-                    <td>
-                        @item.ReleaseDate
-                    </td>
-                    <td>
-                        @item.AddedDate
-                    </td>
-                    <td>
-                        @item.GenreText
-                    </td>
-                    <td>
-                        @item.UserName
-                    </td>
-                    <td>
-                        @item.Runtime
-                    </td>
-                    <td>
-                        @item.Watched
-                    </td>
-                    <td>
-                        <a asp-page="/View" asp-route-Id="@item.FilmID">View</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            @item.FilmName
+                        </td>
+                        <td>
+                            @item.ReleaseDate
+                        </td>
+                        <td>
+                            @item.AddedDate
+                        </td>
+                        <td>
+                            @item.GenreText
+                        </td>
+                        <td>
+                            @item.UserName
+                        </td>
+                        <td>
+                            @item.Watched
+                        </td>
+                        <td>
+                            <a asp-page="/View" asp-route-Id="@item.FilmID">View</a>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -85,7 +81,7 @@
 
                             <input value="@item.FilmID" type="hidden" name="FilmID" />
                             <p>
-                                Tonight you guys are going to watch <strong>@item.FilmName</strong>, and it is @item.AddersName's pick. It is @item.Runtime minutes long . Sorry
+                                Tonight you guys are going to watch <strong>@item.FilmName</strong>, and it is @item.AddersName's pick. Sorry
                                 @if (item.AddersName == "Rhiann")
                                 {
                                     <text>Kyle</text>
@@ -133,42 +129,36 @@
                         <div class="row">
                             <div class="col-12">
                                 <label asp-for="NewFilm.AddersName" class="control-label"></label>
-                                <input asp-for="NewFilm.AddersName" class="form-control adders-name NewFilmAddersName" required="required" type="text" />
+                                <input asp-for="NewFilm.AddersName" class="form-control adders-name" required="required" type="text" />
                                 <span asp-validation-for="NewFilm.AddersName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <label asp-for="NewFilm.FilmName" class="control-label"></label>
-                                <input asp-for="NewFilm.FilmName" class="form-control NewFilmFilmName" required="required" type="text" />
+                                <input asp-for="NewFilm.FilmName" class="form-control" required="required" type="text" />
                                 <span asp-validation-for="NewFilm.FilmName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <label asp-for="NewFilm.Runtime" class="control-label"></label>
-                                <input asp-for="NewFilm.Runtime" class="form-control NewFilmRunTime" required="required" type="number" />
-                                <span asp-validation-for="NewFilm.Runtime" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
                                 <label asp-for="NewFilm.ReleaseDate" class="control-label"></label>
-                                <input asp-for="NewFilm.ReleaseDate" class="form-control NewFilmReleaseDate" required="required" type="date" />
+                                <input asp-for="NewFilm.ReleaseDate" class="form-control" required="required" type="date" />
                                 <span asp-validation-for="NewFilm.ReleaseDate" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <label asp-for="NewFilm.AddedDate" class="control-label"></label>
-                                <input asp-for="NewFilm.AddedDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control AddedDate NewFilmAddedDate" required="required" type="date" />
+                                <input asp-for="NewFilm.AddedDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control AddedDate" required="required" type="date" />
                                 <span asp-validation-for="NewFilm.AddedDate" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <label class="control-label">Genre</label>
-                                <select asp-items="Model.Genre" class="form-control form-control-chosen ddlGenre" multiple data-placeholder="Choose a genre..." required="required"></select>
+                                <label asp-for="NewFilm.GenreID" class="control-label"></label>
+                                <select asp-for="NewFilm.GenreID" asp-items="Model.Genre" class="form-control form-control-chosen" required="required"></select>
+                                <span asp-validation-for="NewFilm.GenreID" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row pt-2">
@@ -176,7 +166,7 @@
                                 <label asp-for="NewFilm.Watched" class="control-label"></label>
                             </div>
                             <div class="col-9">
-                                <input asp-for="NewFilm.Watched" class="form-control NewFilmWatched" />
+                                <input asp-for="NewFilm.Watched" class="form-control" />
                                 <span asp-validation-for="NewFilm.Watched" class="text-danger"></span>
                             </div>
                         </div>
@@ -184,7 +174,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="button" value="Add" class="btn btn-primary btnAddFilm" />
+                    <input type="submit" value="Add" class="btn btn-primary" />
                 </div>
             </form>
         </div>
@@ -365,7 +355,6 @@
                     { "sType": "html" },
                     { "sType": "html" },
                     { "sType": "html" },
-                    { "sType": "html" },
                     { "sType": "html" }
                 ],
                 "columnDefs": [
@@ -375,8 +364,7 @@
                     { "targets": 3 },
                     { "targets": 4 },
                     { "targets": 5 },
-                    { "targets": 6 },
-                    { orderable: false, "targets": 7 }
+                    { orderable: false, "targets": 6 }
                 ],
                 "pagingType": "numbers",
                 "paging": false,
@@ -403,42 +391,5 @@
         function AnotherRandom() {
             window.location.replace("Index?redirect=RandomFilm");
         }
-        $(".btnAddFilm").on("click", function () {
-            var pathname = window.location.pathname;
-            var AddersName = $(".NewFilmAddersName").val();
-            var AddedDate = $(".NewFilmAddedDate").val();
-            var FilmName = $(".NewFilmFilmName").val();
-            var RunTime = $(".NewFilmRunTime").val()
-            var ReleaseDate = $(".NewFilmReleaseDate").val();
-            var Watched = $(".NewFilmWatched").prop("checked");
-
-            $.ajax({
-                dataType: 'json',
-                url: pathname,
-                type: 'POST',
-                data: {
-                    AddersName: AddersName,
-                    AddedDate: AddedDate,
-                    FilmName: FilmName,
-                    ReleaseDate: ReleaseDate,
-                    Watched: Watched,
-                    RunTime: RunTime,
-                    Genres: $(".ddlGenre").chosen().val()
-                },
-                headers: {
-                    RequestVerificationToken:
-                        $('input:hidden[name="__RequestVerificationToken"]').val()
-                },
-                success: function (response) {
-                    console.log(response);
-                    window.location.replace("FilmPot/View?Id=" + response);
-                },
-                error: function () {
-                    alert("AJAX Request Failed, Contact Support");
-                }
-            });
-            console.log($(".ddlGenre").chosen().val());
-        });
-
     </script>
 }

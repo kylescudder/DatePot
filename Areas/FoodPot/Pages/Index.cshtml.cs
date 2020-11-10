@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MySqlConnector;
-using static DatePot.Areas.FilmPot.Models.Films;
-using DatePot.Areas.FilmPot.Data;
+using static DatePot.Areas.FoodPot.Models.Identity;
+using DatePot.Areas.FoodPot.Data;
 
-namespace DatePot.Areas.FilmPot.Pages
+namespace DatePot.Areas.FoodPot.Pages
 {
     public class IndexModel : PageModel
     {
@@ -24,7 +24,7 @@ namespace DatePot.Areas.FilmPot.Pages
             _logger = logger;
             _config = config;
         }
-        FilmData fd = new FilmData();
+        FoodData fd = new FoodData();
         public List<FilmList> Films { get; set; }
         public List<UserList> Users { get; set; }
         public List<SelectListItem> Genre { get; set; }
@@ -62,21 +62,18 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<JsonResult> OnPost(string AddersName, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, List<int>Genres)
+        public ActionResult OnPost()
         {
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                int FilmID = fd.AddFilm(cs, AddersName, AddedDate, FilmName, ReleaseDate, Watched, Runtime);
-                foreach (var item in Genres)
+                if (ModelState.IsValid == false)
                 {
-                    fd.AddFilmGenres(cs, FilmID, Convert.ToInt32(item));
-
+                    return Page();
                 }
+                string cs = _config.GetConnectionString("Default");
+                int FilmID = fd.AddFilm(cs, NewFilm);
 
-                JsonResult result = null;
-                result = new JsonResult(FilmID);
-                return result;
+                return RedirectToPage("./View", new { Id = FilmID });
             }
             catch (Exception ex)
             {
