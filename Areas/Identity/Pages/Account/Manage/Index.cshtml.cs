@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using DatePot.Areas.Identity.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace DatePot.Areas.Identity.Pages.Account.Manage
 {
@@ -13,16 +15,20 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IConfiguration _config;
 
         public IndexModel(
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _config = config;
         }
 
         public string Username { get; set; }
+        public string UserName { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -39,10 +45,14 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(IdentityUser user)
         {
+            string cs = _config.GetConnectionString("Default");
+            IdentityData id = new IdentityData();
             var userName = await _userManager.GetUserNameAsync(user);
+            var UsersName = id.GetUser(cs, user.Id.ToString()).FirstOrDefault().UserName.ToString();
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
+            UserName = UsersName;
 
             Input = new InputModel
             {
