@@ -364,7 +364,7 @@
                     },
                     { "sType": "html" },
                     { "sType": "html" },
-                    { "sType": "html" },
+                    { "sType": "num" },
                     { "sType": "html" },
                     { "sType": "html" }
                 ],
@@ -430,14 +430,12 @@
                         $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
                 success: function (response) {
-                    console.log(response);
                     window.location.replace("FilmPot/View?Id=" + response);
                 },
                 error: function () {
                     alert("AJAX Request Failed, Contact Support");
                 }
             });
-            console.log($(".ddlGenre").chosen().val());
         });
 
     </script>
