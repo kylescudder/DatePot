@@ -422,6 +422,7 @@ namespace DatePot.Areas.FilmPot.Data
                 ws.FilmID = reader.GetInt32("FilmID");
                 ws.FilmName = reader.GetString("FilmName");
                 ws.AddersName = reader.GetString("AddersName");
+                ws.Runtime = reader.GetInt16("Runtime");
                 wsl.Add(ws);
             }
             reader.Close();
