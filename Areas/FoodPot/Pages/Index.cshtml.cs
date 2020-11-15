@@ -25,14 +25,14 @@ namespace DatePot.Areas.FoodPot.Pages
             _config = config;
         }
         FoodData fd = new FoodData();
-        public List<FilmList> Films { get; set; }
-        public List<UserList> Users { get; set; }
-        public List<SelectListItem> Genre { get; set; }
+        public List<RestaurantList> Restaurants { get; set; }
+        public List<SelectListItem> FoodType { get; set; }
+        public List<SelectListItem> When { get; set; }
         [BindProperty]
-        public NewFilm NewFilm { get; set; }
-        public NewGenre NewGenre { get; set; }
-        public NewDirector NewDirector { get; set; }
-        public List<RandomFilm> RandomFilm { get; set; }
+        public NewRestaurant NewRestaurant { get; set; }
+        public NewFoodType NewFoodType { get; set; }
+        public NewWhen NewWhen { get; set; }
+        public List<RandomRestaurant> RandomRestaurant { get; set; }
         public ActionResult OnGet()
          {
             if (!User.Identity.IsAuthenticated)
@@ -42,18 +42,23 @@ namespace DatePot.Areas.FoodPot.Pages
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                Films = fd.GetFilmList(cs);
-                Users = fd.GetUserList(cs);
-                var genres = fd.GetGenreList(cs);
+                Restaurants = fd.GetRestaurantList(cs);
+                var foodtypes = fd.GetFoodTypeList(cs);
+                var when = fd.GetWhenList(cs);
 
-                Genre = new List<SelectListItem>();
+                FoodType = new List<SelectListItem>();
+                When = new List<SelectListItem>();
 
-                genres.ForEach(x =>
+                foodtypes.ForEach(x =>
                 {
-                    Genre.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText });
+                    FoodType.Add(new SelectListItem { Value = x.FoodTypeID.ToString(), Text = x.FoodTypeText });
+                });
+                when.ForEach(x =>
+                {
+                    When.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenText });
                 });
 
-                RandomFilm = fd.GetRandomFilm(cs);
+                RandomRestaurant = fd.GetRandomRestaurant(cs);
 
                 return Page();
             }
@@ -62,7 +67,7 @@ namespace DatePot.Areas.FoodPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public ActionResult OnPost()
+        public ActionResult OnPost(string RestaurantName, List<int> FoodType, List<int> When)
         {
             try
             {
@@ -71,60 +76,71 @@ namespace DatePot.Areas.FoodPot.Pages
                     return Page();
                 }
                 string cs = _config.GetConnectionString("Default");
-                int FilmID = fd.AddFilm(cs, NewFilm);
+                int RestaurantID = fd.AddRestaurant(cs, RestaurantName);
 
-                return RedirectToPage("./View", new { Id = FilmID });
+                foreach (var item in FoodType)
+                {
+                    fd.AddRestaurantFoodType(cs, RestaurantID, Convert.ToInt32(item));
+                }
+                foreach (var item in When)
+                {
+                    fd.AddRestaurantWhen(cs, RestaurantID, Convert.ToInt32(item));
+                }
+
+                JsonResult result = null;
+                result = new JsonResult(RestaurantID);
+                return result;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<IActionResult> OnPostGenre()
+        public async Task<IActionResult> OnPostFoodType()
         {
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                if (!fd.GenreDupeCheck(cs, Request.Form["NewGenre.GenreText"].ToString()))
+                if (!fd.FoodTypeDupeCheck(cs, Request.Form["NewFoodType.FoodTypeText"].ToString()))
                 {
-                    fd.AddGenre(cs, Request.Form["NewGenre.GenreText"].ToString());
+                    fd.AddFoodType(cs, Request.Form["NewFoodType.FoodTypeText"].ToString());
                     return RedirectToPage("./Index");
                 }
-                return RedirectToPage("./Index", new { @redirect = "genredupe", @value = Request.Form["NewGenre.GenreText"].ToString() });
+                return RedirectToPage("./Index", new { @redirect = "FoodTypedupe", @value = Request.Form["NewFoodType.FoodTypeText"].ToString() });
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<IActionResult> OnPostDirector()
+        public async Task<IActionResult> OnPostWhen()
         {
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                if (!fd.DirectorDupeCheck(cs, Request.Form["NewDirector.DirectorText"].ToString()))
+                if (!fd.WhenDupeCheck(cs, Request.Form["NewWhen.WhenText"].ToString()))
                 {
-                    fd.AddDirector(cs, Request.Form["NewDirector.DirectorText"].ToString());
+                    fd.AddWhen(cs, Request.Form["NewWhen.WhenText"].ToString());
                     return RedirectToPage("./Index");
                 }
-                return RedirectToPage("./Index", new { @redirect = "directordupe", @value = Request.Form["NewDirector.DirectorText"].ToString() });
+                return RedirectToPage("./Index", new { @redirect = "Whendupe", @value = Request.Form["NewWhen.WhenText"].ToString() });
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<IActionResult> OnPostAddFilm()
+        public async Task<IActionResult> OnPostAddRestaurant()
         {
             try
             {
                 string cs = _config.GetConnectionString("Default");
 
-                fd.FilmWatched(cs, Convert.ToInt32(Request.Form["FilmID"]));
+                fd.RestaurantWatched(cs, Convert.ToInt32(Request.Form["RestaurantID"]));
 
-                //return RedirectToPage("./Index", new { @redirect = "directordupe", @value = Request.Form["NewDirector.DirectorText"].ToString() });
+                //return RedirectToPage("./Index", new { @redirect = "Whendupe", @value = Request.Form["NewWhen.WhenText"].ToString() });
 
-                return RedirectToPage("./Index", new { @redirect = "FilmWatched" });
+                return RedirectToPage("./Index", new { @redirect = "RestaurantWatched" });
             }
             catch (Exception ex)
             {

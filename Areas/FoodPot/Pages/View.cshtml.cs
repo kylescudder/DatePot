@@ -27,12 +27,12 @@ namespace DatePot.Areas.FoodPot.Pages
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
         [BindProperty]
-        public UpdateFilmDetails UpdateFilmDetails { get; set; }
+        public UpdateRestaurantDetails UpdateRestaurantDetails { get; set; }
 
-        public FilmDetails FilmDetails { get; set; }
-        //public string Genre { get; set; }
-        public List<SelectListItem> Genres { get; set; }
-        public List<SelectListItem> Directors { get; set; }
+        public RestaurantDetails RestaurantDetails { get; set; }
+        //public string FoodType { get; set; }
+        public List<SelectListItem> FoodTypes { get; set; }
+        public List<SelectListItem> When { get; set; }
         public List<SelectListItem> Users { get; set; }
         public async Task<IActionResult> OnGet()
         {
@@ -43,54 +43,50 @@ namespace DatePot.Areas.FoodPot.Pages
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                FilmDetails = fd.GetFilmDetails(cs, Id).FirstOrDefault();
-                if (FilmDetails != null)
+                RestaurantDetails = fd.GetRestaurantDetails(cs, Id).FirstOrDefault();
+                if (RestaurantDetails != null)
                 {
-                    if (FilmDetails != null)
+                    if (RestaurantDetails != null)
                     {
-                        var genres = fd.GetGenreList(cs);
-                        var directors = fd.GetDirectorsList(cs);
-                        var users = fd.GetUserList(cs);
+                        var foodtypes = fd.GetFoodTypeList(cs);
+                        var when = fd.GetWhenList(cs);
 
-                        //Genre = genres.Where(x => x.GenreID == FilmDetails.GenreID).FirstOrDefault()?.GenreText;
+                        //FoodType = FoodTypes.Where(x => x.FoodTypeID == RestaurantDetails.FoodTypeID).FirstOrDefault()?.FoodTypeText;
 
-                        Genres = new List<SelectListItem>();
-                        Directors = new List<SelectListItem>();
-                        Users = new List<SelectListItem>();
+                        FoodTypes = new List<SelectListItem>();
+                        When = new List<SelectListItem>();
 
-                        genres.ForEach(x =>
+                        foodtypes.ForEach(x =>
                         {
-                            if (FilmDetails.GenreID == x.GenreID)
-                            {
-                                Genres.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText, Selected = true });
-                            }
-                            else
-                            {
-                                Genres.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText });
-                            }
+                            FoodTypes.Add(new SelectListItem { Value = x.FoodTypeID.ToString(), Text = x.FoodTypeText });
                         });
-                        directors.ForEach(x =>
+                        when.ForEach(x =>
                         {
-                            if (FilmDetails.DirectorID == x.DirectorID)
-                            {
-                                Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName, Selected = true });
-                            }
-                            else
-                            {
-                                Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName });
-                            }
+                            When.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenText });
                         });
-                        users.ForEach(x =>
-                        {
-                            if (FilmDetails.AddedByID == x.UserID)
-                            {
-                                Users.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.UserName, Selected = true });
-                            }
-                            else
-                            {
-                                Users.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.UserName });
-                            }
-                        });
+
+                        //FoodTypes.ForEach(x =>
+                        //{
+                        //    if (RestaurantDetails.FoodTypeID == x.FoodTypeID)
+                        //    {
+                        //        FoodTypes.Add(new SelectListItem { Value = x.FoodTypeID.ToString(), Text = x.FoodTypeText, Selected = true });
+                        //    }
+                        //    else
+                        //    {
+                        //        FoodTypes.Add(new SelectListItem { Value = x.FoodTypeID.ToString(), Text = x.FoodTypeText });
+                        //    }
+                        //});
+                        //Whens.ForEach(x =>
+                        //{
+                        //    if (RestaurantDetails.WhenID == x.WhenID)
+                        //    {
+                        //        Whens.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenName, Selected = true });
+                        //    }
+                        //    else
+                        //    {
+                        //        Whens.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenName });
+                        //    }
+                        //});
                     }
                 }
 
@@ -110,9 +106,9 @@ namespace DatePot.Areas.FoodPot.Pages
                     return Page();
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.UpdateFilm(cs, UpdateFilmDetails);
+                fd.UpdateRestaurant(cs, UpdateRestaurantDetails);
 
-                return RedirectToPage("./View", new { @Id = UpdateFilmDetails.FilmID, @redirect = "update" });
+                return RedirectToPage("./View", new { @Id = UpdateRestaurantDetails.RestaurantID, @redirect = "update" });
             }
             catch (Exception ex)
             {
@@ -128,7 +124,7 @@ namespace DatePot.Areas.FoodPot.Pages
                     return Page();
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.ArchiveFilm(cs, UpdateFilmDetails.FilmID);
+                fd.ArchiveRestaurant(cs, UpdateRestaurantDetails.RestaurantID);
 
                 return RedirectToPage("./Index");
             }

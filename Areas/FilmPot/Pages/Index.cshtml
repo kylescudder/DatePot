@@ -364,7 +364,7 @@
                     },
                     { "sType": "html" },
                     { "sType": "html" },
-                    { "sType": "html" },
+                    { "sType": "num" },
                     { "sType": "html" },
                     { "sType": "html" }
                 ],
@@ -401,7 +401,12 @@
             modal.find('.modal-body .adders-name').val(recipient)
         })
         function AnotherRandom() {
-            window.location.replace("Index?redirect=RandomFilm");
+            if (window.location.href.indexOf("FilmPot/Index?redirect=RandomFilm") > -1)
+            {
+                window.location.reload();
+            } else {
+                window.location.replace("FilmPot/Index?redirect=RandomFilm");
+            }
         }
         $(".btnAddFilm").on("click", function () {
             var pathname = window.location.pathname;
@@ -430,14 +435,12 @@
                         $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
                 success: function (response) {
-                    console.log(response);
                     window.location.replace("FilmPot/View?Id=" + response);
                 },
                 error: function () {
                     alert("AJAX Request Failed, Contact Support");
                 }
             });
-            console.log($(".ddlGenre").chosen().val());
         });
 
     </script>

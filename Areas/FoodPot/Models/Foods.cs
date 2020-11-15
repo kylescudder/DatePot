@@ -10,27 +10,21 @@ namespace DatePot.Areas.FoodPot.Models
 {
     public class Identity
     {
-        public class FilmIndex
+        public class RestaurantIndex
         {
-            public List<FilmList> FilmList { get; set; }
-            public List<UserList> UserList { get; set; }
+            public List<RestaurantList> RestaurantList { get; set; }
         }
-        public class FilmList
+        public class RestaurantList
         {
             [Key]
-            public int FilmID { get; set; }
+            public int RestaurantID { get; set; }
             [Display(Name = "Name")]
-            public string FilmName { get; set; }
-            [Display(Name = "Release Date")]
-            public string ReleaseDate { get; set; }
-            [Display(Name = "Added Date")]
-            public string AddedDate { get; set; }
-            [Display(Name = "Genre")]
-            public string GenreText { get; set; }
-            public int GenreID { get; set; }
-            public string Watched { get; set; }
-            public string UserName { get; set; }
-            public List<RandomFilm> RandomFilm { get; set; }
+            public string RestaurantName { get; set; }
+            [Display(Name = "Type")]
+            public string FoodTypeText { get; set; }
+            [Display(Name = "When")]
+            public string WhenText { get; set; }
+            public List<RandomRestaurant> RandomRestaurant { get; set; }
         }
         public class UserList
         {
@@ -39,72 +33,51 @@ namespace DatePot.Areas.FoodPot.Models
             [Display(Name = "Name")]
             public string UserName { get; set; }
         }
-        public class NewFilm
+        public class NewRestaurant
         {
-            [Required]
-            [DisplayName("Added by")]
-            public string AddersName { get; set; }
             [Required]
             [MaxLength(100, ErrorMessage = "Names must not exceed 100 characters")]
             [MinLength(2, ErrorMessage = "Names must be at least 2 characters long")]
             [DisplayName("Name")]
-            public string FilmName { get; set; }
+            public string RestaurantName { get; set; }
+            public List<FoodTypes> FoodTypes { get; set; }
             [Required]
-            [DataType(DataType.Date)]
-            [DisplayName("Release Date")]
-            public DateTime ReleaseDate { get; set; }
-            [Range(1, int.MaxValue, ErrorMessage = "Please select a genre from the list")]
-            [DisplayName("Genre")]
-            public int GenreID { get; set; }
-            public bool Watched { get; set; }
-            public List<Genres> Genres { get; set; }
-            [Required]
-            [DataType(DataType.Date)]
-            [DisplayName("Date Added")]
-            public DateTime AddedDate { get; set; }
+            public List<When> When { get; set; }
+            public int FoodTypeID { get; set; }
+            public int WhenID { get; set; }
         }
-        public class Genres
+        public class FoodTypes
         {
-            public int GenreID { get; set; }
-            public string GenreText { get; set; }
+            public int FoodTypeID { get; set; }
+            public string FoodTypeText { get; set; }
         }
-        public class Directors
+        public class When
         {
-            public int DirectorID { get; set; }
-            public string DirectorName { get; set; }
+            public int WhenID { get; set; }
+            public string WhenText { get; set; }
         }
-        public class FilmDetails
+        public class RestaurantDetails
         {
             [Key]
-            public int FilmID { get; set; }
+            public int RestaurantID { get; set; }
             [Display(Name = "Name")]
-            public string FilmName { get; set; }
-            [Display(Name = "Release Date")]
-            public DateTime ReleaseDate { get; set; }
-            [Display(Name = "Genre")]
-            public int GenreID { get; set; }
-            public bool Watched { get; set; }
-            public int AddedByID { get; set; }
-            [DisplayName("Added by")]
-            public string AddersName { get; set; }
-            [DisplayName("Director")]
-            public int DirectorID { get; set; }
+            public string RestaurantName { get; set; }
         }
-        public class UpdateFilmDetails: FilmDetails
+        public class UpdateRestaurantDetails: RestaurantDetails
         {
         }
-        public class RandomFilm : FilmDetails { }
-        public class NewGenre
+        public class RandomRestaurant : RestaurantDetails { }
+        public class NewFoodType
         {
             [Required]
-            [DisplayName("Genre")]
-            public string GenreText { get; set; }
+            [DisplayName("FoodType")]
+            public string FoodTypeText { get; set; }
         }
-        public class NewDirector
+        public class NewWhen
         {
             [Required]
-            [DisplayName("Director")]
-            public string DirectorText { get; set; }
+            [DisplayName("When")]
+            public string WhenText { get; set; }
         }
 
     }
