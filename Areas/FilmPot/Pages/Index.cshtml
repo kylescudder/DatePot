@@ -401,7 +401,12 @@
             modal.find('.modal-body .adders-name').val(recipient)
         })
         function AnotherRandom() {
-            window.location.replace("Index?redirect=RandomFilm");
+            if (window.location.href.indexOf("FilmPot/Index?redirect=RandomFilm") > -1)
+            {
+                window.location.reload();
+            } else {
+                window.location.replace("FilmPot/Index?redirect=RandomFilm");
+            }
         }
         $(".btnAddFilm").on("click", function () {
             var pathname = window.location.pathname;
