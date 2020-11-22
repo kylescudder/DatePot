@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddRestaurantModal">Add Restaurant</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFoodTypeModal">Add FoodType</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFoodTypeModal">Add Food Type</button>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddWhenModal">Add When</button>
         <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#RandomRestaurantModal">Give me a Restaurant</button>
     </div>
@@ -18,6 +18,8 @@
                 <tr>
                     <th>Name</th>
                     <th>Type</th>
+                    <th>Expense</th>
+                    <th>Location</th>
                     <th>When</th>
                     <th></th>
                 </tr>
@@ -25,20 +27,26 @@
             <tbody>
                 @foreach (var item in Model.Restaurants)
                 {
-                    <tr>
-                        <td>
-                            @item.RestaurantName
-                        </td>
-                        <td>
-                            @item.FoodTypeText
-                        </td>
-                        <td>
-                            @item.WhenText
-                        </td>
-                        <td>
-                            <a asp-page="/View" asp-route-Id="@item.RestaurantID">View</a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        @item.RestaurantName
+                    </td>
+                    <td>
+                        @item.FoodTypeText
+                    </td>
+                    <td>
+                        @item.ExpenseText
+                    </td>
+                    <td>
+                        @item.LocationText
+                    </td>
+                    <td>
+                        @item.WhenText
+                    </td>
+                    <td>
+                        <a asp-page="/View" asp-route-Id="@item.RestaurantID">View</a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
@@ -53,7 +61,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" asp-page-handler="AddRestaurant">
+            <form method="post" asp-page-handler="RestaurantAttended">
                 @if (Model.RandomRestaurant.Count > 0)
                 {
                     <div class="modal-body">
@@ -62,7 +70,7 @@
 
                             <input value="@item.RestaurantID" type="hidden" name="RestaurantID" />
                             <p>
-                                Today you guys are going to <strong>@item.RestaurantName</strong>. Enjoy! 🥐🥗🥙🤤
+                                Today you guys are going to <strong>@item.RestaurantName</strong> in @item.LocationText. It is @item.ExpenseText.  Enjoy! 🥐🥗🥙🤤
                             </p>
                         }
 
@@ -108,13 +116,27 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <label class="control-label">Genre</label>
+                                <label asp-for="NewRestaurant.ExpenseID" class="control-label"></label>
+                                <select asp-items="Model.Expense" class="form-control custom-select NewRestaurantExpenseID" required="required"></select>
+                                <span asp-validation-for="NewRestaurant.ExpenseID" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label asp-for="NewRestaurant.LocationID" class="control-label"></label>
+                                <select asp-items="Model.Location" class="form-control custom-select NewRestaurantLocationID" required="required"></select>
+                                <span asp-validation-for="NewRestaurant.LocationID" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="control-label">Type</label>
                                 <select asp-items="Model.FoodType" class="form-control form-control-chosen ddlFoodType" multiple data-placeholder="Choose a genre..." required="required"></select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <label class="control-label">Genre</label>
+                                <label class="control-label">When</label>
                                 <select asp-items="Model.When" class="form-control form-control-chosen ddlWhen" multiple data-placeholder="Choose a genre..." required="required"></select>
                             </div>
                         </div>
@@ -132,7 +154,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add FoodType</h5>
+                <h5 class="modal-title">Add Food Type</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -222,7 +244,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="RestaurantWatched" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="RestaurantAttended" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -234,7 +256,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
-                        <p>All sorted, this Restaurant has been marked as watched. Enjoy! 😁📽</p>
+                        <p>All sorted, Hope you enjoy the food and/or drinks! 😁🥗🍸</p>
                     </div>
                 </div>
             </div>
@@ -265,12 +287,13 @@
                 $('#WhenDupeModal').find('.WhenDupeText').text('You have tried to add ' + redirectParamDupeCheckValue + ' which already exists');
             } else if (redirectParamDupeCheck == "RandomRestaurant") {
                 $('#RandomRestaurantModal').modal();
-            } else if (redirectParamDupeCheck == "RestaurantWatched") {
-                $('#RestaurantWatched').modal();
+            } else if (redirectParamDupeCheck == "RestaurantAttended") {
+                $('#RestaurantAttended').modal();
             }
 
             $('#RestaurantTable').dataTable({
                 "aoColumns": [
+                    { "sType": "html" },
                     { "sType": "html" },
                     { "sType": "html" },
                     { "sType": "html" },
@@ -280,7 +303,8 @@
                     { "targets": 0 },
                     { "targets": 1 },
                     { "targets": 2 },
-                    { orderable: false, "targets": 3 }
+                    { "targets": 3 },
+                    { orderable: false, "targets": 4 }
                 ],
                 "pagingType": "numbers",
                 "paging": false,
@@ -292,17 +316,25 @@
             });
         });
         function AnotherRandom() {
-            window.location.replace("Index?redirect=RandomRestaurant");
+            if (window.location.href.indexOf("FoodPot/Index?redirect=RandomRestaurant") > -1) {
+                window.location.reload();
+            } else {
+                window.location.replace("FoodPot/Index?redirect=RandomRestaurant");
+            }
         }
         $(".btnAddRestaurant").on("click", function () {
             var pathname = window.location.pathname;
             var RestaurantName = $(".NewRestaurantRestaurantName").val();
+            var ExpenseID = $(".NewRestaurantExpenseID").val();
+            var LocationID = $(".NewRestaurantLocationID").val();
             $.ajax({
                 dataType: 'json',
                 url: pathname,
                 type: 'POST',
                 data: {
                     RestaurantName: RestaurantName,
+                    ExpenseID: ExpenseID,
+                    LocationID: LocationID,
                     FoodType: $(".ddlFoodType").chosen().val(),
                     When: $(".ddlWhen").chosen().val()
                 },
@@ -313,11 +345,11 @@
                 success: function (response) {
                     window.location.replace("FoodPot/View?Id=" + response);
                 },
-                error: function () {
+                error: function (ex) {
                     alert("AJAX Request Failed, Contact Support");
+                    console.log(ex);
                 }
             });
-            console.log($(".ddlGenre").chosen().val());
         });
 
     </script>

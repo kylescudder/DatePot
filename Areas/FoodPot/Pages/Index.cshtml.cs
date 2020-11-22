@@ -28,6 +28,8 @@ namespace DatePot.Areas.FoodPot.Pages
         public List<RestaurantList> Restaurants { get; set; }
         public List<SelectListItem> FoodType { get; set; }
         public List<SelectListItem> When { get; set; }
+        public List<SelectListItem> Expense { get; set; }
+        public List<SelectListItem> Location { get; set; }
         [BindProperty]
         public NewRestaurant NewRestaurant { get; set; }
         public NewFoodType NewFoodType { get; set; }
@@ -45,9 +47,13 @@ namespace DatePot.Areas.FoodPot.Pages
                 Restaurants = fd.GetRestaurantList(cs);
                 var foodtypes = fd.GetFoodTypeList(cs);
                 var when = fd.GetWhenList(cs);
+                var expenses = fd.GetExpenseList(cs);
+                var locations = fd.GetLocationList(cs);
 
                 FoodType = new List<SelectListItem>();
                 When = new List<SelectListItem>();
+                Expense = new List<SelectListItem>();
+                Location = new List<SelectListItem>();
 
                 foodtypes.ForEach(x =>
                 {
@@ -56,6 +62,14 @@ namespace DatePot.Areas.FoodPot.Pages
                 when.ForEach(x =>
                 {
                     When.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenText });
+                });
+                expenses.ForEach(x =>
+                {
+                    Expense.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText });
+                });
+                locations.ForEach(x =>
+                {
+                    Location.Add(new SelectListItem { Value = x.LocationID.ToString(), Text = x.LocationText });
                 });
 
                 RandomRestaurant = fd.GetRandomRestaurant(cs);
@@ -67,7 +81,7 @@ namespace DatePot.Areas.FoodPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public ActionResult OnPost(string RestaurantName, List<int> FoodType, List<int> When)
+        public ActionResult OnPost(string RestaurantName, int ExpenseID, int LocationID, List<int> FoodType, List<int> When)
         {
             try
             {
@@ -76,7 +90,7 @@ namespace DatePot.Areas.FoodPot.Pages
                     return Page();
                 }
                 string cs = _config.GetConnectionString("Default");
-                int RestaurantID = fd.AddRestaurant(cs, RestaurantName);
+                int RestaurantID = fd.AddRestaurant(cs, RestaurantName, ExpenseID, LocationID);
 
                 foreach (var item in FoodType)
                 {
@@ -130,17 +144,11 @@ namespace DatePot.Areas.FoodPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<IActionResult> OnPostAddRestaurant()
+        public async Task<IActionResult> OnPostRestaurantAttended()
         {
             try
             {
-                string cs = _config.GetConnectionString("Default");
-
-                fd.RestaurantWatched(cs, Convert.ToInt32(Request.Form["RestaurantID"]));
-
-                //return RedirectToPage("./Index", new { @redirect = "Whendupe", @value = Request.Form["NewWhen.WhenText"].ToString() });
-
-                return RedirectToPage("./Index", new { @redirect = "RestaurantWatched" });
+                return RedirectToPage("./Index", new { @redirect = "RestaurantAttended" });
             }
             catch (Exception ex)
             {

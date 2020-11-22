@@ -31,9 +31,12 @@ namespace DatePot.Areas.FoodPot.Pages
 
         public RestaurantDetails RestaurantDetails { get; set; }
         //public string FoodType { get; set; }
+        public List<RestaurantFoodTypes> RestaurantFoodTypes { get; set; }
+        public List<RestaurantWhens> RestaurantWhen { get; set; }
         public List<SelectListItem> FoodTypes { get; set; }
         public List<SelectListItem> When { get; set; }
-        public List<SelectListItem> Users { get; set; }
+        public List<SelectListItem> Expenses { get; set; }
+        public List<SelectListItem> Locations { get; set; }
         public async Task<IActionResult> OnGet()
         {
             if (!User.Identity.IsAuthenticated)
@@ -50,11 +53,20 @@ namespace DatePot.Areas.FoodPot.Pages
                     {
                         var foodtypes = fd.GetFoodTypeList(cs);
                         var when = fd.GetWhenList(cs);
+                        var expenses = fd.GetExpenseList(cs);
+                        var locations = fd.GetLocationList(cs);
 
                         //FoodType = FoodTypes.Where(x => x.FoodTypeID == RestaurantDetails.FoodTypeID).FirstOrDefault()?.FoodTypeText;
 
                         FoodTypes = new List<SelectListItem>();
                         When = new List<SelectListItem>();
+                        Expenses = new List<SelectListItem>();
+                        Locations = new List<SelectListItem>();
+                        RestaurantFoodTypes = new List<RestaurantFoodTypes>();
+                        RestaurantWhen = new List<RestaurantWhens>();
+
+                        RestaurantFoodTypes = fd.GetRestaurantFoodTypes(cs, Id);
+                        RestaurantWhen = fd.GetRestaurantWhens(cs, Id);
 
                         foodtypes.ForEach(x =>
                         {
@@ -64,29 +76,29 @@ namespace DatePot.Areas.FoodPot.Pages
                         {
                             When.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenText });
                         });
+                        expenses.ForEach(x =>
+                        {
+                            if (RestaurantDetails.ExpenseID == x.ExpenseID)
+                            {
+                                Expenses.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText, Selected = true });
+                            }
+                            else
+                            {
+                                Expenses.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText });
+                            }
+                        });
+                        locations.ForEach(x =>
+                        {
+                            if (RestaurantDetails.LocationID == x.LocationID)
+                            {
+                                Locations.Add(new SelectListItem { Value = x.LocationID.ToString(), Text = x.LocationText, Selected = true });
+                            }
+                            else
+                            {
+                                Locations.Add(new SelectListItem { Value = x.LocationID.ToString(), Text = x.LocationText });
+                            }
+                        });
 
-                        //FoodTypes.ForEach(x =>
-                        //{
-                        //    if (RestaurantDetails.FoodTypeID == x.FoodTypeID)
-                        //    {
-                        //        FoodTypes.Add(new SelectListItem { Value = x.FoodTypeID.ToString(), Text = x.FoodTypeText, Selected = true });
-                        //    }
-                        //    else
-                        //    {
-                        //        FoodTypes.Add(new SelectListItem { Value = x.FoodTypeID.ToString(), Text = x.FoodTypeText });
-                        //    }
-                        //});
-                        //Whens.ForEach(x =>
-                        //{
-                        //    if (RestaurantDetails.WhenID == x.WhenID)
-                        //    {
-                        //        Whens.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenName, Selected = true });
-                        //    }
-                        //    else
-                        //    {
-                        //        Whens.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenName });
-                        //    }
-                        //});
                     }
                 }
 
@@ -97,18 +109,33 @@ namespace DatePot.Areas.FoodPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<IActionResult> OnPost()
+        public async Task<JsonResult> OnPost(int RestaurantID, string RestaurantName, int ExpenseID, int LocationID, List<int> FoodType, List<int> When)
         {
             try
             {
-                if (ModelState.IsValid == false)
-                {
-                    return Page();
-                }
                 string cs = _config.GetConnectionString("Default");
-                fd.UpdateRestaurant(cs, UpdateRestaurantDetails);
+                fd.UpdateRestaurant(cs, RestaurantID, RestaurantName, ExpenseID, LocationID);
 
-                return RedirectToPage("./View", new { @Id = UpdateRestaurantDetails.RestaurantID, @redirect = "update" });
+                foreach (var item in FoodType)
+                {
+                    if (item != 0)
+                    {
+                        fd.AddRestaurantFoodType(cs, RestaurantID, Convert.ToInt32(item));
+                    }
+
+                }
+                foreach (var item in When)
+                {
+                    if (item != 0)
+                    {
+                        fd.AddRestaurantWhen(cs, RestaurantID, Convert.ToInt32(item));
+                    }
+
+                }
+
+                JsonResult result = null;
+                result = new JsonResult(RestaurantID);
+                return result;
             }
             catch (Exception ex)
             {
@@ -133,5 +160,38 @@ namespace DatePot.Areas.FoodPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
+        public async Task<JsonResult> OnPostDeleteFoodType(int RestaurantFoodTypeID, int RestaurantID)
+        {
+            try
+            {
+                string cs = _config.GetConnectionString("Default");
+                fd.DeleteRestaurantFoodType(cs, RestaurantFoodTypeID);
+
+                JsonResult result = null;
+                result = new JsonResult(RestaurantID);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+        public async Task<JsonResult> OnPostDeleteWhen(int RestaurantWhenID, int RestaurantID)
+        {
+            try
+            {
+                string cs = _config.GetConnectionString("Default");
+                fd.DeleteRestaurantWhen(cs, RestaurantWhenID);
+
+                JsonResult result = null;
+                result = new JsonResult(RestaurantID);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
     }
 }

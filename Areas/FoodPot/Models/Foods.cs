@@ -24,6 +24,10 @@ namespace DatePot.Areas.FoodPot.Models
             public string FoodTypeText { get; set; }
             [Display(Name = "When")]
             public string WhenText { get; set; }
+            public int? ExpenseID { get; set; }
+            public string ExpenseText { get; set; }
+            public int? LocationID { get; set; }
+            public string LocationText { get; set; }
             public List<RandomRestaurant> RandomRestaurant { get; set; }
         }
         public class UserList
@@ -43,8 +47,14 @@ namespace DatePot.Areas.FoodPot.Models
             public List<FoodTypes> FoodTypes { get; set; }
             [Required]
             public List<When> When { get; set; }
+            public List<Expenses> Expenses { get; set; }
+            public List<Locations> Locations { get; set; }
             public int FoodTypeID { get; set; }
             public int WhenID { get; set; }
+            [DisplayName("Expense")]
+            public int ExpenseID { get; set; }
+            [DisplayName("Location")]
+            public int LocationID { get; set; }
         }
         public class FoodTypes
         {
@@ -56,12 +66,38 @@ namespace DatePot.Areas.FoodPot.Models
             public int WhenID { get; set; }
             public string WhenText { get; set; }
         }
+        public class Expenses
+        {
+            public int ExpenseID { get; set; }
+            public string ExpenseText { get; set; }
+        }
+        public class Locations
+        {
+            public int LocationID { get; set; }
+            public string LocationText { get; set; }
+        }
+        public class RestaurantFoodTypes
+        {
+            public int RestaurantFoodTypeID { get; set; }
+            public string FoodTypeText { get; set; }
+        }
+        public class RestaurantWhens
+        {
+            public int RestaurantWhenID { get; set; }
+            public string WhenText { get; set; }
+        }
         public class RestaurantDetails
         {
             [Key]
             public int RestaurantID { get; set; }
             [Display(Name = "Name")]
             public string RestaurantName { get; set; }
+            public string ExpenseText { get; set; }
+            [Display(Name = "Expense")]
+            public int? ExpenseID { get; set; }
+            public string LocationText { get; set; }
+            [Display(Name = "Location")]
+            public int? LocationID { get; set; }
         }
         public class UpdateRestaurantDetails: RestaurantDetails
         {

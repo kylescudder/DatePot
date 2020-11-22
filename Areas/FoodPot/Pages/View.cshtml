@@ -19,6 +19,85 @@
                 }, 250);
             }
         });
+        $(".btnUpdateRestaurant").on("click", function () {
+            var pathname = window.location.pathname;
+            var RestaurantID = $(".hidRestaurantID").val();
+            var RestaurantName = $(".UpdateRestaurantRestaurantName").val();
+            var ExpenseID = $(".UpdateRestaurantExpenseID").val();
+            var LocationID = $(".UpdateRestaurantLocationID").val();
+            var FoodType = $(".UpdateRestaurantFoodType").chosen().val();
+            var When = $(".UpdateRestaurantWhen").chosen().val();
+            $.ajax({
+                dataType: 'json',
+                url: pathname,
+                type: 'POST',
+                data: {
+                    RestaurantID: RestaurantID,
+                    RestaurantName: RestaurantName,
+                    ExpenseID: ExpenseID,
+                    LocationID: LocationID,
+                    FoodType: FoodType,
+                    When: When
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    window.location.replace("View?Id=" + response + "&redirect=update");
+                },
+                error: function (ex) {
+                    alert("AJAX Request Failed, Contact Support");
+                    console.log(ex);
+                }
+            });
+        });
+        $(".btnDeleteFoodType").on("click", function () {
+            var RestaurantID = $(".hidRestaurantID").val();
+            var pathname = '?handler=DeleteFoodType';
+            $.ajax({
+                dataType: 'json',
+                url: pathname,
+                type: 'POST',
+                data: {
+                    RestaurantFoodTypeID: this.id,
+                    RestaurantID: RestaurantID
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    window.location.replace("View?Id=" + response);
+                },
+                error: function () {
+                    alert("AJAX Request Failed, Contact Support");
+                }
+            });
+        });
+        $(".btnDeleteWhen").on("click", function () {
+            var RestaurantID = $(".hidRestaurantID").val();
+            var pathname = '?handler=DeleteWhen';
+            $.ajax({
+                dataType: 'json',
+                url: pathname,
+                type: 'POST',
+                data: {
+                    RestaurantWhenID: this.id,
+                    RestaurantID: RestaurantID
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    window.location.replace("View?Id=" + response);
+                },
+                error: function () {
+                    alert("AJAX Request Failed, Contact Support");
+                }
+            });
+        });
     </script>
 }
 <div class="modal fade savedAlert" tabindex="-1" role="dialog">
@@ -50,7 +129,7 @@ else
                 </svg>
             </button>
             <form method="post" asp-page-handler="Archive">
-                <input asp-for="UpdateRestaurantDetails.RestaurantID" value="@Model.RestaurantDetails.RestaurantID" type="hidden" />
+                <input asp-for="UpdateRestaurantDetails.RestaurantID" value="@Model.RestaurantDetails.RestaurantID" type="hidden" class="hidRestaurantID" />
                 <div class="modal fade ArchiveRestaurant" id="ArchiveRestaurant" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -77,18 +156,74 @@ else
         <div class="card-body">
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input asp-for="UpdateRestaurantDetails.RestaurantID" value="@Model.RestaurantDetails.RestaurantID" type="hidden" />
+                <input asp-for="UpdateRestaurantDetails.RestaurantID" value="@Model.RestaurantDetails.RestaurantID" type="hidden" class="hidRestaurantID" />
                 <div class="form-group">
                     <div class="row">
                         <div class="col-12">
                             <label asp-for="UpdateRestaurantDetails.RestaurantName" class="control-label"></label>
-                            <input asp-for="UpdateRestaurantDetails.RestaurantName" class="form-control" value="@Model.RestaurantDetails.RestaurantName" required="required" type="text" />
+                            <input asp-for="UpdateRestaurantDetails.RestaurantName" class="form-control UpdateRestaurantRestaurantName" value="@Model.RestaurantDetails.RestaurantName" required="required" type="text" />
                             <span asp-validation-for="UpdateRestaurantDetails.RestaurantName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="UpdateRestaurantDetails.ExpenseID" class="control-label"></label>
+                            <select asp-for="UpdateRestaurantDetails.ExpenseID" asp-items="Model.Expenses" class="form-control form-control-chosen UpdateRestaurantExpenseID" value="@Model.RestaurantDetails.ExpenseID" data-placeholder="Choose an expense..." required="required"></select>
+                            <span asp-validation-for="UpdateRestaurantDetails.ExpenseID" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="UpdateRestaurantDetails.LocationID" class="control-label"></label>
+                            <select asp-for="UpdateRestaurantDetails.LocationID" asp-items="Model.Locations" class="form-control form-control-chosen UpdateRestaurantLocationID" value="@Model.RestaurantDetails.LocationID" data-placeholder="Choose a location..." required="required"></select>
+                            <span asp-validation-for="UpdateRestaurantDetails.LocationID" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row pt-3">
+                        <div class="col-12">
+                            <label class="control-label">Type</label>
+                            @foreach (var item in Model.RestaurantFoodTypes)
+                            {
+                            <div class="btn btn-dark btnDeleteFoodType" id="@item.RestaurantFoodTypeID">
+                                @item.FoodTypeText
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash text-danger" " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                </svg>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-12">
+                            <label class="control-label">Add food type</label>
+                            <select asp-items="Model.FoodTypes" class="form-control form-control-chosen UpdateRestaurantFoodType" multiple data-placeholder="Choose a food type..." autocomplete="off"></select>
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-12">
+                            <label class="control-label">When</label>
+                            @foreach (var item in Model.RestaurantWhen)
+                            {
+                            <div class="btn btn-dark btnDeleteWhen" id="@item.RestaurantWhenID">
+                                @item.WhenText
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                </svg>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-12">
+                            <label class="control-label">Add when</label>
+                            <select asp-items="Model.When" class="form-control form-control-chosen UpdateRestaurantWhen" multiple data-placeholder="Choose a when..."></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <input type="button" value="Save" class="btn btn-primary btnUpdateRestaurant" />
                 </div>
             </form>
         </div>

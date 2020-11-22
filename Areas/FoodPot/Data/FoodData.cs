@@ -30,6 +30,8 @@ namespace DatePot.Areas.FoodPot.Data
                     var ws = new RestaurantDetails();
                     ws.RestaurantID = reader.GetInt32("RestaurantID");
                     ws.RestaurantName = reader.GetString("RestaurantName");
+                    ws.ExpenseID = reader.GetInt16("ExpenseID");
+                    ws.LocationID = reader.GetInt16("LocationID");
                     wsl.Add(ws);
                 }
                 reader.Close();
@@ -77,7 +79,48 @@ namespace DatePot.Areas.FoodPot.Data
             con.Close();
             return (List<When>)wsl;
         }
-        public void UpdateRestaurant(string cs, UpdateRestaurantDetails updatefiledetails)
+        public List<Expenses> GetExpenseList(string cs)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            string sql = "CALL spGetExpenseList";
+            using var cmd = new MySqlCommand(sql, con);
+            IList<Expenses> wsl = new List<Expenses>();
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var ws = new Expenses();
+                ws.ExpenseID = reader.GetInt32("ExpenseID");
+                ws.ExpenseText = reader.GetString("ExpenseText");
+                wsl.Add(ws);
+            }
+            reader.Close();
+            con.Close();
+            return (List<Expenses>)wsl;
+        }
+        public List<Locations> GetLocationList(string cs)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            string sql = "CALL spGetLocationList";
+            using var cmd = new MySqlCommand(sql, con);
+            IList<Locations> wsl = new List<Locations>();
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var ws = new Locations();
+                ws.LocationID = reader.GetInt32("LocationID");
+                ws.LocationText = reader.GetString("LocationText");
+                wsl.Add(ws);
+            }
+            reader.Close();
+            con.Close();
+            return (List<Locations>)wsl;
+        }
+
+        public void UpdateRestaurant(string cs, int RestaurantID, string RestaurantName, int ExpenseID, int LocationID)
         {
             using var con = new MySqlConnection(cs);
             con.Open();
@@ -88,8 +131,10 @@ namespace DatePot.Areas.FoodPot.Data
                 cmd.CommandText = "spUpdateRestaurant"; // The name of the Stored Proc
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@RestaurantID", updatefiledetails.RestaurantID);
-                cmd.Parameters.AddWithValue("@RestaurantName", updatefiledetails.RestaurantName);
+                cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
+                cmd.Parameters.AddWithValue("@RestaurantName", RestaurantName);
+                cmd.Parameters.AddWithValue("@ExpenseID", ExpenseID);
+                cmd.Parameters.AddWithValue("@LocationID", LocationID);
                 cmd.ExecuteNonQuery();
 
                 con.Close();
@@ -127,6 +172,8 @@ namespace DatePot.Areas.FoodPot.Data
                 var ws = new RestaurantList();
                 ws.RestaurantID = reader.GetInt32("RestaurantID");
                 ws.RestaurantName = reader.GetString("RestaurantName");
+                ws.ExpenseText = reader.GetString("ExpenseText");
+                ws.LocationText = reader.GetString("LocationText");
                 ws.FoodTypeText = reader.GetString("FoodTypeText");
                 ws.WhenText = reader.GetString("WhenText");
                 wsl.Add(ws);
@@ -155,7 +202,7 @@ namespace DatePot.Areas.FoodPot.Data
             return (List<UserList>)wsl;
         }
 
-        public int AddRestaurant(string cs, string RestaurantName)
+        public int AddRestaurant(string cs, string RestaurantName, int ExpenseID, int LocationID)
         {
             using var con = new MySqlConnection(cs);
             con.Open();
@@ -167,6 +214,8 @@ namespace DatePot.Areas.FoodPot.Data
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantName", RestaurantName);
+                cmd.Parameters.AddWithValue("@ExpenseID", ExpenseID);
+                cmd.Parameters.AddWithValue("@LocationID", LocationID);
                 cmd.Parameters.Add("@RestaurantID", MySqlDbType.Int32);
                 cmd.Parameters["@RestaurantID"].Direction = ParameterDirection.Output; // from System.Data
                 cmd.ExecuteNonQuery();
@@ -269,6 +318,8 @@ namespace DatePot.Areas.FoodPot.Data
                 var ws = new RandomRestaurant();
                 ws.RestaurantID = reader.GetInt32("RestaurantID");
                 ws.RestaurantName = reader.GetString("RestaurantName");
+                ws.ExpenseText = reader.GetString("ExpenseText");
+                ws.LocationText = reader.GetString("LocationText");
                 wsl.Add(ws);
             }
             reader.Close();
@@ -324,5 +375,92 @@ namespace DatePot.Areas.FoodPot.Data
                 con.Close();
             }
         }
+        public List<RestaurantFoodTypes> GetRestaurantFoodTypes(string cs, int RestaurantID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spGetRestaurantFoodTypes"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
+                IList<RestaurantFoodTypes> wsl = new List<RestaurantFoodTypes>();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var ws = new RestaurantFoodTypes();
+                    ws.RestaurantFoodTypeID = reader.GetInt32("RestaurantFoodTypeID");
+                    ws.FoodTypeText = reader.GetString("FoodType");
+
+                    wsl.Add(ws);
+                }
+                reader.Close();
+                return (List<RestaurantFoodTypes>)wsl;
+
+            }
+        }
+        public List<RestaurantWhens> GetRestaurantWhens(string cs, int RestaurantID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spGetRestaurantWhens"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
+                IList<RestaurantWhens> wsl = new List<RestaurantWhens>();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var ws = new RestaurantWhens();
+                    ws.RestaurantWhenID = reader.GetInt32("RestaurantsWhensID");
+                    ws.WhenText = reader.GetString("WhenText");
+
+                    wsl.Add(ws);
+                }
+                reader.Close();
+                return (List<RestaurantWhens>)wsl;
+
+            }
+        }
+        public void DeleteRestaurantFoodType(string cs, int RestaurantFoodTypeID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spDeleteRestaurantFoodType"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@RestaurantFoodTypesID", RestaurantFoodTypeID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+        public void DeleteRestaurantWhen(string cs, int RestaurantWhenID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spDeleteRestaurantWhen"; // The name of the Stored Proc
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@RestaurantWhensID", RestaurantWhenID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+
     }
 }
