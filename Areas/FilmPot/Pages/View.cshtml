@@ -205,7 +205,7 @@ else
                     </div>
                     <div class="row pt-3">
                         <div class="col-12">
-                            <label class="control-label">Genre</label>
+                            <label class="control-label">Genres</label>
                             @foreach (var item in Model.FilmGenres)
                             {
                                 <div class="btn btn-dark btnDeleteGenre" id="@item.FilmGenreID">
@@ -226,7 +226,7 @@ else
                     </div>
                     <div class="row pt-2">
                         <div class="col-12">
-                            <label class="control-label"></label>
+                            <label class="control-label">Directors</label>
                             @foreach (var item in Model.FilmDirectors)
                             {
                                 <div class="btn btn-dark btnDeleteDirector" id="@item.FilmDirectorID">
