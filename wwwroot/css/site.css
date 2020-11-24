@@ -79,3 +79,63 @@ body {
 .section:hover {
     text-decoration: none;
 }
+.btnAddRestaurant {
+    background-color: #e8a79a !important;
+    border: none !important;
+}
+.btnAddFoodType {
+    background-color: #e8a79a !important;
+    border: none !important;
+}
+.btnAddWhen {
+    background-color: #e8a79a !important;
+    border: none !important;
+}
+.btnRandomRestaurant {
+    background-color: #e8a79a !important;
+    border: none !important;
+}
+.table .thead-dark th{
+    background-color: #eb6e67 !important;
+    border: none !important;
+}
+
+tr.foodrows.even {
+        background-color: #fad0be !important;
+        border: none !important;
+    }
+    tr.foodrows.odd {
+        background-color: #f6dbd8 !important;
+        border: none !important;
+    }
+
+
+.btnAddFilm {
+    background-color: #51bbbb !important;
+    border: none !important;
+}
+.btnAddGenre {
+    background-color: #51bbbb !important;
+    border: none !important;
+}
+.btnAddDirector {
+    background-color: #51bbbb !important;
+    border: none !important;
+}
+.btnRandomFilm {
+    background-color: #51bbbb !important;
+    border: none !important;
+}
+.table .thead-darkfilmtable th{
+    background-color: #874f5e !important;
+    border: none !important;
+}
+
+.even {
+    background-color: #eaecd5 !important;
+    border: none !important;
+}
+.odd {
+    background-color: #e8c5c5 !important;
+    border: none !important;
+}
