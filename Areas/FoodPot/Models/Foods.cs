@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DatePot.Areas.FoodPot.Models
 {
-    public class Identity
+    public class Food
     {
         public class RestaurantIndex
         {

@@ -10,8 +10,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MySqlConnector;
-using static DatePot.Areas.FoodPot.Models.Identity;
+using static DatePot.Areas.FoodPot.Models.Food;
 using DatePot.Areas.FoodPot.Data;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace DatePot.Areas.FoodPot.Pages
 {
@@ -34,7 +35,7 @@ namespace DatePot.Areas.FoodPot.Pages
         public NewRestaurant NewRestaurant { get; set; }
         public NewFoodType NewFoodType { get; set; }
         public NewWhen NewWhen { get; set; }
-        public List<RandomRestaurant> RandomRestaurant { get; set; }
+        public List<RandomRestaurant> RandomRestaurants { get; set; }
         public ActionResult OnGet()
          {
             if (!User.Identity.IsAuthenticated)
@@ -71,8 +72,6 @@ namespace DatePot.Areas.FoodPot.Pages
                 {
                     Location.Add(new SelectListItem { Value = x.LocationID.ToString(), Text = x.LocationText });
                 });
-
-                RandomRestaurant = fd.GetRandomRestaurant(cs);
 
                 return Page();
             }
@@ -155,5 +154,23 @@ namespace DatePot.Areas.FoodPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
+        public PartialViewResult OnGetRandomRestaurant(int WhenID)
+        {
+            try
+            {
+                string cs = _config.GetConnectionString("Default");
+                RandomRestaurants = fd.GetRandomRestaurant(cs, WhenID);
+                return new PartialViewResult
+                {
+                    ViewName = "_RandomRestaurant",
+                    ViewData = new ViewDataDictionary<List<RandomRestaurant>>(ViewData, RandomRestaurants)
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
     }
 }
