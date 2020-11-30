@@ -1,0 +1,149 @@
+﻿@page
+@model DatePot.Areas.CoffeePot.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<div class="row">
+    <div class="col-12">
+        <button type="button" class="btn btn-primary btnAddCoffeeModal" data-toggle="modal" data-target="#AddCoffeeModal">Add Coffee</button>
+    </div>
+</div>
+<div class="row pt-4">
+    <div class="col-12">
+        <table id="CoffeeTable" class="table table-striped table-stripedCoffeePot table-borderless ClientSearchTable Coffeerow">
+            <thead class="thead-darkCoffeetable">
+                <tr>
+                    <th>Name</th>
+                    <th>Kyle Taste</th>
+                    <th>Rhiann Taste</th>
+                    <th>Kyle Experience</th>
+                    <th>Rhiann Experience</th>
+                    <th>Average Rating</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Coffees)
+                {
+                <tr>
+                    <td>
+                        @item.CoffeeName
+                    </td>
+                    <td>
+                        <input value="@item.KyleTaste" class="starRating rating-loading" data-size="xs">
+                    </td>
+                    <td>
+                        <input value="@item.RhiannTaste" class="starRating rating-loading" data-size="xs">
+                    </td>
+                    <td>
+                        <input value="@item.KyleExperience" class="starRating rating-loading" data-size="xs">
+                    </td>
+                    <td>
+                        <input value="@item.RhiannExperience" class="starRating rating-loading" data-size="xs">
+                    </td>
+                    <td>
+                        <input value="@item.AvgRating" class="starRating rating-loading" data-size="xs">
+                    </td>
+                    <td>
+                        <a asp-page="/View" asp-route-Id="@item.CoffeeID">View</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="AddCoffeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add coffee place</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div lcass="form-group">
+                        <div class="row">
+                            <div class="col-12">
+                                <label asp-for="NewCoffee.CoffeeName" class="control-label"></label>
+                                <input asp-for="NewCoffee.CoffeeName" class="form-control NewCoffeeCoffeeName" required="required" type="text" />
+                                <span asp-validation-for="NewCoffee.CoffeeName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="button" value="Add" class="btn btn-primary btnAddCoffee" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".starRating").rating({
+                displayOnly: true,
+                step: 0.5,
+                showCaption: false,
+                showClear: false,
+                theme: 'krajee-svg'
+            });
+            $('.form-control-chosen').chosen();
+
+            $('#CoffeeTable').dataTable({
+                "aoColumns": [
+                    { "sType": "html" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "html" }
+                ],
+                "columnDefs": [
+                    { "targets": 0 },
+                    { "targets": 1 },
+                    { "targets": 2 },
+                    { "targets": 3 },
+                    { "targets": 4 },
+                    { "targets": 5 },
+                    { orderable: false, "targets": 6 }
+                ],
+                "pagingType": "numbers",
+                "paging": false,
+                "order": [0, 'desc'],
+                "language": {
+                    "emptyTable": "No data available in table"
+                },
+                stateSave: true
+            });
+        });
+        $(".btnAddCoffee").on("click", function () {
+            var pathname = window.location.pathname;
+            var CoffeeName = $(".NewCoffeeCoffeeName").val();
+            $.ajax({
+                dataType: 'json',
+                url: pathname,
+                type: 'POST',
+                data: {
+                    CoffeeName: CoffeeName
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    window.location.replace("CoffeePot/View?Id=" + response);
+                },
+                error: function () {
+                    alert("AJAX Request Failed, Contact Support");
+                }
+            });
+        });
+    </script>
+}
