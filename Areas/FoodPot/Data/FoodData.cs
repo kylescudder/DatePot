@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using static DatePot.Areas.FoodPot.Models.Identity;
+using static DatePot.Areas.FoodPot.Models.Food;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
@@ -11,6 +11,7 @@ namespace DatePot.Areas.FoodPot.Data
 {
     public class FoodData
     {
+        public List<RandomRestaurant> RandomRestaurants { get; set; }
         public List<RestaurantDetails> GetRestaurantDetails(string cs, int RestaurantID)
         {
             using var con = new MySqlConnection(cs);
@@ -303,13 +304,13 @@ namespace DatePot.Areas.FoodPot.Data
                 return lParam;
             }
         }
-        public List<RandomRestaurant> GetRandomRestaurant(string cs)
+        public List<RandomRestaurant> GetRandomRestaurant(string cs, int WhenID)
         {
 
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string sql = "CALL spRandomRestaurant";
+            string sql = "CALL spRandomRestaurant (" + WhenID + ")";
             using var cmd = new MySqlCommand(sql, con);
             IList<RandomRestaurant> wsl = new List<RandomRestaurant>();
             var reader = cmd.ExecuteReader();
@@ -323,6 +324,7 @@ namespace DatePot.Areas.FoodPot.Data
                 wsl.Add(ws);
             }
             reader.Close();
+            RandomRestaurants = (List<RandomRestaurant>)wsl;
             return (List<RandomRestaurant>)wsl;
         }
         public void RestaurantWatched(string cs, int RestaurantID)

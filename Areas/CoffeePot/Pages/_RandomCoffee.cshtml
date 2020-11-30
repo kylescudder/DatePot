@@ -1,0 +1,29 @@
+﻿@model List<DatePot.Areas.CoffeePot.Models.Coffees.RandomCoffee>
+<form method="post" asp-page-handler="RestaurantAttended">
+    @if (Model.Count > 0)
+    {
+        <div class="modal-body">
+            @foreach (var item in Model)
+            {
+
+                <input value="@item.CoffeeID" type="hidden" name="RestaurantID" />
+                <p>
+                    Today you guys are going to <strong>@item.CoffeeName</strong> Enjoy! ☕
+                </p>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick="return RandomCoffee();">No, another!!</button>
+            <input type="submit" value="Let's do it!" class="btn btn-primary" />
+        </div>
+    }
+    else
+    {
+        <div class="modal-body">
+            <p>Looks like you are out of places to try. Add more to the Coffee Pot and try again!</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Will do boss</button>
+        </div>
+    }
+</form>

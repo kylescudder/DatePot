@@ -99,15 +99,14 @@ body {
     background-color: #eb6e67 !important;
     border: none !important;
 }
-
-tr.foodrows.even {
-        background-color: #fad0be !important;
-        border: none !important;
-    }
-    tr.foodrows.odd {
-        background-color: #f6dbd8 !important;
-        border: none !important;
-    }
+.table-stripedFoodPot tbody tr:nth-of-type(odd) {
+    background-color: #f6dbd8 !important;
+    border: none !important;
+}
+.table-stripedFoodPot tbody tr:nth-of-type(even) {
+    background-color: #fad0be !important;
+    border: none !important;
+}
 
 
 .btnAddFilm {
@@ -130,12 +129,14 @@ tr.foodrows.even {
     background-color: #874f5e !important;
     border: none !important;
 }
-
-.even {
+.table-stripedFilmPot tbody tr:nth-of-type(odd){
+    background-color: #e8c5c5 !important;
+    border: none !important;
+}
+.table-stripedFilmPot tbody tr:nth-of-type(even) {
     background-color: #eaecd5 !important;
     border: none !important;
 }
-.odd {
-    background-color: #e8c5c5 !important;
-    border: none !important;
+.text-black {
+    color: black !important;
 }
