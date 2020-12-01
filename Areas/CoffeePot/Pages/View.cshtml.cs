@@ -53,13 +53,45 @@ namespace DatePot.Areas.CoffeePot.Pages
             try
             {
                 string cs = _config.GetConnectionString("Default");
+                int KyleTaste;
+                int RhiannTaste;
+                int KyleExperience;
+                int RhiannExperience;
+                if (Request.Form["UpdateCoffeeDetails.KyleTaste"].ToString() == "")
+                {
+                    KyleTaste = 0;
+                } else
+                {
+                    KyleTaste = Convert.ToInt16(Request.Form["UpdateCoffeeDetails.KyleTaste"]);
+                }
+                if (Request.Form["UpdateCoffeeDetails.RhiannTaste"].ToString() == "")
+                {
+                    RhiannTaste = 0;
+                } else
+                {
+                    RhiannTaste = Convert.ToInt16(Request.Form["UpdateCoffeeDetails.RhiannTaste"]);
+                }
+                if (Request.Form["UpdateCoffeeDetails.KyleExperience"].ToString() == "")
+                {
+                    KyleExperience = 0;
+                } else
+                {
+                    KyleExperience = Convert.ToInt16(Request.Form["UpdateCoffeeDetails.KyleExperience"]);
+                }
+                if (Request.Form["UpdateCoffeeDetails.RhiannExperience"].ToString() == "")
+                {
+                    RhiannExperience = 0;
+                } else
+                {
+                    RhiannExperience = Convert.ToInt16(Request.Form["UpdateCoffeeDetails.RhiannExperience"]);
+                }
                 fd.UpdateCoffee(cs, Convert.ToInt16(Request.Form["UpdateCoffeeDetails.CoffeeID"]),
                     Request.Form["UpdateCoffeeDetails.CoffeeName"].ToString(),
-                    Convert.ToInt16(Request.Form["UpdateCoffeeDetails.KyleTaste"]),
-                    Convert.ToInt16(Request.Form["UpdateCoffeeDetails.RhiannTaste"]),
-                    Convert.ToInt16(Request.Form["UpdateCoffeeDetails.KyleExperience"]),
-                    Convert.ToInt16(Request.Form["UpdateCoffeeDetails.RhiannExperience"]));
-                return RedirectToPage("./View", new { @Id = Convert.ToInt16(Request.Form["UpdateCoffeeDetails.CoffeeID"]), @redirect = "update"  });
+                    KyleTaste,
+                    RhiannTaste,
+                    KyleExperience,
+                    RhiannExperience);
+                return RedirectToPage("./View", new { @Id = Request.Form["UpdateCoffeeDetails.CoffeeID"].ToString(), @redirect = "update"  });
             }
             catch (Exception ex)
             {
