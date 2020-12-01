@@ -140,3 +140,22 @@ body {
 .text-black {
     color: black !important;
 }
+
+
+.btnAddCoffeeModal {
+    background-color: #fab83c !important;
+    border: none !important;
+}
+.table .thead-darkCoffeetable {
+    background-color: #c2905e !important;
+    border: none !important;
+}
+.table-stripedCoffeePot tbody tr:nth-of-type(odd) {
+    background-color: #fef6e3 !important;
+    border: none !important;
+}
+
+.table-stripedCoffeePot tbody tr:nth-of-type(even) {
+    background-color: #fee7c8 !important;
+    border: none !important;
+}
