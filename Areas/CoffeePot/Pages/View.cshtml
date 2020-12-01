@@ -56,7 +56,7 @@ else
                 </svg>
             </button>
             <form method="post" asp-page-handler="Archive">
-                <input asp-for="UpdateCoffeeDetails.CoffeeID" value="@Model.CoffeeDetails.CoffeeID" type="hidden" />
+                <input value="@Model.CoffeeDetails.CoffeeID" type="hidden" />
                 <div class="modal fade ArchiveCoffee" id="ArchiveCoffee" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
