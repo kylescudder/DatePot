@@ -10,10 +10,10 @@
             @foreach (var item in Model.Users)
             {
 
-                <button type="button" class="btn btn-primary btnAddFilm" data-toggle="modal" data-target="#AddFilmModal" data-adder="@item.UserName">Add film by @item.UserName</button>
+                <button type="button" class="btn btn-primary btnAddFilmModal btnAddGenre pb-2" data-toggle="modal" data-target="#AddFilmModal" data-adder="@item.UserName">Add film by @item.UserName</button>
             }
         }
-        <button type="button" class="btn btn-primary float-right btnRandomFilm" data-toggle="modal" data-target="#RandomFilmModal">Give me a film</button>
+        <button type="button" class="btn btn-primary float-right btnRandomFilm btnAddGenre" data-toggle="modal" data-target="#RandomFilmModal">Give me a film</button>
     </div>
 </div>
 <div class="row pt-2">
