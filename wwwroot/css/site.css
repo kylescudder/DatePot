@@ -159,3 +159,6 @@ body {
     background-color: #fee7c8 !important;
     border: none !important;
 }
+.mainPB {
+    padding-bottom: 5rem;
+}
