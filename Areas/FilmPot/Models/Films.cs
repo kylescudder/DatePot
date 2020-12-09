@@ -54,7 +54,7 @@ namespace DatePot.Areas.FilmPot.Models
             [DisplayName("Release Date")]
             public DateTime ReleaseDate { get; set; }
             [Range(1, int.MaxValue, ErrorMessage = "Please select a genre from the list")]
-            [DisplayName("Genre")]
+            [DisplayName("Watched")]
             public bool Watched { get; set; }
             public List<Genres> Genres { get; set; }
             [Required]
