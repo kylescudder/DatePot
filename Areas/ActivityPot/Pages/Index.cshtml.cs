@@ -25,14 +25,13 @@ namespace DatePot.Areas.ActivityPot.Pages
             _config = config;
         }
         ActivityData fd = new ActivityData();
-        public List<FilmList> Films { get; set; }
-        public List<UserList> Users { get; set; }
-        public List<SelectListItem> Genre { get; set; }
+        public List<ActivityList> Activitys { get; set; }
+        public List<SelectListItem> Expense { get; set; }
+        public List<SelectListItem> ActivityType { get; set; }
         [BindProperty]
-        public NewFilm NewFilm { get; set; }
-        public NewGenre NewGenre { get; set; }
-        public NewDirector NewDirector { get; set; }
-        public List<RandomFilm> RandomFilm { get; set; }
+        public NewActivity NewActivity { get; set; }
+        public NewActivityType NewActivityType { get; set; }
+        public List<RandomActivity> RandomActivity { get; set; }
         public ActionResult OnGet()
          {
             if (!User.Identity.IsAuthenticated)
@@ -42,18 +41,17 @@ namespace DatePot.Areas.ActivityPot.Pages
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                Films = fd.GetFilmList(cs);
-                Users = fd.GetUserList(cs);
-                var genres = fd.GetGenreList(cs);
+                Activitys = fd.GetActivityList(cs);
+                var activitytypes = fd.GetyActivityTypeList(cs);
 
-                Genre = new List<SelectListItem>();
+                ActivityType = new List<SelectListItem>();
 
-                genres.ForEach(x =>
+                activitytypes.ForEach(x =>
                 {
-                    Genre.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText });
+                    ActivityType.Add(new SelectListItem { Value = x.ActivityTypeID.ToString(), Text = x.ActivityType });
                 });
 
-                RandomFilm = fd.GetRandomFilm(cs);
+                RandomActivity = fd.GetRandomActivity(cs);
 
                 return Page();
             }
@@ -71,9 +69,9 @@ namespace DatePot.Areas.ActivityPot.Pages
                     return Page();
                 }
                 string cs = _config.GetConnectionString("Default");
-                int FilmID = fd.AddFilm(cs, NewFilm);
+                int ActivityID = fd.AddActivity(cs, NewActivity);
 
-                return RedirectToPage("./View", new { Id = FilmID });
+                return RedirectToPage("./View", new { Id = ActivityID });
             }
             catch (Exception ex)
             {
@@ -114,17 +112,17 @@ namespace DatePot.Areas.ActivityPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<IActionResult> OnPostAddFilm()
+        public async Task<IActionResult> OnPostAddActivity()
         {
             try
             {
                 string cs = _config.GetConnectionString("Default");
 
-                fd.FilmWatched(cs, Convert.ToInt32(Request.Form["FilmID"]));
+                fd.ActivityWatched(cs, Convert.ToInt32(Request.Form["ActivityID"]));
 
                 //return RedirectToPage("./Index", new { @redirect = "directordupe", @value = Request.Form["NewDirector.DirectorText"].ToString() });
 
-                return RedirectToPage("./Index", new { @redirect = "FilmWatched" });
+                return RedirectToPage("./Index", new { @redirect = "ActivityWatched" });
             }
             catch (Exception ex)
             {

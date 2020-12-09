@@ -11,7 +11,7 @@ namespace DatePot.Areas.ActivityPot.Data
 {
     public class ActivityData
     {
-        public List<FilmDetails> GetFilmDetails(string cs, int FilmID)
+        public List<ActivityDetails> GetActivityDetails(string cs, int ActivityID)
         {
             using var con = new MySqlConnection(cs);
             con.Open();
@@ -19,70 +19,50 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetFilmDetails"; // The name of the Stored Proc
+                cmd.CommandText = "spGetActivityDetails"; // The name of the Stored Proc
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@FilmID", FilmID);
-                IList<FilmDetails> wsl = new List<FilmDetails>();
+                cmd.Parameters.AddWithValue("@ActivityID", ActivityID);
+                IList<ActivityDetails> wsl = new List<ActivityDetails>();
                 var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    var ws = new FilmDetails();
-                    ws.FilmID = reader.GetInt32("FilmID");
-                    ws.FilmName = reader.GetString("FilmName");
-                    ws.ReleaseDate = reader.GetDateTime("ReleaseDate");
-                    ws.GenreID = reader.GetInt32("GenreID");
-                    ws.DirectorID = reader.GetInt32("DirectorID");
-                    ws.Watched = reader.GetBoolean("Watched");
-                    ws.AddedByID = reader.GetInt32("AddedByID");
+                    var ws = new ActivityDetails();
+                    ws.ActivityID = reader.GetInt32("ActivityID");
+                    ws.ActivityName = reader.GetString("ActivityName");
+                    ws.Location = reader.GetString("Location");
+                    ws.Description = reader.GetString("Description");
+                    ws.ExpenseID = reader.GetInt32("ExpenseID");
+                    ws.Prebook = reader.GetBoolean("Prebook");
+                    ws.ActivityTypeID = reader.GetInt32("ActivityTypeID");
                     wsl.Add(ws);
                 }
                 reader.Close();
-                return (List<FilmDetails>)wsl;
+                return (List<ActivityDetails>)wsl;
 
             }
         }
-        public List<Genres> GetGenreList(string cs)
+        public List<ActivityTypes> GetyActivityTypeList(string cs)
         {
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string sql = "CALL spGetGenreList";
+            string sql = "CALL spGetActivityTypeList";
             using var cmd = new MySqlCommand(sql, con);
-            IList<Genres> wsl = new List<Genres>();
+            IList<ActivityTypes> wsl = new List<ActivityTypes>();
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                var ws = new Genres();
-                ws.GenreID = reader.GetInt32("GenreID");
-                ws.GenreText = reader.GetString("GenreText");
+                var ws = new ActivityTypes();
+                ws.ActivityTypeID = reader.GetInt32("ActivityTypeID");
+                ws.ActivityType = reader.GetString("ActivityType");
                 wsl.Add(ws);
             }
             reader.Close();
             con.Close();
-            return (List<Genres>)wsl;
+            return (List<ActivityTypes>)wsl;
         }
-        public List<Directors> GetDirectorsList(string cs)
-        {
-            using var con = new MySqlConnection(cs);
-            con.Open();
-
-            string sql = "CALL spGetDirectorsList";
-            using var cmd = new MySqlCommand(sql, con);
-            IList<Directors> wsl = new List<Directors>();
-            var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                var ws = new Directors();
-                ws.DirectorID = reader.GetInt32("DirectorID");
-                ws.DirectorName = reader.GetString("DirectorName");
-                wsl.Add(ws);
-            }
-            reader.Close();
-            con.Close();
-            return (List<Directors>)wsl;
-        }
-        public void UpdateFilm(string cs, UpdateFilmDetails updatefiledetails)
+        public void UpdateActivity(string cs, UpdateActivityDetails updatefiledetails)
         {
             using var con = new MySqlConnection(cs);
             con.Open();
@@ -90,28 +70,26 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spUpdateFilm"; // The name of the Stored Proc
+                cmd.CommandText = "spUpdateActivity"; // The name of the Stored Proc
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@FilmID", updatefiledetails.FilmID);
-                cmd.Parameters.AddWithValue("@FilmName", updatefiledetails.FilmName);
-                cmd.Parameters.AddWithValue("@ReleaseDate", updatefiledetails.ReleaseDate);
-                cmd.Parameters.AddWithValue("@GenreID", updatefiledetails.GenreID);
+                cmd.Parameters.AddWithValue("@ActivityID", updatefiledetails.ActivityID);
+                cmd.Parameters.AddWithValue("@ActivityName", updatefiledetails.ActivityName);
+                cmd.Parameters.AddWithValue("@Location", updatefiledetails.Location);
+                cmd.Parameters.AddWithValue("@Description", updatefiledetails.Description);
                 MySqlParameter paramWatched = new MySqlParameter
                 {
                     ParameterName = "@Watched",
                     MySqlDbType = MySqlDbType.Bit,
-                    Value = updatefiledetails.Watched
+                    Value = updatefiledetails.Prebook
                 };
                 cmd.Parameters.Add(paramWatched);
-                cmd.Parameters.AddWithValue("@AddedByID", updatefiledetails.AddedByID);
-                cmd.Parameters.AddWithValue("@DirectorID", updatefiledetails.DirectorID);
                 cmd.ExecuteNonQuery();
 
                 con.Close();
             }
         }
-        public void ArchiveFilm(string cs, int FilmID)
+        public void ArchiveActivity(string cs, int ActivityID)
         {
             using var con = new MySqlConnection(cs);
             con.Open();
@@ -119,65 +97,44 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spArchiveFilm"; // The name of the Stored Proc
+                cmd.CommandText = "spArchiveActivity"; // The name of the Stored Proc
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                cmd.Parameters.AddWithValue("@ActivityID", ActivityID);
                 cmd.ExecuteNonQuery();
 
                 con.Close();
             }
         }
-        public List<FilmList> GetFilmList(string cs)
+        public List<ActivityList> GetActivityList(string cs)
         {
 
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string sql = "CALL spGetFilmList";
+            string sql = "CALL spGetActivityList";
             using var cmd = new MySqlCommand(sql, con);
-            IList<FilmList> wsl = new List<FilmList>();
+            IList<ActivityList> wsl = new List<ActivityList>();
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                var ws = new FilmList();
-                ws.FilmID = reader.GetInt32("FilmID");
-                ws.FilmName = reader.GetString("FilmName");
-                ws.ReleaseDate = reader.GetString("ReleaseDate");
-                ws.AddedDate = reader.GetString("AddedDate");
-                ws.GenreText = reader.GetString("GenreText");
-                ws.Watched = reader.GetString("Watched");
-                ws.UserName = reader.GetString("UserName");
+                var ws = new ActivityList();
+                ws.ActivityID = reader.GetInt32("ActivityID");
+                ws.ActivityName = reader.GetString("ActivityName");
+                ws.Location = reader.GetString("Location");
+                ws.Description = reader.GetString("Description");
+                ws.ExpenseText = reader.GetString("ExpenseText");
+                ws.ActivityType = reader.GetString("ActivityType");
+                ws.Prebook = reader.GetString("Prebook");
                 wsl.Add(ws);
             }
             reader.Close();
-            return (List<FilmList>)wsl;
+            return (List<ActivityList>)wsl;
         }
-        public List<UserList> GetUserList(string cs)
-        {
-
-            using var con = new MySqlConnection(cs);
-            con.Open();
-
-            string sql = "CALL spGetUserList";
-            using var cmd = new MySqlCommand(sql, con);
-            IList<UserList> wsl = new List<UserList>();
-            var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                var ws = new UserList();
-                ws.UserID = reader.GetInt32("UserID");
-                ws.UserName = reader.GetString("UserName");
-                wsl.Add(ws);
-            }
-            reader.Close();
-            return (List<UserList>)wsl;
-        }
-
-        public int AddFilm(string cs, NewFilm newfilm)
+        public int AddActivity(string cs, NewActivity newActivity)
         {
             int AddedByID = 0;
-            if (newfilm.AddersName == "Kyle")
+            if (newActivity.AddersName == "Kyle")
             {
                 AddedByID = 1;
             }
@@ -188,19 +145,18 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddFilm"; // The name of the Stored Proc
+                cmd.CommandText = "spAddActivity"; // The name of the Stored Proc
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@FilmName", newfilm.FilmName);
-                cmd.Parameters.AddWithValue("@ReleaseDate", newfilm.ReleaseDate);
-                cmd.Parameters.AddWithValue("@AddedDate", newfilm.AddedDate);
-                cmd.Parameters.AddWithValue("@GenreID", newfilm.GenreID);
-                cmd.Parameters.AddWithValue("@Watched", newfilm.Watched);
-                cmd.Parameters.AddWithValue("@AddedByID", AddedByID);
-                cmd.Parameters.Add("@FilmID", MySqlDbType.Int32);
-                cmd.Parameters["@FilmID"].Direction = ParameterDirection.Output; // from System.Data
+                cmd.Parameters.AddWithValue("@ActivityName", newActivity.ActivityName);
+                cmd.Parameters.AddWithValue("@Location", newActivity.Location);
+                cmd.Parameters.AddWithValue("@Description", newActivity.Description);
+                cmd.Parameters.AddWithValue("@ExpenseID", newActivity.ExpenseID);
+                cmd.Parameters.AddWithValue("@Prebook", newActivity.Prebook);
+                cmd.Parameters.Add("@ActivityID", MySqlDbType.Int32);
+                cmd.Parameters["@ActivityID"].Direction = ParameterDirection.Output; // from System.Data
                 cmd.ExecuteNonQuery();
-                Object obj = cmd.Parameters["@FilmID"].Value;
+                Object obj = cmd.Parameters["@ActivityID"].Value;
                 var lParam = (Int32)obj;    // more useful datatype
                 con.Close();
                 return lParam;
@@ -284,28 +240,28 @@ namespace DatePot.Areas.ActivityPot.Data
                 return lParam;
             }
         }
-        public List<RandomFilm> GetRandomFilm(string cs)
+        public List<RandomActivity> GetRandomActivity(string cs)
         {
 
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string sql = "CALL spRandomFilm";
+            string sql = "CALL spRandomActivity";
             using var cmd = new MySqlCommand(sql, con);
-            IList<RandomFilm> wsl = new List<RandomFilm>();
+            IList<RandomActivity> wsl = new List<RandomActivity>();
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                var ws = new RandomFilm();
-                ws.FilmID = reader.GetInt32("FilmID");
-                ws.FilmName = reader.GetString("FilmName");
-                ws.AddersName = reader.GetString("AddersName");
+                var ws = new RandomActivity();
+                ws.ActivityID = reader.GetInt32("ActivityID");
+                ws.ActivityName = reader.GetString("ActivityName");
+                ws.Location = reader.GetString("Location");
                 wsl.Add(ws);
             }
             reader.Close();
-            return (List<RandomFilm>)wsl;
+            return (List<RandomActivity>)wsl;
         }
-        public void FilmWatched(string cs, int FilmID)
+        public void ActivityWatched(string cs, int ActivityID)
         {
             using var con = new MySqlConnection(cs);
             con.Open();
@@ -313,10 +269,10 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spFilmWatched"; // The name of the Stored Proc
+                cmd.CommandText = "spActivityWatched"; // The name of the Stored Proc
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                cmd.Parameters.AddWithValue("@ActivityID", ActivityID);
                 cmd.ExecuteNonQuery();
                 con.Close();
             }

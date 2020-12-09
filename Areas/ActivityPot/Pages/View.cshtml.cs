@@ -26,13 +26,11 @@ namespace DatePot.Areas.ActivityPot.Pages
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
         [BindProperty]
-        public UpdateFilmDetails UpdateFilmDetails { get; set; }
+        public UpdateActivityDetails UpdateActivityDetails { get; set; }
 
-        public FilmDetails FilmDetails { get; set; }
+        public ActivityDetails ActivityDetails { get; set; }
         //public string Genre { get; set; }
-        public List<SelectListItem> Genres { get; set; }
-        public List<SelectListItem> Directors { get; set; }
-        public List<SelectListItem> Users { get; set; }
+        public List<SelectListItem> ActivityTypes { get; set; }
         public async Task<IActionResult> OnGet()
         {
             if (!User.Identity.IsAuthenticated)
@@ -42,53 +40,20 @@ namespace DatePot.Areas.ActivityPot.Pages
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                FilmDetails = fd.GetFilmDetails(cs, Id).FirstOrDefault();
-                if (FilmDetails != null)
+                ActivityDetails = fd.GetActivityDetails(cs, Id).FirstOrDefault();
+                if (ActivityDetails != null)
                 {
-                    if (FilmDetails != null)
+                    if (ActivityDetails != null)
                     {
-                        var genres = fd.GetGenreList(cs);
-                        var directors = fd.GetDirectorsList(cs);
-                        var users = fd.GetUserList(cs);
+                        var activitytypes = fd.GetyActivityTypeList(cs);
 
-                        //Genre = genres.Where(x => x.GenreID == FilmDetails.GenreID).FirstOrDefault()?.GenreText;
+                        //Genre = genres.Where(x => x.GenreID == ActivityDetails.GenreID).FirstOrDefault()?.GenreText;
 
-                        Genres = new List<SelectListItem>();
-                        Directors = new List<SelectListItem>();
-                        Users = new List<SelectListItem>();
+                        ActivityTypes = new List<SelectListItem>();
 
-                        genres.ForEach(x =>
+                        activitytypes.ForEach(x =>
                         {
-                            if (FilmDetails.GenreID == x.GenreID)
-                            {
-                                Genres.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText, Selected = true });
-                            }
-                            else
-                            {
-                                Genres.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText });
-                            }
-                        });
-                        directors.ForEach(x =>
-                        {
-                            if (FilmDetails.DirectorID == x.DirectorID)
-                            {
-                                Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName, Selected = true });
-                            }
-                            else
-                            {
-                                Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName });
-                            }
-                        });
-                        users.ForEach(x =>
-                        {
-                            if (FilmDetails.AddedByID == x.UserID)
-                            {
-                                Users.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.UserName, Selected = true });
-                            }
-                            else
-                            {
-                                Users.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.UserName });
-                            }
+                            ActivityTypes.Add(new SelectListItem { Value = x.ActivityTypeID.ToString(), Text = x.ActivityType });
                         });
                     }
                 }
@@ -109,9 +74,9 @@ namespace DatePot.Areas.ActivityPot.Pages
                     return Page();
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.UpdateFilm(cs, UpdateFilmDetails);
+                fd.UpdateActivity(cs, UpdateActivityDetails);
 
-                return RedirectToPage("./View", new { @Id = UpdateFilmDetails.FilmID, @redirect = "update" });
+                return RedirectToPage("./View", new { @Id = UpdateActivityDetails.ActivityID, @redirect = "update" });
             }
             catch (Exception ex)
             {
@@ -127,7 +92,7 @@ namespace DatePot.Areas.ActivityPot.Pages
                     return Page();
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.ArchiveFilm(cs, UpdateFilmDetails.FilmID);
+                fd.ArchiveActivity(cs, UpdateActivityDetails.ActivityID);
 
                 return RedirectToPage("./Index");
             }

@@ -5,69 +5,60 @@
 }
 <div class="row">
     <div class="col-12">
-        @if (Model.Users.Count > 0)
-        {
-            @foreach (var item in Model.Users)
-            {
-
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddFilmModal" data-adder="@item.UserName">Add film by @item.UserName</button>
-            }
-        }
-        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#RandomFilmModal">Give me a film</button>
+        <button type="button" class="btn btn-primary btnAddActivityModal" data-toggle="modal" data-target="#AddActivityModal">Add Activity</button>
+        <button type="button" class="btn btn-primary float-right btnRandomActivity" data-toggle="modal" data-target="#RandomActivityModal">Give me a Activity</button>
     </div>
 </div>
 <div class="row pt-2">
     <div class="col-12">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddGenreModal">Add genre</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddDirectorModal">Add director</button>
+        <button type="button" class="btn btn-primary btnAddActivityType" data-toggle="modal" data-target="#AddActivityTypeModal">Add Food Type</button>
     </div>
 </div>
 <div class="row pt-4">
     <div class="col-12">
-        <table id="FilmTable" class="table table-striped table-responsive table-borderless ClientSearchTable">
-            <thead class="thead-dark activity">
+        <table id="ActivityTable" class="table table-striped table-responsive table-stripedFoodPot table-borderless ClientSearchTable foodrows">
+            <thead class="thead-dark">
                 <tr>
                     <th>Name</th>
-                    <th>Release Date</th>
-                    <th>Added Date</th>
-                    <th>Genre</th>
-                    <th>Who?</th>
-                    <th>Watched</th>
+                    <th>Type</th>
+                    <th>Expense</th>
+                    <th>Location</th>
+                    <th>When</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Films)
+                @foreach (var item in Model.Activitys)
                 {
-                    <tr>
-                        <td>
-                            @item.FilmName
-                        </td>
-                        <td>
-                            @item.ReleaseDate
-                        </td>
-                        <td>
-                            @item.AddedDate
-                        </td>
-                        <td>
-                            @item.GenreText
-                        </td>
-                        <td>
-                            @item.UserName
-                        </td>
-                        <td>
-                            @item.Watched
-                        </td>
-                        <td>
-                            <a asp-page="/View" asp-route-Id="@item.FilmID">View</a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        @item.ActivityName
+                    </td>
+                    <td>
+                        @item.Location
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.ExpenseText
+                    </td>
+                    <td>
+                        @item.ActivityType
+                    </td>
+                    <td>
+                        @item.Prebook
+                    </td>
+                    <td>
+                        <a asp-page="/View" asp-route-Id="@item.ActivityID">View</a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
-<div class="modal fade" id="RandomFilmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="RandomActivityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -76,52 +67,20 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" asp-page-handler="AddFilm">
-                @if (Model.RandomFilm.Count > 0)
-                {
-                    <div class="modal-body">
-                        @foreach (var item in Model.RandomFilm)
-                        {
-
-                            <input value="@item.FilmID" type="hidden" name="FilmID" />
-                            <p>
-                                Tonight you guys are going to watch <strong>@item.FilmName</strong>, and it is @item.AddersName's pick. Sorry
-                                @if (item.AddersName == "Rhiann")
-                                {
-                                    <text>Kyle</text>
-                                }
-                                else
-                                {
-                                    <text>Rhiann</text>
-                                }
-                            </p>
-                        }
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" onclick="return AnotherRandom();">No, another!!</button>
-                        <input type="submit" value="Let's watch it!" class="btn btn-primary" />
-                    </div>
-                }
-                else
-                {
-                    <div class="modal-body">
-                        <p>Looks like you are out of unwatched films. Add more to films to the list and try again!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Will do boss</button>
-                    </div>
-                }
-            </form>
+            <div class="modal-body">
+                @*<label>Pick a meal time</label>
+                <select asp-items="Model.When" class="form-control ddlWhenRandomActivity" onchange="return RandomActivity()" data-placeholder="Choose a genre..." required="required"></select>
+                <div class="divRandomActivity"></div>*@
+            </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="AddFilmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="AddActivityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Activity</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -132,75 +91,65 @@
                     <div lcass="form-group">
                         <div class="row">
                             <div class="col-12">
-                                <label asp-for="NewFilm.AddersName" class="control-label"></label>
-                                <input asp-for="NewFilm.AddersName" class="form-control adders-name" required="required" type="text" />
-                                <span asp-validation-for="NewFilm.AddersName" class="text-danger"></span>
+                                <label asp-for="NewActivity.ActivityName" class="control-label"></label>
+                                <input asp-for="NewActivity.ActivityName" class="form-control NewActivityActivityName" required="required" type="text" />
+                                <span asp-validation-for="NewActivity.ActivityName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <label asp-for="NewFilm.FilmName" class="control-label"></label>
-                                <input asp-for="NewFilm.FilmName" class="form-control" required="required" type="text" />
-                                <span asp-validation-for="NewFilm.FilmName" class="text-danger"></span>
+                                <label asp-for="NewActivity.Location" class="control-label"></label>
+                                <input asp-for="NewActivity.Location" class="form-control NewActivityLocation" required="required" type="text" />
+                                <span asp-validation-for="NewActivity.Location" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <label asp-for="NewFilm.ReleaseDate" class="control-label"></label>
-                                <input asp-for="NewFilm.ReleaseDate" class="form-control" required="required" type="date" />
-                                <span asp-validation-for="NewFilm.ReleaseDate" class="text-danger"></span>
+                                <label asp-for="NewActivity.Description" class="control-label"></label>
+                                <input asp-for="NewActivity.Description" class="form-control NewActivityDescription" required="required" type="text" />
+                                <span asp-validation-for="NewActivity.Description" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <label asp-for="NewFilm.AddedDate" class="control-label"></label>
-                                <input asp-for="NewFilm.AddedDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control AddedDate" required="required" type="date" />
-                                <span asp-validation-for="NewFilm.AddedDate" class="text-danger"></span>
+                                <label asp-for="NewActivity.ExpenseID" class="control-label"></label>
+                                <select asp-items="Model.Expense" class="form-control custom-select NewActivityExpenseID" required="required"></select>
+                                <span asp-validation-for="NewActivity.ExpenseID" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <label asp-for="NewFilm.GenreID" class="control-label"></label>
-                                <select asp-for="NewFilm.GenreID" asp-items="Model.Genre" class="form-control form-control-chosen" required="required"></select>
-                                <span asp-validation-for="NewFilm.GenreID" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="row pt-2">
-                            <div class="col-3">
-                                <label asp-for="NewFilm.Watched" class="control-label"></label>
-                            </div>
-                            <div class="col-9">
-                                <input asp-for="NewFilm.Watched" class="form-control" />
-                                <span asp-validation-for="NewFilm.Watched" class="text-danger"></span>
+                                <label class="control-label">Type</label>
+                                <select asp-items="Model.ActivityType" class="form-control form-control-chosen ddlActivityType" multiple data-placeholder="Choose a genre..." required="required"></select>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Add" class="btn btn-primary" />
+                    <input type="button" value="Add" class="btn btn-primary btnAddActivity" />
                 </div>
             </form>
         </div>
     </div>
 </div>
-<div class="modal fade" id="AddGenreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="AddActivityTypeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add genre</h5>
+                <h5 class="modal-title">Add Food Type</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" asp-page-handler="Genre">
+            <form method="post" asp-page-handler="ActivityType">
                 <div class="modal-body">
                     <div lcass="form-group">
                         <div class="row">
                             <div class="col-12">
-                                <label asp-for="NewGenre.GenreText" class="control-label"></label>
-                                <input asp-for="NewGenre.GenreText" class="form-control" required="required" type="text" />
-                                <span asp-validation-for="NewGenre.GenreText" class="text-danger"></span>
+                                <label asp-for="NewActivityType.ActivityType" class="control-label"></label>
+                                <input asp-for="NewActivityType.ActivityType" class="form-control" required="required" type="text" />
+                                <span asp-validation-for="NewActivityType.ActivityType" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -213,7 +162,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="GenreDupeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="ActivityTypeDupeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -223,7 +172,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p class="genreDupeText"></p>
+                <p class="ActivityTypeDupeText"></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Right you are my boy!</button>
@@ -231,7 +180,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="DirectorDupeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="WhenDupeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -241,7 +190,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p class="directorDupeText"></p>
+                <p class="WhenDupeText"></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Right you are my boy!</button>
@@ -249,36 +198,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="AddDirectorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add director</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" asp-page-handler="Director">
-                <div class="modal-body">
-                    <div lcass="form-group">
-                        <div class="row">
-                            <div class="col-12">
-                                <label asp-for="NewDirector.DirectorText" class="control-label"></label>
-                                <input asp-for="NewDirector.DirectorText" class="form-control" required="required" type="text" />
-                                <span asp-validation-for="NewDirector.DirectorText" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Add" class="btn btn-primary" />
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="FilmWatched" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="ActivityAttended" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -290,7 +210,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
-                        <p>All sorted, this film has been marked as watched. Enjoy! 😁📽</p>
+                        <p>All sorted, Hope you enjoy the food and/or drinks! 😁🥗🍸</p>
                     </div>
                 </div>
             </div>
@@ -307,55 +227,28 @@
             const urlParams = new URLSearchParams(window.location.search);
             const redirectParam = urlParams.get('create');
             if (redirectParam == "yes") {
-                $('#AddFilmModal').modal();
+                $('#AddActivityModal').modal();
             }
             const redirectParamDupeCheck = urlParams.get('redirect');
             const redirectParamDupeCheckValue = urlParams.get('value');
-            if (redirectParamDupeCheck == "genredupe") {
-                $('#GenreDupeModal').modal();
-                $('#GenreDupeModal').find('.modal-title').text('You sure about ' + redirectParamDupeCheckValue + ' mate?')
-                $('#GenreDupeModal').find('.genreDupeText').text('You have tried to add ' + redirectParamDupeCheckValue + ' which already exists');
-            } else if (redirectParamDupeCheck == "directordupe") {
-                $('#DirectorDupeModal').modal();
-                $('#DirectorDupeModal').find('.modal-title').text('You sure about ' + redirectParamDupeCheckValue + ' mate?')
-                $('#DirectorDupeModal').find('.directorDupeText').text('You have tried to add ' + redirectParamDupeCheckValue + ' which already exists');
-            } else if (redirectParamDupeCheck == "RandomFilm") {
-                $('#RandomFilmModal').modal();
-            } else if (redirectParamDupeCheck == "FilmWatched") {
-                $('#FilmWatched').modal();
+            if (redirectParamDupeCheck == "ActivityTypedupe") {
+                $('#ActivityTypeDupeModal').modal();
+                $('#ActivityTypeDupeModal').find('.modal-title').text('You sure about ' + redirectParamDupeCheckValue + ' mate?')
+                $('#ActivityTypeDupeModal').find('.ActivityTypeDupeText').text('You have tried to add ' + redirectParamDupeCheckValue + ' which already exists');
+            } else if (redirectParamDupeCheck == "Whendupe") {
+                $('#WhenDupeModal').modal();
+                $('#WhenDupeModal').find('.modal-title').text('You sure about ' + redirectParamDupeCheckValue + ' mate?')
+                $('#WhenDupeModal').find('.WhenDupeText').text('You have tried to add ' + redirectParamDupeCheckValue + ' which already exists');
+            } else if (redirectParamDupeCheck == "RandomActivity") {
+                $('#RandomActivityModal').modal();
+            } else if (redirectParamDupeCheck == "ActivityAttended") {
+                $('#ActivityAttended').modal();
             }
 
-            $('#FilmTable').dataTable({
+            $('#ActivityTable').dataTable({
                 "aoColumns": [
                     { "sType": "html" },
-                    {
-                        "type": "date",
-                        "render": function (data, type, row) {
-                            if (type === 'display' || type === 'filter') {
-                                if (data !== null && data !== '') {
-                                    var isoDate = new Date(data).toISOString();
-                                    return moment(isoDate).format('DD/MM/YYYY');
-                                } else {
-                                    return 'Not recorded';
-                                }
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        "type": "date",
-                        "render": function (data, type, row) {
-                            if (type === 'display' || type === 'filter') {
-                                if (data !== null && data !== '') {
-                                    var isoDate = new Date(data).toISOString();
-                                    return moment(isoDate).format('DD/MM/YYYY');
-                                } else {
-                                    return 'Not recorded';
-                                }
-                            }
-                            return data;
-                        }
-                    },
+                    { "sType": "html" },
                     { "sType": "html" },
                     { "sType": "html" },
                     { "sType": "html" },
@@ -367,8 +260,7 @@
                     { "targets": 2 },
                     { "targets": 3 },
                     { "targets": 4 },
-                    { "targets": 5 },
-                    { orderable: false, "targets": 6 }
+                    { orderable: false, "targets": 5 }
                 ],
                 "pagingType": "numbers",
                 "paging": false,
@@ -379,21 +271,38 @@
                 stateSave: true
             });
         });
-        $('#AddFilmModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('adder') // Extract info from data-* attributes
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            var modal = $(this)
-            if (recipient == undefined) {
-                modal.find('.modal-title').text('Please add a film')
-            } else {
-                modal.find('.modal-title').text('Film added by ' + recipient)
-            }
-            modal.find('.modal-body .adders-name').val(recipient)
-        })
-        function AnotherRandom() {
-            window.location.replace("Index?redirect=RandomFilm");
+        $(".btnAddActivity").on("click", function () {
+            var pathname = window.location.pathname;
+            var ActivityName = $(".NewActivityActivityName").val();
+            var ExpenseID = $(".NewActivityExpenseID").val();
+            var LocationID = $(".NewActivityLocationID").val();
+            $.ajax({
+                dataType: 'json',
+                url: pathname,
+                type: 'POST',
+                data: {
+                    ActivityName: ActivityName,
+                    ExpenseID: ExpenseID,
+                    LocationID: LocationID,
+                    ActivityType: $(".ddlActivityType").chosen().val(),
+                    When: $(".ddlWhen").chosen().val()
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    window.location.replace("FoodPot/View?Id=" + response);
+                },
+                error: function (ex) {
+                    alert("AJAX Request Failed, Contact Support");
+                    console.log(ex);
+                }
+            });
+        });
+        function RandomActivity() {
+            var WhenID = $(".ddlWhenRandomActivity").val();
+            $('.divRandomActivity').load('?handler=RandomActivity', "WhenID=" + WhenID);
         }
     </script>
 }

@@ -10,36 +10,27 @@ namespace DatePot.Areas.ActivityPot.Models
 {
     public class Activitys
     {
-        public class FilmIndex
+        public class ActivityIndex
         {
-            public List<FilmList> FilmList { get; set; }
-            public List<UserList> UserList { get; set; }
+            public List<ActivityList> ActivityList { get; set; }
         }
-        public class FilmList
-        {
-            [Key]
-            public int FilmID { get; set; }
-            [Display(Name = "Name")]
-            public string FilmName { get; set; }
-            [Display(Name = "Release Date")]
-            public string ReleaseDate { get; set; }
-            [Display(Name = "Added Date")]
-            public string AddedDate { get; set; }
-            [Display(Name = "Genre")]
-            public string GenreText { get; set; }
-            public int GenreID { get; set; }
-            public string Watched { get; set; }
-            public string UserName { get; set; }
-            public List<RandomFilm> RandomFilm { get; set; }
-        }
-        public class UserList
+        public class ActivityList
         {
             [Key]
-            public int UserID { get; set; }
+            public int ActivityID { get; set; }
             [Display(Name = "Name")]
-            public string UserName { get; set; }
+            public string ActivityName { get; set; }
+            public string Location { get; set; }
+            public string Description { get; set; }
+            [Display(Name = "Expense")]
+            public string ExpenseText { get; set; }
+            public int ExpenseID { get; set; }
+            public string Prebook { get; set; }
+            [Display(Name = "Type")]
+            public string ActivityType { get; set; }
+            public List<RandomActivity> RandomActivity { get; set; }
         }
-        public class NewFilm
+        public class NewActivity
         {
             [Required]
             [DisplayName("Added by")]
@@ -48,64 +39,44 @@ namespace DatePot.Areas.ActivityPot.Models
             [MaxLength(100, ErrorMessage = "Names must not exceed 100 characters")]
             [MinLength(2, ErrorMessage = "Names must be at least 2 characters long")]
             [DisplayName("Name")]
-            public string FilmName { get; set; }
+            public string ActivityName { get; set; }
             [Required]
-            [DataType(DataType.Date)]
-            [DisplayName("Release Date")]
-            public DateTime ReleaseDate { get; set; }
-            [Range(1, int.MaxValue, ErrorMessage = "Please select a genre from the list")]
-            [DisplayName("Genre")]
-            public int GenreID { get; set; }
-            public bool Watched { get; set; }
-            public List<Genres> Genres { get; set; }
-            [Required]
-            [DataType(DataType.Date)]
-            [DisplayName("Date Added")]
-            public DateTime AddedDate { get; set; }
+            public string Location { get; set; }
+            public string Description { get; set; }
+            [Range(1, int.MaxValue, ErrorMessage = "Please select an expense from the list")]
+            [DisplayName("Expense")]
+            public int ExpenseID { get; set; }
+            public int ActivtyTypeID { get; set; }
+            public bool Prebook { get; set; }
+            public List<ActivityTypes> ActivityTypes { get; set; }
         }
-        public class Genres
+        public class ActivityTypes
         {
-            public int GenreID { get; set; }
-            public string GenreText { get; set; }
+            public int ActivityTypeID { get; set; }
+            public string ActivityType { get; set; }
         }
-        public class Directors
-        {
-            public int DirectorID { get; set; }
-            public string DirectorName { get; set; }
-        }
-        public class FilmDetails
+        public class ActivityDetails
         {
             [Key]
-            public int FilmID { get; set; }
+            public int ActivityID { get; set; }
             [Display(Name = "Name")]
-            public string FilmName { get; set; }
-            [Display(Name = "Release Date")]
-            public DateTime ReleaseDate { get; set; }
-            [Display(Name = "Genre")]
-            public int GenreID { get; set; }
-            public bool Watched { get; set; }
-            public int AddedByID { get; set; }
-            [DisplayName("Added by")]
-            public string AddersName { get; set; }
-            [DisplayName("Director")]
-            public int DirectorID { get; set; }
+            public string ActivityName { get; set; }
+            public string Location { get; set; }
+            public string Description { get; set; }
+            public int ExpenseID { get; set; }
+            [Display(Name = "Activity Type")]
+            public int ActivityTypeID { get; set; }
+            public bool Prebook { get; set; }
         }
-        public class UpdateFilmDetails: FilmDetails
+        public class UpdateActivityDetails: ActivityDetails
         {
         }
-        public class RandomFilm : FilmDetails { }
-        public class NewGenre
+        public class RandomActivity : ActivityDetails { }
+        public class NewActivityType
         {
             [Required]
-            [DisplayName("Genre")]
-            public string GenreText { get; set; }
+            [DisplayName("Activity Type")]
+            public string ActivityType { get; set; }
         }
-        public class NewDirector
-        {
-            [Required]
-            [DisplayName("Director")]
-            public string DirectorText { get; set; }
-        }
-
     }
 }
