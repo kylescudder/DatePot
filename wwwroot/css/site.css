@@ -1,10 +1,9 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+﻿fbtnAddRestaurant /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
-
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
@@ -79,7 +78,7 @@ body {
 .section:hover {
     text-decoration: none;
 }
-.btnAddRestaurant {
+.btnAddRestaurantModal {
     background-color: #e8a79a !important;
     border: none !important;
 }
