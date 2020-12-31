@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Elmah.Io.AspNetCore;
+using Serilog;
 
 namespace DatePot
 {
@@ -76,6 +77,8 @@ namespace DatePot
             app.UseHttpsRedirection();
             app.UseElmahIo();
             app.UseStaticFiles();
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 

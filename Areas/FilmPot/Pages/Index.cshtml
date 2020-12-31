@@ -441,8 +441,9 @@
                 success: function (response) {
                     window.location.replace("FilmPot/View?Id=" + response);
                 },
-                error: function () {
-                    alert("AJAX Request Failed, Contact Support");
+                error: function (xhr, status, errorThrown) {
+                    var err = "Status: " + status + " " + errorThrown;
+                    console.log(err);
                 }
             });
         });

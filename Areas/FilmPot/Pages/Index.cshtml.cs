@@ -73,14 +73,16 @@ namespace DatePot.Areas.FilmPot.Pages
                     fd.AddFilmGenres(cs, FilmID, Convert.ToInt32(item));
 
                 }
-
                 JsonResult result = null;
                 result = new JsonResult(FilmID);
                 return result;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+                _logger.LogError(ex, "An error occured");
+                JsonResult result = null;
+                result = new JsonResult(ex);
+                return result;
             }
         }
         public async Task<IActionResult> OnPostGenre()
