@@ -413,7 +413,7 @@
             }
         }
         $(".btnAddFilm").on("click", function () {
-            var pathname = "/FilmPot";
+            var pathname = window.location.pathname;
             var AddersName = $(".NewFilmAddersName").val();
             var AddedDate = $(".NewFilmAddedDate").val();
             var FilmName = $(".NewFilmFilmName").val();
