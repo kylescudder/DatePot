@@ -30,6 +30,7 @@
             var Watched = $(".UpdateFilmWatched").prop("checked");
             var Genre = $(".UpdateFilmGenre").chosen().val();
             var Director = $(".UpdateFilmDirector").chosen().val();
+            var Platform = $(".UpdateFilmPlatform").chosen().val();
 
             $.ajax({
                 dataType: 'json',
@@ -43,9 +44,9 @@
                     AddedDate: AddedDate,
                     Watched: Watched,
                     Runtime: Runtime,
-                    Genre: selected,
-                    Director: 0,
-                    Platform: 0
+                    Genre: Genre,
+                    Director: Director,
+                    Platform: Platform
                 },
                 headers: {
                     RequestVerificationToken:
