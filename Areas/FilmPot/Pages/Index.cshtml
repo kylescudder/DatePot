@@ -30,7 +30,6 @@
                 <tr>
                     <th>Name</th>
                     <th>Release Date</th>
-                    <th>Added Date</th>
                     <th>Genre</th>
                     <th>Who?</th>
                     <th>Runtime</th>
@@ -49,10 +48,7 @@
                     <td>
                         @item.ReleaseDate
                     </td>
-                    <td>
-                        @item.AddedDate
-                    </td>
-                    <td>
+                    <td style="word-break:break-all">
                         @item.GenreText
                     </td>
                     <td>
@@ -425,23 +421,10 @@
                             return data;
                         }
                     },
-                    {
-                        "type": "date",
-                        "render": function (data, type, row) {
-                            if (type === 'display' || type === 'filter') {
-                                if (data !== null && data !== '') {
-                                    var isoDate = new Date(data).toISOString();
-                                    return moment(isoDate).format('DD/MM/YYYY');
-                                } else {
-                                    return 'Not recorded';
-                                }
-                            }
-                            return data;
-                        }
-                    },
                     { "sType": "html" },
                     { "sType": "html" },
                     { "sType": "num" },
+                    { "sType": "html" },
                     { "sType": "html" },
                     { "sType": "html" }
                 ],
