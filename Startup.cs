@@ -14,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Elmah.Io.AspNetCore;
 using Serilog;
+using Microsoft.AspNetCore.DataProtection;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DatePot
 {
@@ -57,6 +60,9 @@ namespace DatePot
                 options.Password.RequireLowercase = true;
                 options.SignIn.RequireConfirmedEmail = false;
             });
+
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(@"~\"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
