@@ -19,7 +19,7 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetActivityDetails"; // The name of the Stored Proc
+                cmd.CommandText = "spGetActivityDetails"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@ActivityID", ActivityID);
@@ -97,7 +97,7 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spArchiveActivity"; // The name of the Stored Proc
+                cmd.CommandText = "spArchiveActivity"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@ActivityID", ActivityID);
@@ -170,7 +170,7 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddGenre"; // The name of the Stored Proc
+                cmd.CommandText = "spAddGenre"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@GenreText", GenreText);
@@ -186,7 +186,7 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddDirector"; // The name of the Stored Proc
+                cmd.CommandText = "spAddDirector"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@DirectorText", DirectorText);
@@ -202,7 +202,7 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGenreDupeCheck"; // The name of the Stored Proc
+                cmd.CommandText = "spGenreDupeCheck"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@GenreText", GenreText);
@@ -225,7 +225,7 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spDirectorDupeCheck"; // The name of the Stored Proc
+                cmd.CommandText = "spDirectorDupeCheck"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@DirectorText", DirectorText);
@@ -269,7 +269,7 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spActivityWatched"; // The name of the Stored Proc
+                cmd.CommandText = "spActivityWatched"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@ActivityID", ActivityID);

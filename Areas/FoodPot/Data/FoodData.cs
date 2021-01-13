@@ -20,7 +20,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetRestaurantDetails"; // The name of the Stored Proc
+                cmd.CommandText = "spGetRestaurantDetails"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
@@ -129,7 +129,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spUpdateRestaurant"; // The name of the Stored Proc
+                cmd.CommandText = "spUpdateRestaurant"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
@@ -149,7 +149,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spArchiveRestaurant"; // The name of the Stored Proc
+                cmd.CommandText = "spArchiveRestaurant"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
@@ -211,7 +211,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddRestaurant"; // The name of the Stored Proc
+                cmd.CommandText = "spAddRestaurant"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantName", RestaurantName);
@@ -234,7 +234,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddFoodType"; // The name of the Stored Proc
+                cmd.CommandText = "spAddFoodType"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FoodTypeText", FoodTypeText);
@@ -250,7 +250,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddWhen"; // The name of the Stored Proc
+                cmd.CommandText = "spAddWhen"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@WhenText", WhenText);
@@ -266,7 +266,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spFoodTypeDupeCheck"; // The name of the Stored Proc
+                cmd.CommandText = "spFoodTypeDupeCheck"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FoodTypeText", FoodTypeText);
@@ -289,7 +289,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spWhenDupeCheck"; // The name of the Stored Proc
+                cmd.CommandText = "spWhenDupeCheck"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@WhenText", WhenText);
@@ -335,7 +335,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spRestaurantWatched"; // The name of the Stored Proc
+                cmd.CommandText = "spRestaurantWatched"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
@@ -351,7 +351,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddRestaurantFoodType"; // The name of the Stored Proc
+                cmd.CommandText = "spAddRestaurantFoodType"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
@@ -368,7 +368,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddRestaurantWhen"; // The name of the Stored Proc
+                cmd.CommandText = "spAddRestaurantWhen"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
@@ -385,7 +385,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetRestaurantFoodTypes"; // The name of the Stored Proc
+                cmd.CommandText = "spGetRestaurantFoodTypes"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
@@ -412,7 +412,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetRestaurantWhens"; // The name of the Stored Proc
+                cmd.CommandText = "spGetRestaurantWhens"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantID", RestaurantID);
@@ -439,7 +439,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spDeleteRestaurantFoodType"; // The name of the Stored Proc
+                cmd.CommandText = "spDeleteRestaurantFoodType"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantFoodTypesID", RestaurantFoodTypeID);
@@ -455,7 +455,7 @@ namespace DatePot.Areas.FoodPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spDeleteRestaurantWhen"; // The name of the Stored Proc
+                cmd.CommandText = "spDeleteRestaurantWhen"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@RestaurantWhensID", RestaurantWhenID);

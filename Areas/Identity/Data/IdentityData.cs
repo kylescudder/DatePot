@@ -20,7 +20,7 @@ namespace DatePot.Areas.Identity.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddUserName"; // The name of the Stored Proc
+                cmd.CommandText = "spAddUserName"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@UserName", UserName);
@@ -37,7 +37,7 @@ namespace DatePot.Areas.Identity.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetUser"; // The name of the Stored Proc
+                cmd.CommandText = "spGetUser"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@UserID", Id);

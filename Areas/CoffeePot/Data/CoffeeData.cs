@@ -19,7 +19,7 @@ namespace DatePot.Areas.CoffeePot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetCoffeeDetails"; // The name of the Stored Proc
+                cmd.CommandText = "spGetCoffeeDetails"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@CoffeeID", CoffeeID);
@@ -49,7 +49,7 @@ namespace DatePot.Areas.CoffeePot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spUpdateCoffee"; // The name of the Stored Proc
+                cmd.CommandText = "spUpdateCoffee"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@CoffeeID", CoffeeID);
@@ -72,7 +72,7 @@ namespace DatePot.Areas.CoffeePot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spArchiveCoffee"; // The name of the Stored Proc
+                cmd.CommandText = "spArchiveCoffee"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@CoffeeID", CoffeeID);
@@ -114,7 +114,7 @@ namespace DatePot.Areas.CoffeePot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddCoffee"; // The name of the Stored Proc
+                cmd.CommandText = "spAddCoffee"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@CoffeeName", CoffeeName);

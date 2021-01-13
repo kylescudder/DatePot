@@ -19,7 +19,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetFilmDetails"; // The name of the Stored Proc
+                cmd.CommandText = "spGetFilmDetails"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmID", FilmID);
@@ -50,7 +50,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetFilmGenres"; // The name of the Stored Proc
+                cmd.CommandText = "spGetFilmGenres"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmID", FilmID);
@@ -77,7 +77,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGetFilmDirectors"; // The name of the Stored Proc
+                cmd.CommandText = "spGetFilmDirectors"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmID", FilmID);
@@ -145,7 +145,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spUpdateFilm"; // The name of the Stored Proc
+                cmd.CommandText = "spUpdateFilm"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmID", FilmID);
@@ -174,7 +174,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spArchiveFilm"; // The name of the Stored Proc
+                cmd.CommandText = "spArchiveFilm"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmID", FilmID);
@@ -244,7 +244,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddFilm"; // The name of the Stored Proc
+                cmd.CommandText = "spAddFilm"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmName", FilmName);
@@ -270,7 +270,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddFilmGenres"; // The name of the Stored Proc
+                cmd.CommandText = "spAddFilmGenres"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmID", FilmID);
@@ -287,7 +287,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddFilmDirectors"; // The name of the Stored Proc
+                cmd.CommandText = "spAddFilmDirectors"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmID", FilmID);
@@ -304,7 +304,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spDeleteFilmGenre"; // The name of the Stored Proc
+                cmd.CommandText = "spDeleteFilmGenre"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmGenresID", FilmGenreID);
@@ -320,7 +320,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spDeleteFilmDirector"; // The name of the Stored Proc
+                cmd.CommandText = "spDeleteFilmDirector"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmDirectorsID", FilmDirectorID);
@@ -336,7 +336,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddGenre"; // The name of the Stored Proc
+                cmd.CommandText = "spAddGenre"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@GenreText", GenreText);
@@ -352,7 +352,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddDirector"; // The name of the Stored Proc
+                cmd.CommandText = "spAddDirector"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@DirectorText", DirectorText);
@@ -368,7 +368,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spGenreDupeCheck"; // The name of the Stored Proc
+                cmd.CommandText = "spGenreDupeCheck"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@GenreText", GenreText);
@@ -391,7 +391,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spDirectorDupeCheck"; // The name of the Stored Proc
+                cmd.CommandText = "spDirectorDupeCheck"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@DirectorText", DirectorText);
@@ -436,7 +436,7 @@ namespace DatePot.Areas.FilmPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spFilmWatched"; // The name of the Stored Proc
+                cmd.CommandText = "spFilmWatched"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmID", FilmID);
