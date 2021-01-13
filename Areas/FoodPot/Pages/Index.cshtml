@@ -84,6 +84,7 @@
                 </button>
             </div>
             <form method="post">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div lcass="form-group">
@@ -140,6 +141,7 @@
                 </button>
             </div>
             <form method="post" asp-page-handler="FoodType">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div lcass="form-group">
                         <div class="row">
@@ -205,6 +207,7 @@
                 </button>
             </div>
             <form method="post" asp-page-handler="When">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div lcass="form-group">
                         <div class="row">

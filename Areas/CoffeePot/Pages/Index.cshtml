@@ -63,6 +63,7 @@
                 </button>
             </div>
             <form method="post">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div lcass="form-group">

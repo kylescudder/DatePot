@@ -15,6 +15,7 @@ using DatePot.Areas.FilmPot.Data;
 
 namespace DatePot.Areas.FilmPot.Pages
 {
+    [ValidateAntiForgeryToken]
     public class ViewModel : PageModel
     {
         private readonly IConfiguration _config;

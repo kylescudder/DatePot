@@ -81,6 +81,7 @@
                 </button>
             </div>
             <form method="post" asp-page-handler="AddFilm">
+                @Html.AntiForgeryToken()
                 @if (Model.RandomFilm.Count > 0)
                 {
                     <div class="modal-body">
@@ -131,6 +132,7 @@
                 </button>
             </div>
             <form method="post">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div lcass="form-group">
@@ -204,6 +206,7 @@
                 </button>
             </div>
             <form method="post" asp-page-handler="Genre">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div lcass="form-group">
                         <div class="row">
@@ -269,6 +272,7 @@
                 </button>
             </div>
             <form method="post" asp-page-handler="Director">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div lcass="form-group">
                         <div class="row">

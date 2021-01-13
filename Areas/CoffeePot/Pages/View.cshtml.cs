@@ -15,6 +15,7 @@ using DatePot.Areas.CoffeePot.Data;
 
 namespace DatePot.Areas.CoffeePot.Pages
 {
+    [ValidateAntiForgeryToken]
     public class ViewModel : PageModel
     {
         private readonly IConfiguration _config;

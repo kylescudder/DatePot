@@ -15,6 +15,7 @@ using DatePot.Areas.FoodPot.Data;
 
 namespace DatePot.Areas.FoodPot.Pages
 {
+    [ValidateAntiForgeryToken]
     public class ViewModel : PageModel
     {
         private readonly IConfiguration _config;

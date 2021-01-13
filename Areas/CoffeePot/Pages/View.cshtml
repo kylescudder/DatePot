@@ -56,6 +56,7 @@ else
                 </svg>
             </button>
             <form method="post" asp-page-handler="Archive">
+                @Html.AntiForgeryToken()
                 <input value="@Model.CoffeeDetails.CoffeeID" asp-for="UpdateCoffeeDetails.CoffeeID" type="hidden" />
                 <div class="modal fade ArchiveCoffee" id="ArchiveCoffee" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
@@ -82,6 +83,7 @@ else
     <div class="card bg-light mb-2">
         <div class="card-body">
             <form method="post">
+                @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input asp-for="UpdateCoffeeDetails.CoffeeID" value="@Model.CoffeeDetails.CoffeeID" type="hidden" class="hidCoffeeID" />
                 <div class="form-group">
