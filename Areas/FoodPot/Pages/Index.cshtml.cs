@@ -84,9 +84,19 @@ namespace DatePot.Areas.FoodPot.Pages
         {
             try
             {
+                JsonResult result = null;
                 if (ModelState.IsValid == false)
                 {
-                    return Page();
+                    foreach (var modelStateKey in ViewData.ModelState.Keys)
+                    {
+                        var value = ViewData.ModelState[modelStateKey];
+                        foreach (var error in value.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            result = new JsonResult(modelStateKey + ": " + errorMessage);
+                        }
+                    }
+                    return result;
                 }
                 string cs = _config.GetConnectionString("Default");
                 int RestaurantID = fd.AddRestaurant(cs, RestaurantName, ExpenseID, LocationID);
@@ -100,7 +110,6 @@ namespace DatePot.Areas.FoodPot.Pages
                     fd.AddRestaurantWhen(cs, RestaurantID, Convert.ToInt32(item));
                 }
 
-                JsonResult result = null;
                 result = new JsonResult(RestaurantID);
                 return result;
             }

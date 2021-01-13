@@ -113,6 +113,20 @@ namespace DatePot.Areas.FoodPot.Pages
         {
             try
             {
+                JsonResult result = null;
+                if (ModelState.IsValid == false)
+                {
+                    foreach (var modelStateKey in ViewData.ModelState.Keys)
+                    {
+                        var value = ViewData.ModelState[modelStateKey];
+                        foreach (var error in value.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            result = new JsonResult(modelStateKey + ": " + errorMessage);
+                        }
+                    }
+                    return result;
+                }
                 string cs = _config.GetConnectionString("Default");
                 fd.UpdateRestaurant(cs, RestaurantID, RestaurantName, ExpenseID, LocationID);
 
@@ -133,7 +147,6 @@ namespace DatePot.Areas.FoodPot.Pages
 
                 }
 
-                JsonResult result = null;
                 result = new JsonResult(RestaurantID);
                 return result;
             }
@@ -164,10 +177,23 @@ namespace DatePot.Areas.FoodPot.Pages
         {
             try
             {
+                JsonResult result = null;
+                if (ModelState.IsValid == false)
+                {
+                    foreach (var modelStateKey in ViewData.ModelState.Keys)
+                    {
+                        var value = ViewData.ModelState[modelStateKey];
+                        foreach (var error in value.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            result = new JsonResult(modelStateKey + ": " + errorMessage);
+                        }
+                    }
+                    return result;
+                }
                 string cs = _config.GetConnectionString("Default");
                 fd.DeleteRestaurantFoodType(cs, RestaurantFoodTypeID);
 
-                JsonResult result = null;
                 result = new JsonResult(RestaurantID);
                 return result;
             }
@@ -180,10 +206,23 @@ namespace DatePot.Areas.FoodPot.Pages
         {
             try
             {
+                JsonResult result = null;
+                if (ModelState.IsValid == false)
+                {
+                    foreach (var modelStateKey in ViewData.ModelState.Keys)
+                    {
+                        var value = ViewData.ModelState[modelStateKey];
+                        foreach (var error in value.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            result = new JsonResult(modelStateKey + ": " + errorMessage);
+                        }
+                    }
+                    return result;
+                }
                 string cs = _config.GetConnectionString("Default");
                 fd.DeleteRestaurantWhen(cs, RestaurantWhenID);
 
-                JsonResult result = null;
                 result = new JsonResult(RestaurantID);
                 return result;
             }

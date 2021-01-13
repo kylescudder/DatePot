@@ -6,13 +6,13 @@
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
+            $('.form-control-chosen').chosen();
             $(".starRating").rating({
                 step: 1,
                 showCaption: false,
                 showClear: true,
                 theme: 'krajee-svg'
             });
-            $('.form-control-chosen').chosen();
             const urlParams = new URLSearchParams(window.location.search);
             const redirectParam = urlParams.get('redirect');
             if (redirectParam == "update") {

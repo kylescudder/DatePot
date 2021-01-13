@@ -66,6 +66,20 @@ namespace DatePot.Areas.FilmPot.Pages
         {
             try
             {
+                JsonResult result = null;
+                if (ModelState.IsValid == false)
+                {
+                    foreach (var modelStateKey in ViewData.ModelState.Keys)
+                    {
+                        var value = ViewData.ModelState[modelStateKey];
+                        foreach (var error in value.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            result = new JsonResult(modelStateKey + ": " + errorMessage);
+                        }
+                    }
+                    return result;
+                }
                 string cs = _config.GetConnectionString("Default");
                 int FilmID = fd.AddFilm(cs, AddersName, AddedDate, FilmName, ReleaseDate, Watched, Runtime);
                 foreach (var item in Genres)
