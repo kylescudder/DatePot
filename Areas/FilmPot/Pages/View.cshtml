@@ -43,8 +43,9 @@
                     AddedDate: AddedDate,
                     Watched: Watched,
                     Runtime: Runtime,
-                    Genre: Genre,
-                    Director: Director
+                    Genre: selected,
+                    Director: 0,
+                    Platform: 0
                 },
                 headers: {
                     RequestVerificationToken:
@@ -119,6 +120,28 @@
                 }
             });
         });
+        $(".btnDeletePlatform").on("click", function () {
+            var FilmID = $(".hidFilmID").val();
+            var pathname = '?handler=DeletePlatform';
+            $.ajax({
+                dataType: 'json',
+                url: pathname,
+                type: 'POST',
+                data: {
+                    FilmPlatformID: this.id,
+                    FilmID: FilmID
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (Number.isInteger(response)) {
+                        window.location.replace("View?Id=" + response);
+                    } else {
+                        $("#ValidationCheck").modal();
+                        $(".errorText").text(response);
+                    }
                 },
                 error: function () {
                     alert("AJAX Request Failed, Contact Support");
@@ -190,8 +213,8 @@ else
                     <div class="row">
                         <div class="col-12">
                             @*<label asp-for="UpdateFilmDetails.AddersName" class="control-label"></label>
-                <input asp-for="UpdateFilmDetails.AddersName" class="form-control adders-name" value="@Model.FilmDetails.AddersName" required="required" type="text" />
-                <span asp-validation-for="UpdateFilmDetails.AddersName" class="text-danger"></span>*@
+                    <input asp-for="UpdateFilmDetails.AddersName" class="form-control adders-name" value="@Model.FilmDetails.AddersName" required="required" type="text" />
+                    <span asp-validation-for="UpdateFilmDetails.AddersName" class="text-danger"></span>*@
                             <label asp-for="UpdateFilmDetails.AddedByID" class="control-label"></label>
                             <select asp-for="UpdateFilmDetails.AddedByID" asp-items="Model.Users" class="form-control form-control-chosen UpdateFilmAddedByID" value="@Model.FilmDetails.AddedByID" data-placeholder="Choose a person..." required="required"></select>
                             <span asp-validation-for="UpdateFilmDetails.AddedByID" class="text-danger"></span>
@@ -265,6 +288,27 @@ else
                         <div class="col-12">
                             <label class="control-label">Add directors</label>
                             <select asp-items="Model.Directors" class="form-control form-control-chosen UpdateFilmDirector" multiple data-placeholder="Choose a director..."></select>
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-12">
+                            <label class="control-label">Platforms</label>
+                            @foreach (var item in Model.FilmPlatforms)
+                            {
+                                <div class="btn btn-dark btnDeletePlatform" id="@item.FilmPlatformID">
+                                    @item.PlatformText
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                    </svg>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-12">
+                            <label class="control-label">Add platform</label>
+                            <select asp-items="Model.Platforms" class="form-control form-control-chosen UpdateFilmPlatform" multiple data-placeholder="Choose a platform..."></select>
                         </div>
                     </div>
                     <div class="row pt-2">

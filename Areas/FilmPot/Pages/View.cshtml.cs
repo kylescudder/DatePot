@@ -32,9 +32,11 @@ namespace DatePot.Areas.FilmPot.Pages
         public FilmDetails FilmDetails { get; set; }
         public List<FilmGenres> FilmGenres { get; set; }
         public List<FilmDirectors> FilmDirectors { get; set; }
+        public List<FilmPlatforms> FilmPlatforms { get; set; }
         //public string Genre { get; set; }
         public List<SelectListItem> Genres { get; set; }
         public List<SelectListItem> Directors { get; set; }
+        public List<SelectListItem> Platforms { get; set; }
         public List<SelectListItem> Users { get; set; }
         public async Task<IActionResult> OnGet()
         {
@@ -52,18 +54,22 @@ namespace DatePot.Areas.FilmPot.Pages
                     {
                         var genres = fd.GetGenreList(cs);
                         var directors = fd.GetDirectorsList(cs);
+                        var platforms = fd.GetPlatformsList(cs);
                         var users = fd.GetUserList(cs);
 
                         //Genre = genres.Where(x => x.GenreID == FilmDetails.GenreID).FirstOrDefault()?.GenreText;
 
                         Genres = new List<SelectListItem>();
                         Directors = new List<SelectListItem>();
+                        Platforms = new List<SelectListItem>();
                         Users = new List<SelectListItem>();
                         FilmGenres = new List<FilmGenres>();
                         FilmDirectors = new List<FilmDirectors>();
+                        FilmPlatforms = new List<FilmPlatforms>();
 
                         FilmGenres = fd.GetFilmGenres(cs, Id);
                         FilmDirectors = fd.GetFilmDirectors(cs, Id);
+                        FilmPlatforms = fd.GetFilmPlatforms(cs, Id);
 
                         genres.ForEach(x =>
                         {
@@ -72,6 +78,10 @@ namespace DatePot.Areas.FilmPot.Pages
                         directors.ForEach(x =>
                         {
                             Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName });
+                        });
+                        platforms.ForEach(x =>
+                        {
+                            Platforms.Add(new SelectListItem { Value = x.PlatformID.ToString(), Text = x.PlatformText });
                         });
                         users.ForEach(x =>
                         {
@@ -94,7 +104,7 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<JsonResult> OnPost(int FilmID, int AddedByID, string FilmName, DateTime ReleaseDate, DateTime AddedDate, bool Watched, int Runtime, List<int> Genre, List<int> Director)
+        public async Task<JsonResult> OnPost(int FilmID, int AddedByID, string FilmName, DateTime ReleaseDate, DateTime AddedDate, bool Watched, int Runtime, List<int> Genre, List<int> Director, List<int> Platform)
         {
             try
             {
@@ -131,8 +141,15 @@ namespace DatePot.Areas.FilmPot.Pages
                     }
 
                 }
+                foreach (var item in Platform)
+                {
+                    if (item != 0)
+                    {
+                        fd.AddFilmPlatforms(cs, FilmID, Convert.ToInt32(item));
+                    }
 
-                JsonResult result = null;
+                }
+
                 result = new JsonResult(FilmID);
                 return result;
             }
@@ -162,7 +179,6 @@ namespace DatePot.Areas.FilmPot.Pages
                 string cs = _config.GetConnectionString("Default");
                 fd.DeleteFilmGenre(cs, FilmGenreID);
 
-                JsonResult result = null;
                 result = new JsonResult(FilmID);
                 return result;
             }
@@ -187,7 +203,35 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
+        public async Task<JsonResult> OnPostDeletePlatform(int FilmPlatformID, int FilmID)
+        {
+            try
+            {
+                JsonResult result = null;
+                if (ModelState.IsValid == false)
+                {
+                    foreach (var modelStateKey in ViewData.ModelState.Keys)
+                    {
+                        var value = ViewData.ModelState[modelStateKey];
+                        foreach (var error in value.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            result = new JsonResult(modelStateKey + ": " + errorMessage);
+                        }
+                    }
+                    return result;
+                }
+                string cs = _config.GetConnectionString("Default");
+                fd.DeleteFilmPlatform(cs, FilmPlatformID);
 
+                result = new JsonResult(FilmID);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
         public async Task<IActionResult> OnPostArchive()
         {
             try

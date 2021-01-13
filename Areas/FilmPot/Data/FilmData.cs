@@ -96,7 +96,33 @@ namespace DatePot.Areas.FilmPot.Data
 
             }
         }
+        public List<FilmPlatforms> GetFilmPlatforms(string cs, int FilmID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
 
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spGetFilmPlatforms"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                IList<FilmPlatforms> wsl = new List<FilmPlatforms>();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var ws = new FilmPlatforms();
+                    ws.FilmPlatformID = reader.GetInt32("FilmPlatformID");
+                    ws.PlatformText = reader.GetString("PlatformText");
+
+                    wsl.Add(ws);
+                }
+                reader.Close();
+                return (List<FilmPlatforms>)wsl;
+
+            }
+        }
         public List<Genres> GetGenreList(string cs)
         {
             using var con = new MySqlConnection(cs);
@@ -136,6 +162,26 @@ namespace DatePot.Areas.FilmPot.Data
             reader.Close();
             con.Close();
             return (List<Directors>)wsl;
+        }
+        public List<Platforms> GetPlatformsList(string cs)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            string sql = "CALL spGetPlatformsList";
+            using var cmd = new MySqlCommand(sql, con);
+            IList<Platforms> wsl = new List<Platforms>();
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var ws = new Platforms();
+                ws.PlatformID = reader.GetInt32("PlatformID");
+                ws.PlatformText = reader.GetString("PlatformText");
+                wsl.Add(ws);
+            }
+            reader.Close();
+            con.Close();
+            return (List<Platforms>)wsl;
         }
         public void UpdateFilm(string cs, int FilmID, int AddedByID, string FilmName, DateTime ReleaseDate, DateTime AddedDate, bool Watched, int Runtime)
         {
@@ -204,6 +250,7 @@ namespace DatePot.Areas.FilmPot.Data
                 ws.Watched = reader.GetString("Watched");
                 ws.UserName = reader.GetString("UserName");
                 ws.Runtime = reader.GetInt32("Runtime");
+                ws.Platform = reader.GetString("PlatformText");
                 wsl.Add(ws);
             }
             reader.Close();
@@ -296,6 +343,23 @@ namespace DatePot.Areas.FilmPot.Data
                 con.Close();
             }
         }
+        public void AddFilmPlatforms(string cs, int FilmID, int PlatformID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spAddFilmPlatforms"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                cmd.Parameters.AddWithValue("@PlatformID", PlatformID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
         public void DeleteFilmGenre(string cs, int FilmGenreID)
         {
             using var con = new MySqlConnection(cs);
@@ -324,6 +388,22 @@ namespace DatePot.Areas.FilmPot.Data
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmDirectorsID", FilmDirectorID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+        public void DeleteFilmPlatform(string cs, int FilmPlatformID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spDeleteFilmPlatform"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@FilmPlatformsID", FilmPlatformID);
                 cmd.ExecuteNonQuery();
                 con.Close();
             }
@@ -440,6 +520,45 @@ namespace DatePot.Areas.FilmPot.Data
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
                 cmd.Parameters.AddWithValue("@FilmID", FilmID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+        public bool PlatformDupeCheck(string cs, string PlatformText)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spPlatformDupeCheck"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@PlatformText", PlatformText);
+                cmd.Parameters.Add("@PlatformExists", MySqlDbType.Bool);
+                cmd.Parameters["@PlatformExists"].Direction = ParameterDirection.Output; // from System.Data
+                cmd.ExecuteNonQuery();
+                Object obj = cmd.Parameters["@PlatformExists"].Value;
+                var lParam = (Boolean)obj;    // more useful datatype
+
+                cmd.ExecuteNonQuery();
+                con.Close();
+                return lParam;
+            }
+        }
+        public void AddPlatform(string cs, string PlatformText)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spAddPlatform"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@PlatformText", PlatformText);
                 cmd.ExecuteNonQuery();
                 con.Close();
             }

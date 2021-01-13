@@ -30,6 +30,7 @@ namespace DatePot.Areas.FilmPot.Models
             public string Watched { get; set; }
             public string UserName { get; set; }
             public int Runtime { get; set; }
+            public string Platform { get; set; }
             public List<RandomFilm> RandomFilm { get; set; }
         }
         public class UserList
@@ -53,7 +54,6 @@ namespace DatePot.Areas.FilmPot.Models
             [DataType(DataType.Date)]
             [DisplayName("Release Date")]
             public DateTime ReleaseDate { get; set; }
-            [Range(1, int.MaxValue, ErrorMessage = "Please select a genre from the list")]
             [DisplayName("Watched")]
             public bool Watched { get; set; }
             public List<Genres> Genres { get; set; }
@@ -61,6 +61,7 @@ namespace DatePot.Areas.FilmPot.Models
             [DataType(DataType.Date)]
             [DisplayName("Date Added")]
             public DateTime AddedDate { get; set; }
+            [Required]
             public int Runtime { get; set; }
         }
         public class Genres
@@ -72,6 +73,11 @@ namespace DatePot.Areas.FilmPot.Models
         {
             public int DirectorID { get; set; }
             public string DirectorName { get; set; }
+        }
+        public class Platforms
+        {
+            public int PlatformID { get; set; }
+            public string PlatformText { get; set; }
         }
         public class FilmDetails
         {
@@ -98,6 +104,11 @@ namespace DatePot.Areas.FilmPot.Models
             public int FilmDirectorID { get; set; }
             public string DirectorText { get; set; }
         }
+        public class FilmPlatforms
+        {
+            public int FilmPlatformID { get; set; }
+            public string PlatformText { get; set; }
+        }
         public class UpdateFilmDetails: FilmDetails
         {
         }
@@ -114,6 +125,11 @@ namespace DatePot.Areas.FilmPot.Models
             [DisplayName("Director")]
             public string DirectorText { get; set; }
         }
-
+        public class NewPlatform
+        {
+            [Required]
+            [DisplayName("Platform")]
+            public string PlatformText { get; set; }
+        }
     }
 }

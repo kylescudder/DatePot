@@ -10,16 +10,17 @@
             @foreach (var item in Model.Users)
             {
 
-                <button type="button" class="btn btn-primary btnAddFilmModal btnAddGenre pb-2" data-toggle="modal" data-target="#AddFilmModal" data-adder="@item.UserName">Add film by @item.UserName</button>
+                <button type="button" class="btn btn-primary btnAddFilmModal btnAddGenre btnFilmButtons pb-2" data-toggle="modal" data-target="#AddFilmModal" data-adder="@item.UserName">Add film by @item.UserName</button>
             }
         }
-        <button type="button" class="btn btn-primary float-right btnRandomFilm btnAddGenre" data-toggle="modal" data-target="#RandomFilmModal">Give me a film</button>
+        <button type="button" class="btn btn-primary float-right btnRandomFilm btnAddGenre btnFilmButtons" data-toggle="modal" data-target="#RandomFilmModal">Give me a film</button>
     </div>
 </div>
 <div class="row pt-2">
     <div class="col-12">
-        <button type="button" class="btn btn-primary btnAddGenre" data-toggle="modal" data-target="#AddGenreModal">Add genre</button>
-        <button type="button" class="btn btn-primary btnAddDirector" data-toggle="modal" data-target="#AddDirectorModal">Add director</button>
+        <button type="button" class="btn btn-primary btnAddGenre btnFilmButtons" data-toggle="modal" data-target="#AddGenreModal">Add genre</button>
+        <button type="button" class="btn btn-primary btnAddDirector btnFilmButtons" data-toggle="modal" data-target="#AddDirectorModal">Add director</button>
+        <button type="button" class="btn btn-primary btnAddPlatform btnFilmButtons" data-toggle="modal" data-target="#AddPlatformModal">Add platform</button>
     </div>
 </div>
 <div class="row pt-4">
@@ -33,6 +34,7 @@
                     <th>Genre</th>
                     <th>Who?</th>
                     <th>Runtime</th>
+                    <th>Platform</th>
                     <th>Watched</th>
                     <th></th>
                 </tr>
@@ -58,6 +60,9 @@
                     </td>
                     <td>
                         @item.Runtime
+                    </td>
+                    <td>
+                        @item.Platform
                     </td>
                     <td>
                         @item.Watched
@@ -177,6 +182,18 @@
                                 <select asp-items="Model.Genre" class="form-control form-control-chosen ddlGenre" multiple data-placeholder="Choose a genre..." required="required"></select>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="control-label">Director</label>
+                                <select asp-items="Model.Director" class="form-control form-control-chosen ddlDirector" multiple data-placeholder="Choose a director..." required="required"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="control-label">Platform</label>
+                                <select asp-items="Model.Platform" class="form-control form-control-chosen ddlPlatform" multiple data-placeholder="Choose a platform..." required="required"></select>
+                            </div>
+                        </div>
                         <div class="row pt-2">
                             <div class="col-3">
                                 <label asp-for="NewFilm.Watched" class="control-label"></label>
@@ -280,6 +297,36 @@
                                 <label asp-for="NewDirector.DirectorText" class="control-label"></label>
                                 <input asp-for="NewDirector.DirectorText" class="form-control" required="required" type="text" />
                                 <span asp-validation-for="NewDirector.DirectorText" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="AddPlatformModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add platform</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-page-handler="Platform">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div lcass="form-group">
+                        <div class="row">
+                            <div class="col-12">
+                                <label asp-for="NewPlatform.PlatformText" class="control-label"></label>
+                                <input asp-for="NewPlatform.PlatformText" class="form-control" required="required" type="text" />
+                                <span asp-validation-for="NewPlatform.PlatformText" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -458,7 +505,9 @@
                     ReleaseDate: ReleaseDate,
                     Watched: Watched,
                     RunTime: RunTime,
-                    Genres: $(".ddlGenre").chosen().val()
+                    Genres: $(".ddlGenre").chosen().val(),
+                    Directors: $(".ddlDirector").chosen().val(),
+                    Platforms: $(".ddlPlatform").chosen().val()
                 },
                 headers: {
                     RequestVerificationToken:

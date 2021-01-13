@@ -29,10 +29,13 @@ namespace DatePot.Areas.FilmPot.Pages
         public List<FilmList> Films { get; set; }
         public List<UserList> Users { get; set; }
         public List<SelectListItem> Genre { get; set; }
+        public List<SelectListItem> Director { get; set; }
+        public List<SelectListItem> Platform { get; set; }
         [BindProperty]
         public NewFilm NewFilm { get; set; }
         public NewGenre NewGenre { get; set; }
         public NewDirector NewDirector { get; set; }
+        public NewPlatform NewPlatform { get; set; }
         public List<RandomFilm> RandomFilm { get; set; }
         public ActionResult OnGet()
          {
@@ -46,12 +49,24 @@ namespace DatePot.Areas.FilmPot.Pages
                 Films = fd.GetFilmList(cs);
                 Users = fd.GetUserList(cs);
                 var genres = fd.GetGenreList(cs);
+                var directors = fd.GetDirectorsList(cs);
+                var platforms = fd.GetPlatformsList(cs);
 
                 Genre = new List<SelectListItem>();
+                Director = new List<SelectListItem>();
+                Platform = new List<SelectListItem>();
 
                 genres.ForEach(x =>
                 {
                     Genre.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText });
+                });
+                directors.ForEach(x =>
+                {
+                    Director.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName });
+                });
+                platforms.ForEach(x =>
+                {
+                    Platform.Add(new SelectListItem { Value = x.PlatformID.ToString(), Text = x.PlatformText });
                 });
 
                 RandomFilm = fd.GetRandomFilm(cs);
@@ -63,7 +78,7 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<JsonResult> OnPost(string AddersName, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, List<int>Genres)
+        public async Task<JsonResult> OnPost(string AddersName, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, List<int>Genres, List<int> Directors, List<int> Platforms)
         {
             try
             {
@@ -88,7 +103,16 @@ namespace DatePot.Areas.FilmPot.Pages
                     fd.AddFilmGenres(cs, FilmID, Convert.ToInt32(item));
 
                 }
-                JsonResult result = null;
+                foreach (var item in Directors)
+                {
+                    fd.AddFilmDirectors(cs, FilmID, Convert.ToInt32(item));
+
+                }
+                foreach (var item in Platforms)
+                {
+                    fd.AddFilmPlatforms(cs, FilmID, Convert.ToInt32(item));
+
+                }
                 result = new JsonResult(FilmID);
                 return result;
             }
@@ -134,6 +158,24 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
+        public async Task<IActionResult> OnPostPlatform()
+        {
+            try
+            {
+                string cs = _config.GetConnectionString("Default");
+                if (!fd.PlatformDupeCheck(cs, Request.Form["NewPlatform.PlatformText"].ToString()))
+                {
+                    fd.AddPlatform(cs, Request.Form["NewPlatform.PlatformText"].ToString());
+                    return RedirectToPage("./Index");
+                }
+                return RedirectToPage("./Index", new { @redirect = "Platformdupe", @value = Request.Form["NewPlatform.PlatformText"].ToString() });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
         public async Task<IActionResult> OnPostAddFilm()
         {
             try
