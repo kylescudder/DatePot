@@ -78,19 +78,7 @@ body {
 .section:hover {
     text-decoration: none;
 }
-.btnAddRestaurantModal {
-    background-color: #e8a79a !important;
-    border: none !important;
-}
-.btnAddFoodType {
-    background-color: #e8a79a !important;
-    border: none !important;
-}
-.btnAddWhen {
-    background-color: #e8a79a !important;
-    border: none !important;
-}
-.btnRandomRestaurant {
+.btnFoodButtons {
     background-color: #e8a79a !important;
     border: none !important;
 }
@@ -106,21 +94,7 @@ body {
     background-color: #fad0be !important;
     border: none !important;
 }
-
-
-.btnAddFilmModal {
-    background-color: #51bbbb !important;
-    border: none !important;
-}
-.btnAddGenre {
-    background-color: #51bbbb !important;
-    border: none !important;
-}
-.btnAddDirector {
-    background-color: #51bbbb !important;
-    border: none !important;
-}
-.btnRandomFilm {
+.btnFilmButtons {
     background-color: #51bbbb !important;
     border: none !important;
 }
@@ -160,4 +134,13 @@ body {
 }
 .mainPB {
     padding-bottom: 5rem;
+}
+#ValidationCheck .modal-content {
+    background-color: lightcoral;
+}
+#ValidationCheck .modal-header {
+    border-bottom: none;
+}
+#ValidationCheck .modal-footer {
+    border-top: none;
 }
