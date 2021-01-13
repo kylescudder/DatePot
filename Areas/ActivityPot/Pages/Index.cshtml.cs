@@ -15,6 +15,7 @@ using DatePot.Areas.ActivityPot.Data;
 
 namespace DatePot.Areas.ActivityPot.Pages
 {
+    [ValidateAntiForgeryToken]
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
@@ -43,13 +44,21 @@ namespace DatePot.Areas.ActivityPot.Pages
                 string cs = _config.GetConnectionString("Default");
                 Activitys = fd.GetActivityList(cs);
                 var activitytypes = fd.GetyActivityTypeList(cs);
+                var expenses = fd.GetExpenseList(cs);
 
                 ActivityType = new List<SelectListItem>();
+                Expense = new List<SelectListItem>();
+
 
                 activitytypes.ForEach(x =>
                 {
                     ActivityType.Add(new SelectListItem { Value = x.ActivityTypeID.ToString(), Text = x.ActivityType });
                 });
+                expenses.ForEach(x =>
+                {
+                    Expense.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText });
+                });
+
 
                 RandomActivity = fd.GetRandomActivity(cs);
 
@@ -60,69 +69,51 @@ namespace DatePot.Areas.ActivityPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public ActionResult OnPost()
+        public ActionResult OnPost(string ActivityName, string Location, int? ExpenseID, string Description, bool Prebook, List<int> ActivityTypes)
         {
             try
             {
+                JsonResult result = null;
                 if (ModelState.IsValid == false)
                 {
-                    return Page();
+                    foreach (var modelStateKey in ViewData.ModelState.Keys)
+                    {
+                        var value = ViewData.ModelState[modelStateKey];
+                        foreach (var error in value.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            result = new JsonResult(modelStateKey + ": " + errorMessage);
+                        }
+                    }
+                    return result;
                 }
                 string cs = _config.GetConnectionString("Default");
-                int ActivityID = fd.AddActivity(cs, NewActivity);
+                int ActivityID = fd.AddActivity(cs, ActivityName, Location, ExpenseID, Description, Prebook);
+                
+                foreach (var item in ActivityTypes)
+                {
+                    fd.AddActivityxType(cs, ActivityID, Convert.ToInt32(item));
+                }
 
-                return RedirectToPage("./View", new { Id = ActivityID });
+                result = new JsonResult(ActivityID);
+                return result;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<IActionResult> OnPostGenre()
+        public async Task<IActionResult> OnPostActivityType()
         {
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                if (!fd.GenreDupeCheck(cs, Request.Form["NewGenre.GenreText"].ToString()))
+                if (!fd.ActivityTypeDupeCheck(cs, Request.Form["NewActivityType.ActivityType"].ToString()))
                 {
-                    fd.AddGenre(cs, Request.Form["NewGenre.GenreText"].ToString());
+                    fd.AddActivityType(cs, Request.Form["NewActivityType.ActivityType"].ToString());
                     return RedirectToPage("./Index");
                 }
-                return RedirectToPage("./Index", new { @redirect = "genredupe", @value = Request.Form["NewGenre.GenreText"].ToString() });
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
-        public async Task<IActionResult> OnPostDirector()
-        {
-            try
-            {
-                string cs = _config.GetConnectionString("Default");
-                if (!fd.DirectorDupeCheck(cs, Request.Form["NewDirector.DirectorText"].ToString()))
-                {
-                    fd.AddDirector(cs, Request.Form["NewDirector.DirectorText"].ToString());
-                    return RedirectToPage("./Index");
-                }
-                return RedirectToPage("./Index", new { @redirect = "directordupe", @value = Request.Form["NewDirector.DirectorText"].ToString() });
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
-        public async Task<IActionResult> OnPostAddActivity()
-        {
-            try
-            {
-                string cs = _config.GetConnectionString("Default");
-
-                fd.ActivityWatched(cs, Convert.ToInt32(Request.Form["ActivityID"]));
-
-                //return RedirectToPage("./Index", new { @redirect = "directordupe", @value = Request.Form["NewDirector.DirectorText"].ToString() });
-
-                return RedirectToPage("./Index", new { @redirect = "ActivityWatched" });
+                return RedirectToPage("./Index", new { @redirect = "activitytypedupe", @value = Request.Form["NewActivityType.ActivityType"].ToString() });
             }
             catch (Exception ex)
             {

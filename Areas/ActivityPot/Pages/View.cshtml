@@ -19,6 +19,68 @@
                 }, 250);
             }
         });
+        $(".btnDeleteActivityType").on("click", function () {
+            var ActivityID = $(".hidActivityID").val();
+            var pathname = '?handler=DeleteActivityType';
+            $.ajax({
+                dataType: 'json',
+                url: pathname,
+                type: 'POST',
+                data: {
+                    ActivityxTypeID: this.id,
+                    ActivityID: ActivityID
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (Number.isInteger(response)) {
+                        window.location.replace("View?Id=" + response);
+                    } else {
+                        $("#ValidationCheck").modal();
+                        $(".errorText").text(response);
+                    }
+                },
+                error: function () {
+                    alert("AJAX Request Failed, Contact Support");
+                }
+            });
+        });
+        $(".btnUpdateActivity").on("click", function () {
+            console.log($(".hidActivityID").val());
+            $.ajax({
+                dataType: 'json',
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    ActivityID: $(".hidActivityID").val(),
+                    ActivityName: $(".UpdateActivityActivityName").val(),
+                    Location: $(".UpdateActivityLocation").val(),
+                    ExpenseID: $(".UpdateActivityExpenseID").val(),
+                    Description: $(".UpdateActivityDescription").val(),
+                    Prebook: $(".UpdateActivityPrebook").prop("checked"),
+                    ActivityTypes: $(".UpdateActivityActivityType").chosen().val()
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (Number.isInteger(response)) {
+                        window.location.replace("View?Id=" + response + "&redirect=update");
+                    } else {
+                        $("#ValidationCheck").modal();
+                        $(".errorText").text(response);
+                    }
+                },
+                error: function (ex) {
+                    alert("AJAX Request Failed, Contact Support");
+                    console.log(ex);
+                }
+            });
+        });
+
     </script>
 }
 <div class="modal fade savedAlert" tabindex="-1" role="dialog">
@@ -50,6 +112,7 @@ else
                 </svg>
             </button>
             <form method="post" asp-page-handler="Archive">
+                @Html.AntiForgeryToken()
                 <input asp-for="UpdateActivityDetails.ActivityID" value="@Model.ActivityDetails.ActivityID" type="hidden" />
                 <div class="modal fade ArchiveActivity" id="ArchiveActivity" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
@@ -76,44 +139,95 @@ else
     <div class="card bg-light mb-2">
         <div class="card-body">
             <form method="post">
+                @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input asp-for="UpdateActivityDetails.ActivityID" value="@Model.ActivityDetails.ActivityID" type="hidden" />
+                <input asp-for="UpdateActivityDetails.ActivityID" value="@Model.ActivityDetails.ActivityID" type="hidden" class="hidActivityID" />
                 <div class="form-group">
                     <div class="row">
                         <div class="col-12">
                             <label asp-for="UpdateActivityDetails.ActivityName" class="control-label"></label>
-                            <input asp-for="UpdateActivityDetails.ActivityName" class="form-control" value="@Model.ActivityDetails.ActivityName" required="required" type="text" />
+                            <input asp-for="UpdateActivityDetails.ActivityName" class="form-control UpdateActivityActivityName" value="@Model.ActivityDetails.ActivityName" required="required" type="text" />
                             <span asp-validation-for="UpdateActivityDetails.ActivityName" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
                             <label asp-for="UpdateActivityDetails.Location" class="control-label"></label>
-                            <input asp-for="UpdateActivityDetails.Location" class="form-control" value="@Model.ActivityDetails.Location" required="required" />
+                            <input asp-for="UpdateActivityDetails.Location" class="form-control UpdateActivityLocation" value="@Model.ActivityDetails.Location" required="required" />
                             <span asp-validation-for="UpdateActivityDetails.Location" class="text-danger"></span>
                         </div>
                     </div>
-                    @*<div class="row">
+                    <div class="row">
                         <div class="col-12">
-                            <label asp-for="UpdateActivityDetails.GenreID" class="control-label"></label>
-                            <select asp-for="UpdateActivityDetails.GenreID" asp-items="Model.Genres" class="form-control form-control-chosen" value="@Model.ActivityDetails.GenreID" required="required"></select>
-                            <span asp-validation-for="UpdateActivityDetails.GenreID" class="text-danger"></span>
+                            <label asp-for="UpdateActivityDetails.ExpenseID" class="control-label"></label>
+                            <select asp-for="UpdateActivityDetails.ExpenseID" asp-items="Model.Expenses" class="form-control form-control-chosen UpdateActivityExpenseID" value="@Model.ActivityDetails.ExpenseID" data-placeholder="Choose an expense..." required="required"></select>
+                            <span asp-validation-for="UpdateActivityDetails.ExpenseID" class="text-danger"></span>
                         </div>
-                    </div>*@
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="UpdateActivityDetails.Description" class="control-label"></label>
+                            <input asp-for="UpdateActivityDetails.Description" class="form-control UpdateActivityDescription" value="@Model.ActivityDetails.Description" required="required" />
+                            <span asp-validation-for="UpdateActivityDetails.Description" class="text-danger"></span>
+                        </div>
+                    </div>
                     <div class="row pt-2">
                         <div class="col-3">
                             <label asp-for="UpdateActivityDetails.Prebook" class="control-label"></label>
                         </div>
                         <div class="col-9">
-                            <input asp-for="UpdateActivityDetails.Prebook" checked="@Model.ActivityDetails.Prebook" class="form-control" />
+                            <input asp-for="UpdateActivityDetails.Prebook" checked="@Model.ActivityDetails.Prebook" class="form-control UpdateActivityPrebook" />
                             <span asp-validation-for="UpdateActivityDetails.Prebook" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row pt-3">
+                        <div class="col-12">
+                            <label class="control-label">Type</label>
+                            @foreach (var item in Model.ActivityxTypes)
+                            {
+                                <div class="btn btn-dark btnDeleteActivityType" id="@item.ActivityXTypeID">
+                                    @item.ActivityTypeText
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash text-danger" " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                    </svg>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-12">
+                            <label class="control-label">Add type</label>
+                            <select asp-items="Model.ActivityTypes" class="form-control form-control-chosen UpdateActivityActivityType" multiple data-placeholder="Choose a type..." autocomplete="off"></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <input type="submit" value="Save" class="btn btn-primary btnUpdateActivity" />
                 </div>
             </form>
         </div>
     </div>
 }
+<div class="modal fade" id="ValidationCheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Check it again bud</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="errorText"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

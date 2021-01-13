@@ -33,9 +33,6 @@ namespace DatePot.Areas.ActivityPot.Models
         public class NewActivity
         {
             [Required]
-            [DisplayName("Added by")]
-            public string AddersName { get; set; }
-            [Required]
             [MaxLength(100, ErrorMessage = "Names must not exceed 100 characters")]
             [MinLength(2, ErrorMessage = "Names must be at least 2 characters long")]
             [DisplayName("Name")]
@@ -63,6 +60,7 @@ namespace DatePot.Areas.ActivityPot.Models
             public string ActivityName { get; set; }
             public string Location { get; set; }
             public string Description { get; set; }
+            [Display(Name = "Expense")]
             public int ExpenseID { get; set; }
             [Display(Name = "Activity Type")]
             public int ActivityTypeID { get; set; }
@@ -77,6 +75,16 @@ namespace DatePot.Areas.ActivityPot.Models
             [Required]
             [DisplayName("Activity Type")]
             public string ActivityType { get; set; }
+        }
+        public class Expenses
+        {
+            public int ExpenseID { get; set; }
+            public string ExpenseText { get; set; }
+        }
+        public class ActivityxTypes
+        {
+            public int ActivityXTypeID { get; set; }
+            public string ActivityTypeText { get; set; }
         }
     }
 }

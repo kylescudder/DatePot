@@ -15,6 +15,7 @@ using DatePot.Areas.ActivityPot.Data;
 
 namespace DatePot.Areas.ActivityPot.Pages
 {
+    [ValidateAntiForgeryToken]
     public class ViewModel : PageModel
     {
         private readonly IConfiguration _config;
@@ -31,6 +32,8 @@ namespace DatePot.Areas.ActivityPot.Pages
         public ActivityDetails ActivityDetails { get; set; }
         //public string Genre { get; set; }
         public List<SelectListItem> ActivityTypes { get; set; }
+        public List<ActivityxTypes> ActivityxTypes { get; set; }
+        public List<SelectListItem> Expenses { get; set; }
         public async Task<IActionResult> OnGet()
         {
             if (!User.Identity.IsAuthenticated)
@@ -45,16 +48,31 @@ namespace DatePot.Areas.ActivityPot.Pages
                 {
                     if (ActivityDetails != null)
                     {
+                        var expenses = fd.GetExpenseList(cs);
                         var activitytypes = fd.GetyActivityTypeList(cs);
 
-                        //Genre = genres.Where(x => x.GenreID == ActivityDetails.GenreID).FirstOrDefault()?.GenreText;
-
+                        Expenses = new List<SelectListItem>();
                         ActivityTypes = new List<SelectListItem>();
+                        ActivityxTypes = new List<ActivityxTypes>();
 
+                        ActivityxTypes = fd.GetActivityxTypes(cs, Id);
+
+                        expenses.ForEach(x =>
+                        {
+                            if (ActivityDetails.ExpenseID == x.ExpenseID)
+                            {
+                                Expenses.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText, Selected = true });
+                            }
+                            else
+                            {
+                                Expenses.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText });
+                            }
+                        });
                         activitytypes.ForEach(x =>
                         {
                             ActivityTypes.Add(new SelectListItem { Value = x.ActivityTypeID.ToString(), Text = x.ActivityType });
                         });
+
                     }
                 }
 
@@ -65,18 +83,38 @@ namespace DatePot.Areas.ActivityPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(int ActivityID, string ActivityName,string Location, int ExpenseID, string Description, bool Prebook, List<int> ActivityTypes)
         {
             try
             {
+                JsonResult result = null;
                 if (ModelState.IsValid == false)
                 {
-                    return Page();
+                    foreach (var modelStateKey in ViewData.ModelState.Keys)
+                    {
+                        var value = ViewData.ModelState[modelStateKey];
+                        foreach (var error in value.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            result = new JsonResult(modelStateKey + ": " + errorMessage);
+                        }
+                    }
+                    return result;
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.UpdateActivity(cs, UpdateActivityDetails);
+                fd.UpdateActivity(cs, ActivityID, ActivityName, Location, ExpenseID, Description, Prebook);
 
-                return RedirectToPage("./View", new { @Id = UpdateActivityDetails.ActivityID, @redirect = "update" });
+                foreach (var item in ActivityTypes)
+                {
+                    if (item != 0)
+                    {
+                        fd.AddActivityxType(cs, ActivityID, Convert.ToInt32(item));
+                    }
+
+                }
+
+                result = new JsonResult(ActivityID);
+                return result;
             }
             catch (Exception ex)
             {
@@ -95,6 +133,35 @@ namespace DatePot.Areas.ActivityPot.Pages
                 fd.ArchiveActivity(cs, UpdateActivityDetails.ActivityID);
 
                 return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+        public async Task<JsonResult> OnPostDeleteActivityType(int ActivityxTypeID, int ActivityID)
+        {
+            try
+            {
+                JsonResult result = null;
+                if (ModelState.IsValid == false)
+                {
+                    foreach (var modelStateKey in ViewData.ModelState.Keys)
+                    {
+                        var value = ViewData.ModelState[modelStateKey];
+                        foreach (var error in value.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            result = new JsonResult(modelStateKey + ": " + errorMessage);
+                        }
+                    }
+                    return result;
+                }
+                string cs = _config.GetConnectionString("Default");
+                fd.DeleteActivityxType(cs, ActivityxTypeID);
+
+                result = new JsonResult(ActivityID);
+                return result;
             }
             catch (Exception ex)
             {

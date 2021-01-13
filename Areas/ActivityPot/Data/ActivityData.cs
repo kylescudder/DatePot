@@ -34,7 +34,6 @@ namespace DatePot.Areas.ActivityPot.Data
                     ws.Description = reader.GetString("Description");
                     ws.ExpenseID = reader.GetInt32("ExpenseID");
                     ws.Prebook = reader.GetBoolean("Prebook");
-                    ws.ActivityTypeID = reader.GetInt32("ActivityTypeID");
                     wsl.Add(ws);
                 }
                 reader.Close();
@@ -62,7 +61,7 @@ namespace DatePot.Areas.ActivityPot.Data
             con.Close();
             return (List<ActivityTypes>)wsl;
         }
-        public void UpdateActivity(string cs, UpdateActivityDetails updatefiledetails)
+        public void UpdateActivity(string cs, int ActivityID, string ActivityName, string Location, int ExpenseID, string Description, bool Prebook)
         {
             using var con = new MySqlConnection(cs);
             con.Open();
@@ -70,18 +69,19 @@ namespace DatePot.Areas.ActivityPot.Data
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spUpdateActivity"; // The name of the Stored Proc
+                cmd.CommandText = "spUpdateActivity"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@ActivityID", updatefiledetails.ActivityID);
-                cmd.Parameters.AddWithValue("@ActivityName", updatefiledetails.ActivityName);
-                cmd.Parameters.AddWithValue("@Location", updatefiledetails.Location);
-                cmd.Parameters.AddWithValue("@Description", updatefiledetails.Description);
+                cmd.Parameters.AddWithValue("@ActivityID", ActivityID);
+                cmd.Parameters.AddWithValue("@ActivityName", ActivityName);
+                cmd.Parameters.AddWithValue("@Location", Location);
+                cmd.Parameters.AddWithValue("@ExpenseID", ExpenseID);
+                cmd.Parameters.AddWithValue("@Description", Description);
                 MySqlParameter paramWatched = new MySqlParameter
                 {
-                    ParameterName = "@Watched",
+                    ParameterName = "@Prebook",
                     MySqlDbType = MySqlDbType.Bit,
-                    Value = updatefiledetails.Prebook
+                    Value = Prebook
                 };
                 cmd.Parameters.Add(paramWatched);
                 cmd.ExecuteNonQuery();
@@ -131,28 +131,22 @@ namespace DatePot.Areas.ActivityPot.Data
             reader.Close();
             return (List<ActivityList>)wsl;
         }
-        public int AddActivity(string cs, NewActivity newActivity)
+        public int AddActivity(string cs, string ActivityName, string Location, int? ExpenseID, string Description, bool Prebook)
         {
-            int AddedByID = 0;
-            if (newActivity.AddersName == "Kyle")
-            {
-                AddedByID = 1;
-            }
-            else { AddedByID = 2; }
             using var con = new MySqlConnection(cs);
             con.Open();
 
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "spAddActivity"; // The name of the Stored Proc
+                cmd.CommandText = "spAddActivity"; 
                 cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
 
-                cmd.Parameters.AddWithValue("@ActivityName", newActivity.ActivityName);
-                cmd.Parameters.AddWithValue("@Location", newActivity.Location);
-                cmd.Parameters.AddWithValue("@Description", newActivity.Description);
-                cmd.Parameters.AddWithValue("@ExpenseID", newActivity.ExpenseID);
-                cmd.Parameters.AddWithValue("@Prebook", newActivity.Prebook);
+                cmd.Parameters.AddWithValue("@ActivityName", ActivityName);
+                cmd.Parameters.AddWithValue("@Location", Location);
+                cmd.Parameters.AddWithValue("@Description", Description);
+                cmd.Parameters.AddWithValue("@ExpenseID", ExpenseID);
+                cmd.Parameters.AddWithValue("@Prebook", Prebook);
                 cmd.Parameters.Add("@ActivityID", MySqlDbType.Int32);
                 cmd.Parameters["@ActivityID"].Direction = ParameterDirection.Output; // from System.Data
                 cmd.ExecuteNonQuery();
@@ -277,5 +271,125 @@ namespace DatePot.Areas.ActivityPot.Data
                 con.Close();
             }
         }
+        public List<Expenses> GetExpenseList(string cs)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            string sql = "CALL spGetExpenseList";
+            using var cmd = new MySqlCommand(sql, con);
+            IList<Expenses> wsl = new List<Expenses>();
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var ws = new Expenses();
+                ws.ExpenseID = reader.GetInt32("ExpenseID");
+                ws.ExpenseText = reader.GetString("ExpenseText");
+                wsl.Add(ws);
+            }
+            reader.Close();
+            con.Close();
+            return (List<Expenses>)wsl;
+        }
+        public bool ActivityTypeDupeCheck(string cs, string ActivityTypeText)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spActivityTypeDupeCheck"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@ActivityTypeText", ActivityTypeText);
+                cmd.Parameters.Add("@ActivityTypeExists", MySqlDbType.Bool);
+                cmd.Parameters["@ActivityTypeExists"].Direction = ParameterDirection.Output; // from System.Data
+                cmd.ExecuteNonQuery();
+                Object obj = cmd.Parameters["@ActivityTypeExists"].Value;
+                var lParam = (Boolean)obj;    // more useful datatype
+
+                cmd.ExecuteNonQuery();
+                con.Close();
+                return lParam;
+            }
+        }
+        public void AddActivityType(string cs, string ActivityTypeText)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spAddActivityType"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@ActivityTypeText", ActivityTypeText);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+        public void AddActivityxType(string cs, int ActivityID, int ActivityTypeID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spAddActivityxType"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@ActivityID", ActivityID);
+                cmd.Parameters.AddWithValue("@ActivityTypeID", ActivityTypeID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+        public List<ActivityxTypes> GetActivityxTypes(string cs, int ActivityID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spGetActivityxTypes"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@ActivityID", ActivityID);
+                IList<ActivityxTypes> wsl = new List<ActivityxTypes>();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var ws = new ActivityxTypes();
+                    ws.ActivityXTypeID = reader.GetInt32("ActivityxTypeID");
+                    ws.ActivityTypeText = reader.GetString("ActivityTypeText");
+
+                    wsl.Add(ws);
+                }
+                reader.Close();
+                return (List<ActivityxTypes>)wsl;
+
+            }
+        }
+        public void DeleteActivityxType(string cs, int ActivityxTypeID)
+        {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "spDeleteActivityxType"; 
+                cmd.CommandType = CommandType.StoredProcedure; // It is a Stored Proc
+
+                cmd.Parameters.AddWithValue("@ActivityxTypesID", ActivityxTypeID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+
     }
 }
