@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Elmah.Io.AspNetCore;
+using System.IO;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace DatePot
 {
@@ -56,6 +58,9 @@ namespace DatePot
                 options.Password.RequireLowercase = true;
                 options.SignIn.RequireConfirmedEmail = false;
             });
+
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(@"D:\HostingSpaces\scud97\kylescudder.co.uk\data\keys\"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
