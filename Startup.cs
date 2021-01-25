@@ -17,7 +17,7 @@ using Serilog;
 using Microsoft.AspNetCore.DataProtection;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-
+using Microsoft.AspNetCore.DataProtection;
 namespace DatePot
 {
     public class Startup
@@ -62,7 +62,7 @@ namespace DatePot
             });
 
             services.AddDataProtection()
-                .PersistKeysToFileSystem(new DirectoryInfo(@"~\"));
+                .PersistKeysToFileSystem(new DirectoryInfo(@"D:\HostingSpaces\scud97\kylescudder.co.uk\data\keys\"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
