@@ -18,6 +18,13 @@ using Microsoft.AspNetCore.DataProtection;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.DataProtection;
+using DatePot.Db;
+using DatePot.Areas.FilmPot.Data;
+using DatePot.Areas.FoodPot.Data;
+using DatePot.Areas.CoffeePot.Data;
+using DatePot.Areas.ActivityPot.Data;
+using DatePot.Areas.Identity.Data;
+
 namespace DatePot
 {
     public class Startup
@@ -33,16 +40,18 @@ namespace DatePot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseMySql(
-                Configuration.GetConnectionString("DefaultConnection")));
-
-            string constr = this.Configuration.GetConnectionString("Default");
-
-            //services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:Default"]));
-
+                        options.UseSqlServer(
+                            Configuration.GetConnectionString("Default")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
+
+            services.AddSingleton<ISqlDb, SqlDb>();
+            services.AddSingleton<IFilmData, FilmData>();
+            services.AddSingleton<IFoodData, FoodData>();
+            services.AddSingleton<ICoffeeData, CoffeeData>();
+            services.AddSingleton<IActivityData, ActivityData>();
+            services.AddSingleton<IIdentityData, IdentityData>();
 
             services.AddElmahIo(o =>
             {

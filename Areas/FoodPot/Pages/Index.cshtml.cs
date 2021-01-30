@@ -9,10 +9,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MySqlConnector;
+//using MySqlConnector;
 using static DatePot.Areas.FoodPot.Models.Food;
 using DatePot.Areas.FoodPot.Data;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using DatePot.Areas.FilmPot.Data;
 
 namespace DatePot.Areas.FoodPot.Pages
 {
@@ -21,12 +22,13 @@ namespace DatePot.Areas.FoodPot.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IConfiguration _config;
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration config)
+        private readonly IFoodData _foodData;
+        public IndexModel(ILogger<IndexModel> logger, IConfiguration config, IFoodData foodData)
         {
             _logger = logger;
             _config = config;
+            _foodData = foodData;
         }
-        FoodData fd = new FoodData();
         public List<RestaurantList> Restaurants { get; set; }
         public List<SelectListItem> FoodType { get; set; }
         public List<SelectListItem> When { get; set; }
@@ -45,31 +47,30 @@ namespace DatePot.Areas.FoodPot.Pages
             }
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                Restaurants = fd.GetRestaurantList(cs);
-                var foodtypes = fd.GetFoodTypeList(cs);
-                var when = fd.GetWhenList(cs);
-                var expenses = fd.GetExpenseList(cs);
-                var locations = fd.GetLocationList(cs);
+                Restaurants = _foodData.GetRestaurantList().Result;
+                var foodtypes = _foodData.GetFoodTypeList();
+                var when = _foodData.GetWhenList();
+                var expenses = _foodData.GetExpenseList();
+                var locations = _foodData.GetLocationList();
 
                 FoodType = new List<SelectListItem>();
                 When = new List<SelectListItem>();
                 Expense = new List<SelectListItem>();
                 Location = new List<SelectListItem>();
 
-                foodtypes.ForEach(x =>
+                foodtypes.Result.ForEach(x =>
                 {
                     FoodType.Add(new SelectListItem { Value = x.FoodTypeID.ToString(), Text = x.FoodTypeText });
                 });
-                when.ForEach(x =>
+                when.Result.ForEach(x =>
                 {
                     When.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenText });
                 });
-                expenses.ForEach(x =>
+                expenses.Result.ForEach(x =>
                 {
                     Expense.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText });
                 });
-                locations.ForEach(x =>
+                locations.Result.ForEach(x =>
                 {
                     Location.Add(new SelectListItem { Value = x.LocationID.ToString(), Text = x.LocationText });
                 });
@@ -99,16 +100,15 @@ namespace DatePot.Areas.FoodPot.Pages
                     }
                     return result;
                 }
-                string cs = _config.GetConnectionString("Default");
-                int RestaurantID = fd.AddRestaurant(cs, RestaurantName, ExpenseID, LocationID);
+                int RestaurantID = _foodData.AddRestaurant(RestaurantName, ExpenseID, LocationID).Result;
 
                 foreach (var item in FoodType)
                 {
-                    fd.AddRestaurantFoodType(cs, RestaurantID, Convert.ToInt32(item));
+                    _foodData.AddRestaurantFoodType(RestaurantID, Convert.ToInt32(item));
                 }
                 foreach (var item in When)
                 {
-                    fd.AddRestaurantWhen(cs, RestaurantID, Convert.ToInt32(item));
+                    _foodData.AddRestaurantWhen(RestaurantID, Convert.ToInt32(item));
                 }
 
                 result = new JsonResult(RestaurantID);
@@ -123,10 +123,9 @@ namespace DatePot.Areas.FoodPot.Pages
         {
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                if (!fd.FoodTypeDupeCheck(cs, Request.Form["NewFoodType.FoodTypeText"].ToString()))
+                if (!_foodData.FoodTypeDupeCheck(Request.Form["NewFoodType.FoodTypeText"].ToString()).Result)
                 {
-                    fd.AddFoodType(cs, Request.Form["NewFoodType.FoodTypeText"].ToString());
+                    await _foodData.AddFoodType(Request.Form["NewFoodType.FoodTypeText"].ToString());
                     return RedirectToPage("./Index");
                 }
                 return RedirectToPage("./Index", new { @redirect = "FoodTypedupe", @value = Request.Form["NewFoodType.FoodTypeText"].ToString() });
@@ -140,10 +139,9 @@ namespace DatePot.Areas.FoodPot.Pages
         {
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                if (!fd.WhenDupeCheck(cs, Request.Form["NewWhen.WhenText"].ToString()))
+                if (!_foodData.WhenDupeCheck(Request.Form["NewWhen.WhenText"].ToString()).Result)
                 {
-                    fd.AddWhen(cs, Request.Form["NewWhen.WhenText"].ToString());
+                    await _foodData.AddWhen(Request.Form["NewWhen.WhenText"].ToString());
                     return RedirectToPage("./Index");
                 }
                 return RedirectToPage("./Index", new { @redirect = "Whendupe", @value = Request.Form["NewWhen.WhenText"].ToString() });
@@ -168,8 +166,7 @@ namespace DatePot.Areas.FoodPot.Pages
         {
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                RandomRestaurants = fd.GetRandomRestaurant(cs, WhenID);
+                RandomRestaurants = _foodData.GetRandomRestaurant(WhenID).Result;
                 return new PartialViewResult
                 {
                     ViewName = "_RandomRestaurant",

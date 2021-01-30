@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MySqlConnector;
+//using MySqlConnector;
 using static DatePot.Areas.ActivityPot.Models.Activitys;
 using DatePot.Areas.ActivityPot.Data;
 
@@ -20,12 +20,13 @@ namespace DatePot.Areas.ActivityPot.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IConfiguration _config;
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration config)
+        private readonly IActivityData _activityData;
+        public IndexModel(ILogger<IndexModel> logger, IConfiguration config, IActivityData activityData)
         {
             _logger = logger;
             _config = config;
+            _activityData = activityData;
         }
-        ActivityData fd = new ActivityData();
         public List<ActivityList> Activitys { get; set; }
         public List<SelectListItem> Expense { get; set; }
         public List<SelectListItem> ActivityType { get; set; }
@@ -41,26 +42,25 @@ namespace DatePot.Areas.ActivityPot.Pages
             }
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                Activitys = fd.GetActivityList(cs);
-                var activitytypes = fd.GetyActivityTypeList(cs);
-                var expenses = fd.GetExpenseList(cs);
+                Activitys = _activityData.GetActivityList().Result;
+                var activitytypes = _activityData.GetyActivityTypeList();
+                var expenses = _activityData.GetExpenseList();
 
                 ActivityType = new List<SelectListItem>();
                 Expense = new List<SelectListItem>();
 
 
-                activitytypes.ForEach(x =>
+                activitytypes.Result.ForEach(x =>
                 {
                     ActivityType.Add(new SelectListItem { Value = x.ActivityTypeID.ToString(), Text = x.ActivityType });
                 });
-                expenses.ForEach(x =>
+                expenses.Result.ForEach(x =>
                 {
                     Expense.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText });
                 });
 
 
-                RandomActivity = fd.GetRandomActivity(cs);
+                RandomActivity = _activityData.GetRandomActivity().Result;
 
                 return Page();
             }
@@ -87,12 +87,11 @@ namespace DatePot.Areas.ActivityPot.Pages
                     }
                     return result;
                 }
-                string cs = _config.GetConnectionString("Default");
-                int ActivityID = fd.AddActivity(cs, ActivityName, Location, ExpenseID, Description, Prebook);
+                int ActivityID = _activityData.AddActivity(ActivityName, Location, ExpenseID, Description, Prebook).Result;
                 
                 foreach (var item in ActivityTypes)
                 {
-                    fd.AddActivityxType(cs, ActivityID, Convert.ToInt32(item));
+                    _activityData.AddActivityxType(ActivityID, Convert.ToInt32(item));
                 }
 
                 result = new JsonResult(ActivityID);
@@ -107,10 +106,9 @@ namespace DatePot.Areas.ActivityPot.Pages
         {
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                if (!fd.ActivityTypeDupeCheck(cs, Request.Form["NewActivityType.ActivityType"].ToString()))
+                if (!_activityData.ActivityTypeDupeCheck(Request.Form["NewActivityType.ActivityType"].ToString()).Result)
                 {
-                    fd.AddActivityType(cs, Request.Form["NewActivityType.ActivityType"].ToString());
+                    await _activityData.AddActivityType(Request.Form["NewActivityType.ActivityType"].ToString());
                     return RedirectToPage("./Index");
                 }
                 return RedirectToPage("./Index", new { @redirect = "activitytypedupe", @value = Request.Form["NewActivityType.ActivityType"].ToString() });

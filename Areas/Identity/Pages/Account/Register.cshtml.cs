@@ -27,19 +27,22 @@ namespace DatePot.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _config;
+        private readonly IIdentityData _identityData;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IConfiguration config)
+            IConfiguration config,
+            IIdentityData identityData)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _config = config;
+            _identityData = identityData;
         }
 
         [BindProperty]
@@ -87,8 +90,7 @@ namespace DatePot.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     string cs = _config.GetConnectionString("Default");
-                    IdentityData id = new IdentityData();
-                    id.AddUser(cs, Input.Name.ToString(), user.Id);
+                    _identityData.AddUser(Input.Name.ToString(), user.Id);
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

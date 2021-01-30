@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 using static DatePot.Areas.CoffeePot.Models.Coffees;
 using DatePot.Areas.CoffeePot.Data;
 
@@ -19,11 +19,12 @@ namespace DatePot.Areas.CoffeePot.Pages
     public class ViewModel : PageModel
     {
         private readonly IConfiguration _config;
-        public ViewModel(IConfiguration config)
+        private readonly ICoffeeData _coffeeData;
+        public ViewModel(IConfiguration config, ICoffeeData coffeeData)
         {
             _config = config;
+            _coffeeData = coffeeData;
         }
-        CoffeeData fd = new CoffeeData();
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
         [BindProperty]
@@ -40,7 +41,7 @@ namespace DatePot.Areas.CoffeePot.Pages
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                CoffeeDetails = fd.GetCoffeeDetails(cs, Id).FirstOrDefault();
+                CoffeeDetails = _coffeeData.GetCoffeeDetails(Id).Result.FirstOrDefault();
 
                 return Page();
             }
@@ -86,7 +87,7 @@ namespace DatePot.Areas.CoffeePot.Pages
                 {
                     RhiannExperience = Convert.ToInt16(Request.Form["UpdateCoffeeDetails.RhiannExperience"]);
                 }
-                fd.UpdateCoffee(cs, Convert.ToInt16(Request.Form["UpdateCoffeeDetails.CoffeeID"]),
+                await _coffeeData.UpdateCoffee(Convert.ToInt16(Request.Form["UpdateCoffeeDetails.CoffeeID"]),
                     Request.Form["UpdateCoffeeDetails.CoffeeName"].ToString(),
                     KyleTaste,
                     RhiannTaste,
@@ -108,7 +109,7 @@ namespace DatePot.Areas.CoffeePot.Pages
                     return Page();
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.ArchiveCoffee(cs, UpdateCoffeeDetails.CoffeeID);
+                await _coffeeData.ArchiveCoffee(UpdateCoffeeDetails.CoffeeID);
 
                 return RedirectToPage("./Index");
             }

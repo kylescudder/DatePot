@@ -16,15 +16,18 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _config;
+        private readonly IIdentityData _identityData;
 
         public IndexModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IConfiguration config)
+            IConfiguration config,
+            IIdentityData identityData)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
+            _identityData = identityData;
         }
 
         public string Username { get; set; }
@@ -46,9 +49,8 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(IdentityUser user)
         {
             string cs = _config.GetConnectionString("Default");
-            IdentityData id = new IdentityData();
             var userName = await _userManager.GetUserNameAsync(user);
-            var UsersName = id.GetUser(cs, user.Id.ToString()).FirstOrDefault().UserName.ToString();
+            var UsersName = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserName.ToString();
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;

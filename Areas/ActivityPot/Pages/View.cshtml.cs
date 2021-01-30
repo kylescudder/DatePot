@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 using static DatePot.Areas.ActivityPot.Models.Activitys;
 using DatePot.Areas.ActivityPot.Data;
 
@@ -19,11 +19,12 @@ namespace DatePot.Areas.ActivityPot.Pages
     public class ViewModel : PageModel
     {
         private readonly IConfiguration _config;
-        public ViewModel(IConfiguration config)
+        private readonly IActivityData _activityData;
+        public ViewModel(IConfiguration config, IActivityData activityData)
         {
             _config = config;
+            _activityData = activityData;
         }
-        ActivityData fd = new ActivityData();
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
         [BindProperty]
@@ -42,22 +43,21 @@ namespace DatePot.Areas.ActivityPot.Pages
             }
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                ActivityDetails = fd.GetActivityDetails(cs, Id).FirstOrDefault();
+                ActivityDetails = _activityData.GetActivityDetails(Id).Result.FirstOrDefault();
                 if (ActivityDetails != null)
                 {
                     if (ActivityDetails != null)
                     {
-                        var expenses = fd.GetExpenseList(cs);
-                        var activitytypes = fd.GetyActivityTypeList(cs);
+                        var expenses = _activityData.GetExpenseList();
+                        var activitytypes = _activityData.GetyActivityTypeList();
 
                         Expenses = new List<SelectListItem>();
                         ActivityTypes = new List<SelectListItem>();
                         ActivityxTypes = new List<ActivityxTypes>();
 
-                        ActivityxTypes = fd.GetActivityxTypes(cs, Id);
+                        ActivityxTypes = _activityData.GetActivityxTypes(Id).Result;
 
-                        expenses.ForEach(x =>
+                        expenses.Result.ForEach(x =>
                         {
                             if (ActivityDetails.ExpenseID == x.ExpenseID)
                             {
@@ -68,7 +68,7 @@ namespace DatePot.Areas.ActivityPot.Pages
                                 Expenses.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText });
                             }
                         });
-                        activitytypes.ForEach(x =>
+                        activitytypes.Result.ForEach(x =>
                         {
                             ActivityTypes.Add(new SelectListItem { Value = x.ActivityTypeID.ToString(), Text = x.ActivityType });
                         });
@@ -101,14 +101,13 @@ namespace DatePot.Areas.ActivityPot.Pages
                     }
                     return result;
                 }
-                string cs = _config.GetConnectionString("Default");
-                fd.UpdateActivity(cs, ActivityID, ActivityName, Location, ExpenseID, Description, Prebook);
+                await _activityData.UpdateActivity(ActivityID, ActivityName, Location, ExpenseID, Description, Prebook);
 
                 foreach (var item in ActivityTypes)
                 {
                     if (item != 0)
                     {
-                        fd.AddActivityxType(cs, ActivityID, Convert.ToInt32(item));
+                        await _activityData.AddActivityxType(ActivityID, Convert.ToInt32(item));
                     }
 
                 }
@@ -129,8 +128,7 @@ namespace DatePot.Areas.ActivityPot.Pages
                 {
                     return Page();
                 }
-                string cs = _config.GetConnectionString("Default");
-                fd.ArchiveActivity(cs, UpdateActivityDetails.ActivityID);
+                await _activityData.ArchiveActivity(UpdateActivityDetails.ActivityID);
 
                 return RedirectToPage("./Index");
             }
@@ -157,8 +155,7 @@ namespace DatePot.Areas.ActivityPot.Pages
                     }
                     return result;
                 }
-                string cs = _config.GetConnectionString("Default");
-                fd.DeleteActivityxType(cs, ActivityxTypeID);
+                await _activityData.DeleteActivityxType(ActivityxTypeID);
 
                 result = new JsonResult(ActivityID);
                 return result;

@@ -275,6 +275,24 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="PlatformDupeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="platformDupeText"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Right you are my boy!</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="AddDirectorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -398,6 +416,10 @@
                 $('#DirectorDupeModal').modal();
                 $('#DirectorDupeModal').find('.modal-title').text('You sure about ' + redirectParamDupeCheckValue + ' mate?')
                 $('#DirectorDupeModal').find('.directorDupeText').text('You have tried to add ' + redirectParamDupeCheckValue + ' which already exists');
+            } else if (redirectParamDupeCheck == "Platformdupe") {
+                $('#PlatformDupeModal').modal();
+                $('#PlatformDupeModal').find('.modal-title').text('You sure about ' + redirectParamDupeCheckValue + ' mate?')
+                $('#PlatformDupeModal').find('.platformDupeText').text('You have tried to add ' + redirectParamDupeCheckValue + ' which already exists');
             } else if (redirectParamDupeCheck == "RandomFilm") {
                 $('#RandomFilmModal').modal();
             } else if (redirectParamDupeCheck == "FilmWatched") {

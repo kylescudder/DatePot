@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 using static DatePot.Areas.FoodPot.Models.Food;
 using DatePot.Areas.FoodPot.Data;
 
@@ -19,12 +19,12 @@ namespace DatePot.Areas.FoodPot.Pages
     public class ViewModel : PageModel
     {
         private readonly IConfiguration _config;
-        public ViewModel(IConfiguration config)
+        private readonly IFoodData _foodData;
+        public ViewModel(IConfiguration config, IFoodData foodData)
         {
             _config = config;
+            _foodData = foodData;
         }
-        FoodData fd = new FoodData();
-
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
         [BindProperty]
@@ -46,16 +46,15 @@ namespace DatePot.Areas.FoodPot.Pages
             }
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                RestaurantDetails = fd.GetRestaurantDetails(cs, Id).FirstOrDefault();
+                RestaurantDetails = _foodData.GetRestaurantDetails(Id).Result.FirstOrDefault();
                 if (RestaurantDetails != null)
                 {
                     if (RestaurantDetails != null)
                     {
-                        var foodtypes = fd.GetFoodTypeList(cs);
-                        var when = fd.GetWhenList(cs);
-                        var expenses = fd.GetExpenseList(cs);
-                        var locations = fd.GetLocationList(cs);
+                        var foodtypes = _foodData.GetFoodTypeList();
+                        var when = _foodData.GetWhenList();
+                        var expenses = _foodData.GetExpenseList();
+                        var locations = _foodData.GetLocationList();
 
                         //FoodType = FoodTypes.Where(x => x.FoodTypeID == RestaurantDetails.FoodTypeID).FirstOrDefault()?.FoodTypeText;
 
@@ -66,18 +65,18 @@ namespace DatePot.Areas.FoodPot.Pages
                         RestaurantFoodTypes = new List<RestaurantFoodTypes>();
                         RestaurantWhen = new List<RestaurantWhens>();
 
-                        RestaurantFoodTypes = fd.GetRestaurantFoodTypes(cs, Id);
-                        RestaurantWhen = fd.GetRestaurantWhens(cs, Id);
+                        RestaurantFoodTypes = _foodData.GetRestaurantFoodTypes(Id).Result;
+                        RestaurantWhen = _foodData.GetRestaurantWhens(Id).Result;
 
-                        foodtypes.ForEach(x =>
+                        foodtypes.Result.ForEach(x =>
                         {
                             FoodTypes.Add(new SelectListItem { Value = x.FoodTypeID.ToString(), Text = x.FoodTypeText });
                         });
-                        when.ForEach(x =>
+                        when.Result.ForEach(x =>
                         {
                             When.Add(new SelectListItem { Value = x.WhenID.ToString(), Text = x.WhenText });
                         });
-                        expenses.ForEach(x =>
+                        expenses.Result.ForEach(x =>
                         {
                             if (RestaurantDetails.ExpenseID == x.ExpenseID)
                             {
@@ -88,7 +87,7 @@ namespace DatePot.Areas.FoodPot.Pages
                                 Expenses.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText });
                             }
                         });
-                        locations.ForEach(x =>
+                        locations.Result.ForEach(x =>
                         {
                             if (RestaurantDetails.LocationID == x.LocationID)
                             {
@@ -128,14 +127,13 @@ namespace DatePot.Areas.FoodPot.Pages
                     }
                     return result;
                 }
-                string cs = _config.GetConnectionString("Default");
-                fd.UpdateRestaurant(cs, RestaurantID, RestaurantName, ExpenseID, LocationID);
+                await _foodData.UpdateRestaurant(RestaurantID, RestaurantName, ExpenseID, LocationID);
 
                 foreach (var item in FoodType)
                 {
                     if (item != 0)
                     {
-                        fd.AddRestaurantFoodType(cs, RestaurantID, Convert.ToInt32(item));
+                        await _foodData.AddRestaurantFoodType(RestaurantID, Convert.ToInt32(item));
                     }
 
                 }
@@ -143,7 +141,7 @@ namespace DatePot.Areas.FoodPot.Pages
                 {
                     if (item != 0)
                     {
-                        fd.AddRestaurantWhen(cs, RestaurantID, Convert.ToInt32(item));
+                        await _foodData.AddRestaurantWhen(RestaurantID, Convert.ToInt32(item));
                     }
 
                 }
@@ -164,8 +162,7 @@ namespace DatePot.Areas.FoodPot.Pages
                 {
                     return Page();
                 }
-                string cs = _config.GetConnectionString("Default");
-                fd.ArchiveRestaurant(cs, UpdateRestaurantDetails.RestaurantID);
+                await _foodData.ArchiveRestaurant(UpdateRestaurantDetails.RestaurantID);
 
                 return RedirectToPage("./Index");
             }
@@ -192,8 +189,7 @@ namespace DatePot.Areas.FoodPot.Pages
                     }
                     return result;
                 }
-                string cs = _config.GetConnectionString("Default");
-                fd.DeleteRestaurantFoodType(cs, RestaurantFoodTypeID);
+                await _foodData.DeleteRestaurantFoodType(RestaurantFoodTypeID);
 
                 result = new JsonResult(RestaurantID);
                 return result;
@@ -221,8 +217,7 @@ namespace DatePot.Areas.FoodPot.Pages
                     }
                     return result;
                 }
-                string cs = _config.GetConnectionString("Default");
-                fd.DeleteRestaurantWhen(cs, RestaurantWhenID);
+                await _foodData.DeleteRestaurantWhen(RestaurantWhenID);
 
                 result = new JsonResult(RestaurantID);
                 return result;

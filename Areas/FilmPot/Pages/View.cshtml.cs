@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 using static DatePot.Areas.FilmPot.Models.Films;
 using DatePot.Areas.FilmPot.Data;
 
@@ -19,11 +19,12 @@ namespace DatePot.Areas.FilmPot.Pages
     public class ViewModel : PageModel
     {
         private readonly IConfiguration _config;
-        public ViewModel(IConfiguration config)
+        private readonly IFilmData _filmData;
+        public ViewModel(IConfiguration config, IFilmData filmData)
         {
             _config = config;
+            _filmData = filmData;
         }
-        FilmData fd = new FilmData();
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
         [BindProperty]
@@ -47,15 +48,15 @@ namespace DatePot.Areas.FilmPot.Pages
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                FilmDetails = fd.GetFilmDetails(cs, Id).FirstOrDefault();
+                FilmDetails = _filmData.GetFilmDetails(Id).Result.FirstOrDefault();
                 if (FilmDetails != null)
                 {
                     if (FilmDetails != null)
                     {
-                        var genres = fd.GetGenreList(cs);
-                        var directors = fd.GetDirectorsList(cs);
-                        var platforms = fd.GetPlatformsList(cs);
-                        var users = fd.GetUserList(cs);
+                        var genres = _filmData.GetGenreList();
+                        var directors = _filmData.GetDirectorsList();
+                        var platforms = _filmData.GetPlatformsList();
+                        var users = _filmData.GetUserList();
 
                         //Genre = genres.Where(x => x.GenreID == FilmDetails.GenreID).FirstOrDefault()?.GenreText;
 
@@ -67,23 +68,23 @@ namespace DatePot.Areas.FilmPot.Pages
                         FilmDirectors = new List<FilmDirectors>();
                         FilmPlatforms = new List<FilmPlatforms>();
 
-                        FilmGenres = fd.GetFilmGenres(cs, Id);
-                        FilmDirectors = fd.GetFilmDirectors(cs, Id);
-                        FilmPlatforms = fd.GetFilmPlatforms(cs, Id);
+                        FilmGenres = _filmData.GetFilmGenres(Id).Result;
+                        FilmDirectors = _filmData.GetFilmDirectors(Id).Result;
+                        FilmPlatforms = _filmData.GetFilmPlatforms(Id).Result;
 
-                        genres.ForEach(x =>
+                        genres.Result.ForEach(x =>
                         {
                             Genres.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText });
                         });
-                        directors.ForEach(x =>
+                        directors.Result.ForEach(x =>
                         {
                             Directors.Add(new SelectListItem { Value = x.DirectorID.ToString(), Text = x.DirectorName });
                         });
-                        platforms.ForEach(x =>
+                        platforms.Result.ForEach(x =>
                         {
                             Platforms.Add(new SelectListItem { Value = x.PlatformID.ToString(), Text = x.PlatformText });
                         });
-                        users.ForEach(x =>
+                        users.Result.ForEach(x =>
                         {
                             if (FilmDetails.AddedByID == x.UserID)
                             {
@@ -123,13 +124,13 @@ namespace DatePot.Areas.FilmPot.Pages
                     return result;
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.UpdateFilm(cs, FilmID, AddedByID, FilmName, ReleaseDate, AddedDate, Watched, Runtime);
+                await _filmData.UpdateFilm(FilmID, AddedByID, FilmName, ReleaseDate, AddedDate, Watched, Runtime);
 
                 foreach (var item in Genre)
                 {
                     if (item != 0)
                     {
-                        fd.AddFilmGenres(cs, FilmID, Convert.ToInt32(item));
+                        await _filmData.AddFilmGenres(FilmID, Convert.ToInt32(item));
                     }
 
                 }
@@ -137,7 +138,7 @@ namespace DatePot.Areas.FilmPot.Pages
                 {
                     if (item != 0)
                     {
-                        fd.AddFilmDirectors(cs, FilmID, Convert.ToInt32(item));
+                        await _filmData.AddFilmDirectors(FilmID, Convert.ToInt32(item));
                     }
 
                 }
@@ -145,7 +146,7 @@ namespace DatePot.Areas.FilmPot.Pages
                 {
                     if (item != 0)
                     {
-                        fd.AddFilmPlatforms(cs, FilmID, Convert.ToInt32(item));
+                        await _filmData.AddFilmPlatforms(FilmID, Convert.ToInt32(item));
                     }
 
                 }
@@ -177,7 +178,7 @@ namespace DatePot.Areas.FilmPot.Pages
                     return result;
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.DeleteFilmGenre(cs, FilmGenreID);
+                await _filmData.DeleteFilmGenre(FilmGenreID);
 
                 result = new JsonResult(FilmID);
                 return result;
@@ -192,7 +193,7 @@ namespace DatePot.Areas.FilmPot.Pages
             try
             {
                 string cs = _config.GetConnectionString("Default");
-                fd.DeleteFilmDirector(cs, FilmDirectorID);
+                await _filmData.DeleteFilmDirector(FilmDirectorID);
 
                 JsonResult result = null;
                 result = new JsonResult(FilmID);
@@ -222,7 +223,7 @@ namespace DatePot.Areas.FilmPot.Pages
                     return result;
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.DeleteFilmPlatform(cs, FilmPlatformID);
+                await _filmData.DeleteFilmPlatform(FilmPlatformID);
 
                 result = new JsonResult(FilmID);
                 return result;
@@ -241,7 +242,7 @@ namespace DatePot.Areas.FilmPot.Pages
                     return Page();
                 }
                 string cs = _config.GetConnectionString("Default");
-                fd.ArchiveFilm(cs, UpdateFilmDetails.FilmID);
+                await _filmData.ArchiveFilm(UpdateFilmDetails.FilmID);
 
                 return RedirectToPage("./Index");
             }

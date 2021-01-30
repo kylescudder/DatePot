@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MySqlConnector;
+//using MySqlConnector;
 using static DatePot.Areas.CoffeePot.Models.Coffees;
 using DatePot.Areas.CoffeePot.Data;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -21,12 +21,13 @@ namespace DatePot.Areas.CoffeePot.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IConfiguration _config;
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration config)
+        private readonly ICoffeeData _coffeeData;
+        public IndexModel(ILogger<IndexModel> logger, IConfiguration config, ICoffeeData coffeeData)
         {
             _logger = logger;
             _config = config;
+            _coffeeData = coffeeData;
         }
-        CoffeeData fd = new CoffeeData();
         public List<CoffeeList> Coffees { get; set; }
         public NewCoffee NewCoffee { get; set; }
         public List<RandomCoffee> RandomCoffees { get; set; }
@@ -38,8 +39,7 @@ namespace DatePot.Areas.CoffeePot.Pages
             }
             try
             {
-                string cs = _config.GetConnectionString("Default");
-                Coffees = fd.GetCoffeeList(cs);
+                Coffees = _coffeeData.GetCoffeeList().Result;
 
                 return Page();
             }
@@ -66,8 +66,7 @@ namespace DatePot.Areas.CoffeePot.Pages
                     }
                     return result;
                 }
-                string cs = _config.GetConnectionString("Default");
-                int CoffeeID = fd.AddCoffee(cs, CoffeeName);
+                int CoffeeID = _coffeeData.AddCoffee(CoffeeName).Result;
 
                 result = new JsonResult(CoffeeID);
                 return result;
