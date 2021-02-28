@@ -1,29 +1,22 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using DatePot.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Elmah.Io.AspNetCore;
 using Serilog;
 using Microsoft.AspNetCore.DataProtection;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.DataProtection;
 using DatePot.Db;
 using DatePot.Areas.FilmPot.Data;
 using DatePot.Areas.FoodPot.Data;
 using DatePot.Areas.CoffeePot.Data;
 using DatePot.Areas.ActivityPot.Data;
 using DatePot.Areas.Identity.Data;
+using DatePot.Areas.VinylPot.Data;
 
 namespace DatePot
 {
@@ -51,6 +44,7 @@ namespace DatePot
             services.AddSingleton<IFoodData, FoodData>();
             services.AddSingleton<ICoffeeData, CoffeeData>();
             services.AddSingleton<IActivityData, ActivityData>();
+            services.AddSingleton<IVinylData, VinylData>();
             services.AddSingleton<IIdentityData, IdentityData>();
 
             services.AddElmahIo(o =>

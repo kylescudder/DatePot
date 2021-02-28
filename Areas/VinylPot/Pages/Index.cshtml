@@ -1,0 +1,172 @@
+﻿@page
+@model DatePot.Areas.VinylPot.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<div class="row">
+    <div class="col-12">
+        <button type="button" class="btn btn-primary btnAddVinylModal" data-toggle="modal" data-target="#AddVinylModal">Add Vinyl</button>
+    </div>
+</div>
+<div class="row pt-4">
+    <div class="col-12">
+        <table id="VinylTable" class="table table-striped table-responsive table-stripedFilmPot table-borderless ClientSearchTable filmrow">
+            <thead class="thead-darkVinyltable">
+                <tr>
+                    <th>Name</th>
+                    <th>Artist</th>
+                    <th>Purchased</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Vinyls)
+                {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.ArtistName
+                    </td>
+                    <td>
+                        @item.Purchased
+                    </td>
+                    
+                    <td>
+                        <a asp-page="/View" asp-route-Id="@item.VinylID">View</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="AddVinylModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Vinyl place</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div lcass="form-group">
+                        <div class="row">
+                            <div class="col-12">
+                                <label asp-for="NewVinyl.Name" class="control-label"></label>
+                                <input asp-for="NewVinyl.Name" class="form-control NewVinylName" required="required" type="text" />
+                                <span asp-validation-for="NewVinyl.Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label asp-for="NewVinyl.ArtistName" class="control-label"></label>
+                                <input asp-for="NewVinyl.ArtistName" class="form-control NewVinylArtistName" required="required" type="text" />
+                                <span asp-validation-for="NewVinyl.ArtistName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-3">
+                                <label asp-for="NewVinyl.Purchased" class="control-label"></label>
+                            </div>
+                            <div class="col-9">
+                                <input asp-for="NewVinyl.Purchased" class="form-control NewVinylPurchased" />
+                                <span asp-validation-for="NewVinyl.Purchased" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="button" value="Add" class="btn btn-primary btnAddVinyl" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ValidationCheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Check it again bud</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="errorText"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#VinylTable').dataTable({
+                "aoColumns": [
+                    { "sType": "text" },
+                    { "sType": "text" },
+                    { "sType": "html" },
+                    { "sType": "html" }
+                ],
+                "columnDefs": [
+                    { "targets": 0 },
+                    { "targets": 1 },
+                    { "targets": 2 },
+                    { orderable: false, "targets": 3 }
+                ],
+                "pagingType": "numbers",
+                "paging": false,
+                "order": [0, 'desc'],
+                "language": {
+                    "emptyTable": "No data available in table"
+                },
+                stateSave: true
+            });
+        });
+        $(".btnAddVinyl").on("click", function () {
+            var pathname = window.location.pathname;
+            var VinylName = $(".NewVinylName").val();
+            var VinylArtistName = $(".NewVinylArtistName").val();
+            var VinylPurchased = $(".NewVinylPurchased").prop("checked");
+            console.log(VinylPurchased);
+            $.ajax({
+                dataType: 'json',
+                url: pathname,
+                type: 'POST',
+                data: {
+                    VinylName: VinylName,
+                    VinylArtistName: VinylArtistName,
+                    VinylPurchased: VinylPurchased
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (Number.isInteger(response)) {
+                        window.location.replace("VinylPot/View?Id=" + response);
+                    } else {
+                        $("#ValidationCheck").modal();
+                        $(".errorText").text(response);
+                    }
+                },
+                error: function () {
+                    alert("AJAX Request Failed, Contact Support");
+                }
+            });
+        });
+    </script>
+}
