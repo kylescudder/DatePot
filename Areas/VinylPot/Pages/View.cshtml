@@ -24,6 +24,7 @@
             var Name = $(".UpdateVinylName").val();
             var ArtistName = $(".UpdateVinylArtistName").val();
             var Purchased = $(".UpdateVinylPurchased").prop("checked");
+            var AddedByID = $(".UpdateVinylAddedByID").chosen().val();
 
             $.ajax({
                 dataType: 'json',
@@ -33,7 +34,8 @@
                     VinylID: VinylID,
                     Name: Name,
                     ArtistName: ArtistName,
-                    Purchased: Purchased
+                    Purchased: Purchased,
+                    AddedByID: AddedByID
                 },
                 headers: {
                     RequestVerificationToken:
@@ -126,6 +128,13 @@ else
                             <label asp-for="UpdateVinylDetails.ArtistName" class="control-label"></label>
                             <input asp-for="UpdateVinylDetails.ArtistName" class="form-control UpdateVinylArtistName" value="@Model.VinylDetails.ArtistName" required="required" type="text" />
                             <span asp-validation-for="UpdateVinylDetails.ArtistName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="UpdateVinylDetails.AddedByID" class="control-label"></label>
+                            <select asp-for="UpdateVinylDetails.AddedByID" asp-items="Model.Users" class="form-control form-control-chosen UpdateVinylAddedByID" value="@Model.VinylDetails.AddedByID" data-placeholder="Choose an user..." required="required"></select>
+                            <span asp-validation-for="UpdateVinylDetails.AddedByID" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row pt-2">

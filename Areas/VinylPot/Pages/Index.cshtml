@@ -16,6 +16,7 @@
                     <th>Name</th>
                     <th>Artist</th>
                     <th>Purchased</th>
+                    <th>Who</th>
                     <th></th>
                 </tr>
             </thead>
@@ -32,7 +33,9 @@
                     <td>
                         @item.Purchased
                     </td>
-                    
+                    <td>
+                        @item.UserName
+                    </td>
                     <td>
                         <a asp-page="/View" asp-route-Id="@item.VinylID">View</a>
                     </td>
@@ -68,6 +71,13 @@
                                 <label asp-for="NewVinyl.ArtistName" class="control-label"></label>
                                 <input asp-for="NewVinyl.ArtistName" class="form-control NewVinylArtistName" required="required" type="text" />
                                 <span asp-validation-for="NewVinyl.ArtistName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label asp-for="NewVinyl.AddedByID" class="control-label"></label>
+                                <select asp-for="NewVinyl.AddedByID" asp-items="Model.Users" class="form-control form-control-chosen NewVinylAddedByID" data-placeholder="Choose an user..." required="required"></select>
+                                <span asp-validation-for="NewVinyl.AddedByID" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row pt-2">
@@ -119,13 +129,15 @@
                     { "sType": "text" },
                     { "sType": "text" },
                     { "sType": "html" },
+                    { "sType": "html" },
                     { "sType": "html" }
                 ],
                 "columnDefs": [
                     { "targets": 0 },
                     { "targets": 1 },
                     { "targets": 2 },
-                    { orderable: false, "targets": 3 }
+                    { "targets": 3 },
+                    { orderable: false, "targets": 4 }
                 ],
                 "pagingType": "numbers",
                 "paging": false,
@@ -141,6 +153,7 @@
             var VinylName = $(".NewVinylName").val();
             var VinylArtistName = $(".NewVinylArtistName").val();
             var VinylPurchased = $(".NewVinylPurchased").prop("checked");
+            var VinylAddedByID = $(".NewVinylAddedByID").chosen().val();
             console.log(VinylPurchased);
             $.ajax({
                 dataType: 'json',
@@ -149,7 +162,8 @@
                 data: {
                     VinylName: VinylName,
                     VinylArtistName: VinylArtistName,
-                    VinylPurchased: VinylPurchased
+                    VinylPurchased: VinylPurchased,
+                    VinylAddedByID: VinylAddedByID
                 },
                 headers: {
                     RequestVerificationToken:
