@@ -45,6 +45,7 @@ namespace DatePot
             services.AddSingleton<ICoffeeData, CoffeeData>();
             services.AddSingleton<IActivityData, ActivityData>();
             services.AddSingleton<IVinylData, VinylData>();
+            services.AddSingleton<ISiteData, SiteData>();
             services.AddSingleton<IIdentityData, IdentityData>();
 
             services.AddElmahIo(o =>
@@ -65,7 +66,7 @@ namespace DatePot
             });
 
             services.AddDataProtection()
-                .PersistKeysToFileSystem(new DirectoryInfo(@"D:\HostingSpaces\scud97\kylescudder.co.uk\data\keys\"));
+                .PersistKeysToFileSystem(new DirectoryInfo(@"D:\HostingSpaces\scud97\thedatepot.co.uk\data\keys\"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
