@@ -128,16 +128,17 @@
                     { "sType": "html" }
                 ],
                 "columnDefs": [
-                    { "targets": 0 },
-                    { "targets": 1 },
-                    { "targets": 2 },
-                    { "targets": 3 },
-                    { "targets": 4 },
-                    { "targets": 5 },
-                    { orderable: false, "targets": 6 }
+                    { responsivePriority: 1, "targets": 0 },
+                    { responsivePriority: 5, "targets": 1 },
+                    { responsivePriority: 4, "targets": 2 },
+                    { responsivePriority: 6, "targets": 3 },
+                    { responsivePriority: 7, "targets": 4 },
+                    { responsivePriority: 3, "targets": 5 },
+                    { responsivePriority: 2, orderable: false, "targets": 6 }
                 ],
                 "pagingType": "numbers",
                 "paging": false,
+                "responsive": true,
                 "order": [0, 'desc'],
                 "language": {
                     "emptyTable": "No data available in table"
