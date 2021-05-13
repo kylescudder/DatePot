@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-//using MySql.Data.MySqlClient;
 using static DatePot.Areas.VinylPot.Models.Vinyls;
-using Microsoft.Extensions.Configuration;
 using System.Data;
 using DatePot.Db;
 using Dapper;
 
 namespace DatePot.Areas.VinylPot.Data
 {
-	public class VinylData : IVinylData
+    public class VinylData : IVinylData
 	{
 		private readonly ISqlDb _dataAccess;
 		public VinylData(ISqlDb dataAccess
