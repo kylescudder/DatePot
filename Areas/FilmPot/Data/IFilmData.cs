@@ -1,7 +1,9 @@
-﻿using DatePot.Areas.FilmPot.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+//using MySql.Data.MySqlClient;
+using static DatePot.Areas.FilmPot.Models.Films;
+using static DatePot.Models.Site;
 
 namespace DatePot.Areas.FilmPot.Data
 {
@@ -21,16 +23,16 @@ namespace DatePot.Areas.FilmPot.Data
         Task<bool> DirectorDupeCheck(string DirectorText);
         Task<int> FilmWatched(int FilmID);
         Task<bool> GenreDupeCheck(string GenreText);
-        Task<List<Films.Directors>> GetDirectorsList();
-        Task<List<Films.FilmDetails>> GetFilmDetails(int FilmID);
-        Task<List<Films.FilmDirectors>> GetFilmDirectors(int FilmID);
-        Task<List<Films.FilmGenres>> GetFilmGenres(int FilmID);
-        Task<List<Films.FilmList>> GetFilmList();
-        Task<List<Films.FilmPlatforms>> GetFilmPlatforms(int FilmID);
-        Task<List<Films.Genres>> GetGenreList();
-        Task<List<Films.Platforms>> GetPlatformsList();
-        Task<List<Films.RandomFilm>> GetRandomFilm();
-        Task<List<Films.UserList>> GetUserList();
+        Task<List<Directors>> GetDirectorsList();
+        Task<List<FilmDetails>> GetFilmDetails(int FilmID);
+        Task<List<FilmDirectors>> GetFilmDirectors(int FilmID);
+        Task<List<FilmGenres>> GetFilmGenres(int FilmID);
+        Task<List<FilmList>> GetFilmList();
+        Task<List<FilmPlatforms>> GetFilmPlatforms(int FilmID);
+        Task<List<Genres>> GetGenreList();
+        Task<List<Platforms>> GetPlatformsList();
+        Task<List<RandomFilm>> GetRandomFilm();
+        Task<List<UserList>> GetUserList();
         Task<bool> PlatformDupeCheck(string PlatformText);
         Task<int> UpdateFilm(int FilmID, int AddedByID, string FilmName, DateTime ReleaseDate, DateTime AddedDate, bool Watched, int Runtime);
     }
