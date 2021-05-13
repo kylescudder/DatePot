@@ -12,6 +12,10 @@ using Microsoft.Extensions.Configuration;
 //using MySql.Data.MySqlClient;
 using static DatePot.Areas.FoodPot.Models.Food;
 using DatePot.Areas.FoodPot.Data;
+using Microsoft.AspNetCore.Identity;
+using DatePot.Areas.Identity.Data;
+using DatePot.Data;
+using static DatePot.Models.Site;
 
 namespace DatePot.Areas.FoodPot.Pages
 {
@@ -20,10 +24,20 @@ namespace DatePot.Areas.FoodPot.Pages
     {
         private readonly IConfiguration _config;
         private readonly IFoodData _foodData;
-        public ViewModel(IConfiguration config, IFoodData foodData)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IIdentityData _identityData;
+        private readonly ISiteData _siteData;
+        public ViewModel(IConfiguration config, 
+        IFoodData foodData,
+        UserManager<IdentityUser> userManager,
+        IIdentityData identityData,
+        ISiteData siteData)
         {
             _config = config;
             _foodData = foodData;
+            _userManager = userManager;
+            _identityData = identityData;
+            _siteData = siteData;
         }
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
@@ -38,6 +52,7 @@ namespace DatePot.Areas.FoodPot.Pages
         public List<SelectListItem> When { get; set; }
         public List<SelectListItem> Expenses { get; set; }
         public List<SelectListItem> Locations { get; set; }
+		public List<PotAccess> PotAccess { get; set; }
         public async Task<IActionResult> OnGet()
         {
             if (!User.Identity.IsAuthenticated)
@@ -46,6 +61,14 @@ namespace DatePot.Areas.FoodPot.Pages
             }
             try
             {
+				var user = await _userManager.GetUserAsync(User);
+				var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
+				PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+				int index = PotAccess.FindIndex(item => item.PotID == 2);
+                if (index == -1)
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
                 RestaurantDetails = _foodData.GetRestaurantDetails(Id).Result.FirstOrDefault();
                 if (RestaurantDetails != null)
                 {

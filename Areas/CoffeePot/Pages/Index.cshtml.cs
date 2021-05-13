@@ -13,6 +13,10 @@ using Microsoft.Extensions.Logging;
 using static DatePot.Areas.CoffeePot.Models.Coffees;
 using DatePot.Areas.CoffeePot.Data;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using static DatePot.Models.Site;
+using Microsoft.AspNetCore.Identity;
+using DatePot.Areas.Identity.Data;
+using DatePot.Data;
 
 namespace DatePot.Areas.CoffeePot.Pages
 {
@@ -22,16 +26,28 @@ namespace DatePot.Areas.CoffeePot.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IConfiguration _config;
         private readonly ICoffeeData _coffeeData;
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration config, ICoffeeData coffeeData)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IIdentityData _identityData;
+        private readonly ISiteData _siteData;
+        public IndexModel(ILogger<IndexModel> logger, 
+        IConfiguration config, 
+        ICoffeeData coffeeData,
+        UserManager<IdentityUser> userManager,
+        IIdentityData identityData,
+        ISiteData siteData)
         {
             _logger = logger;
             _config = config;
             _coffeeData = coffeeData;
+            _userManager = userManager;
+            _identityData = identityData;
+            _siteData = siteData;
         }
         public List<CoffeeList> Coffees { get; set; }
         public NewCoffee NewCoffee { get; set; }
         public List<RandomCoffee> RandomCoffees { get; set; }
-        public ActionResult OnGet()
+        public List<PotAccess> PotAccess { get; set; }
+        public async Task<ActionResult> OnGet()
          {
             if (!User.Identity.IsAuthenticated)
             {
@@ -39,6 +55,14 @@ namespace DatePot.Areas.CoffeePot.Pages
             }
             try
             {
+				var user = await _userManager.GetUserAsync(User);
+				var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
+				PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+				int index = PotAccess.FindIndex(item => item.PotID == 4);
+                if (index == -1)
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
                 Coffees = _coffeeData.GetCoffeeList().Result;
 
                 return Page();

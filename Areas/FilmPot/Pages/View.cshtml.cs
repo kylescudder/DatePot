@@ -12,6 +12,10 @@ using Microsoft.Extensions.Configuration;
 //using MySql.Data.MySqlClient;
 using static DatePot.Areas.FilmPot.Models.Films;
 using DatePot.Areas.FilmPot.Data;
+using static DatePot.Models.Site;
+using Microsoft.AspNetCore.Identity;
+using DatePot.Areas.Identity.Data;
+using DatePot.Data;
 
 namespace DatePot.Areas.FilmPot.Pages
 {
@@ -20,10 +24,20 @@ namespace DatePot.Areas.FilmPot.Pages
     {
         private readonly IConfiguration _config;
         private readonly IFilmData _filmData;
-        public ViewModel(IConfiguration config, IFilmData filmData)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IIdentityData _identityData;
+        private readonly ISiteData _siteData;
+        public ViewModel(IConfiguration config, 
+        IFilmData filmData,
+        UserManager<IdentityUser> userManager,
+        IIdentityData identityData,
+        ISiteData siteData)
         {
             _config = config;
             _filmData = filmData;
+            _userManager = userManager;
+            _identityData = identityData;
+            _siteData = siteData;
         }
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
@@ -39,6 +53,7 @@ namespace DatePot.Areas.FilmPot.Pages
         public List<SelectListItem> Directors { get; set; }
         public List<SelectListItem> Platforms { get; set; }
         public List<SelectListItem> Users { get; set; }
+        public List<PotAccess> PotAccess { get; set; }
         public async Task<IActionResult> OnGet()
         {
             if (!User.Identity.IsAuthenticated)
@@ -47,6 +62,14 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             try
             {
+				var user = await _userManager.GetUserAsync(User);
+				var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
+				PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+				int index = PotAccess.FindIndex(item => item.PotID == 1);
+                if (index == -1)
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
                 string cs = _config.GetConnectionString("Default");
                 FilmDetails = _filmData.GetFilmDetails(Id).Result.FirstOrDefault();
                 if (FilmDetails != null)

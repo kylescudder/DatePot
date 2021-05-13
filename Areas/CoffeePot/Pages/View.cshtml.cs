@@ -12,6 +12,10 @@ using Microsoft.Extensions.Configuration;
 //using MySql.Data.MySqlClient;
 using static DatePot.Areas.CoffeePot.Models.Coffees;
 using DatePot.Areas.CoffeePot.Data;
+using static DatePot.Models.Site;
+using Microsoft.AspNetCore.Identity;
+using DatePot.Areas.Identity.Data;
+using DatePot.Data;
 
 namespace DatePot.Areas.CoffeePot.Pages
 {
@@ -20,10 +24,20 @@ namespace DatePot.Areas.CoffeePot.Pages
     {
         private readonly IConfiguration _config;
         private readonly ICoffeeData _coffeeData;
-        public ViewModel(IConfiguration config, ICoffeeData coffeeData)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IIdentityData _identityData;
+        private readonly ISiteData _siteData;
+        public ViewModel(IConfiguration config, 
+        ICoffeeData coffeeData,
+        UserManager<IdentityUser> userManager,
+        IIdentityData identityData,
+        ISiteData siteData)
         {
             _config = config;
             _coffeeData = coffeeData;
+            _userManager = userManager;
+            _identityData = identityData;
+            _siteData = siteData;
         }
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
@@ -31,7 +45,7 @@ namespace DatePot.Areas.CoffeePot.Pages
         public UpdateCoffeeDetails UpdateCoffeeDetails { get; set; }
 
         public CoffeeDetails CoffeeDetails { get; set; }
-        //public string Genre { get; set; }
+        public List<PotAccess> PotAccess { get; set; }
         public async Task<IActionResult> OnGet()
         {
             if (!User.Identity.IsAuthenticated)
@@ -40,6 +54,14 @@ namespace DatePot.Areas.CoffeePot.Pages
             }
             try
             {
+				var user = await _userManager.GetUserAsync(User);
+				var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
+				PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+				int index = PotAccess.FindIndex(item => item.PotID == 4);
+                if (index == -1)
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
                 string cs = _config.GetConnectionString("Default");
                 CoffeeDetails = _coffeeData.GetCoffeeDetails(Id).Result.FirstOrDefault();
 

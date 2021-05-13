@@ -1,32 +1,43 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
-//using MySql.Data.MySqlClient;
 using static DatePot.Areas.VinylPot.Models.Vinyls;
 using DatePot.Areas.VinylPot.Data;
 using DatePot.Areas.FilmPot.Data;
+using Microsoft.AspNetCore.Identity;
+using DatePot.Areas.Identity.Data;
+using DatePot.Data;
+using static DatePot.Models.Site;
 
 namespace DatePot.Areas.VinylPot.Pages
 {
-	[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
 	public class ViewModel : PageModel
 	{
 		private readonly IConfiguration _config;
 		private readonly IVinylData _VinylData;
 		private readonly IFilmData _filmData;
-		public ViewModel(IConfiguration config, IVinylData VinylData, IFilmData filmData)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IIdentityData _identityData;
+        private readonly ISiteData _siteData;
+		public ViewModel(IConfiguration config, 
+		IVinylData VinylData, 
+		IFilmData filmData,
+		UserManager<IdentityUser> userManager,
+        IIdentityData identityData,
+        ISiteData siteData)
 		{
 			_config = config;
 			_VinylData = VinylData;
 			_filmData = filmData;
+			_userManager = userManager;
+            _identityData = identityData;
+            _siteData = siteData;
 		}
 		[BindProperty(SupportsGet = true)]
 		public int Id { get; set; }
@@ -34,6 +45,7 @@ namespace DatePot.Areas.VinylPot.Pages
 		public UpdateVinylDetails UpdateVinylDetails { get; set; }
 		public List<SelectListItem> Users { get; set; }
 		public VinylDetails VinylDetails { get; set; }
+		public List<PotAccess> PotAccess { get; set; }
 		//public string Genre { get; set; }
 		public async Task<IActionResult> OnGet()
 		{
@@ -43,6 +55,14 @@ namespace DatePot.Areas.VinylPot.Pages
 			}
 			try
 			{
+				var user = await _userManager.GetUserAsync(User);
+				var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
+				PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+				int index = PotAccess.FindIndex(item => item.PotID == 5);
+                if (index == -1)
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
 				VinylDetails = _VinylData.GetVinylDetails(Id).Result.FirstOrDefault();
 				if (VinylDetails != null)
 				{

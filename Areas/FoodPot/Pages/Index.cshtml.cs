@@ -9,11 +9,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-//using MySqlConnector;
 using static DatePot.Areas.FoodPot.Models.Food;
 using DatePot.Areas.FoodPot.Data;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using DatePot.Areas.FilmPot.Data;
+using Microsoft.AspNetCore.Identity;
+using DatePot.Areas.Identity.Data;
+using DatePot.Data;
+using static DatePot.Models.Site;
 
 namespace DatePot.Areas.FoodPot.Pages
 {
@@ -23,11 +26,22 @@ namespace DatePot.Areas.FoodPot.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IConfiguration _config;
         private readonly IFoodData _foodData;
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration config, IFoodData foodData)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IIdentityData _identityData;
+        private readonly ISiteData _siteData;
+        public IndexModel(ILogger<IndexModel> logger, 
+        IConfiguration config, 
+        IFoodData foodData,
+        UserManager<IdentityUser> userManager,
+        IIdentityData identityData,
+        ISiteData siteData)
         {
             _logger = logger;
             _config = config;
             _foodData = foodData;
+            _userManager = userManager;
+            _identityData = identityData;
+            _siteData = siteData;
         }
         public List<RestaurantList> Restaurants { get; set; }
         public List<SelectListItem> FoodType { get; set; }
@@ -39,7 +53,8 @@ namespace DatePot.Areas.FoodPot.Pages
         public NewFoodType NewFoodType { get; set; }
         public NewWhen NewWhen { get; set; }
         public List<RandomRestaurant> RandomRestaurants { get; set; }
-        public ActionResult OnGet()
+        public List<PotAccess> PotAccess { get; set; }
+        public async Task<ActionResult> OnGet()
          {
             if (!User.Identity.IsAuthenticated)
             {
@@ -47,6 +62,14 @@ namespace DatePot.Areas.FoodPot.Pages
             }
             try
             {
+				var user = await _userManager.GetUserAsync(User);
+				var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
+				PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+				int index = PotAccess.FindIndex(item => item.PotID == 2);
+                if (index == -1)
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
                 Restaurants = _foodData.GetRestaurantList().Result;
                 var foodtypes = _foodData.GetFoodTypeList();
                 var when = _foodData.GetWhenList();
