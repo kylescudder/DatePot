@@ -40,21 +40,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="FilmPot" asp-page="/Index">Film</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="FoodPot" asp-page="/Index">Food</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="ActivityPot" asp-page="/Index">Activity</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="CoffeePot" asp-page="/Index">Coffee</a>
-                            </li>
-                        }
                     </ul>
                 </div>
             </div>
