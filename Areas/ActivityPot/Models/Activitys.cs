@@ -65,6 +65,7 @@ namespace DatePot.Areas.ActivityPot.Models
             [Display(Name = "Activity Type")]
             public int ActivityTypeID { get; set; }
             public bool Prebook { get; set; }
+            public int UserGroupID { get; set; }
         }
         public class UpdateActivityDetails: ActivityDetails
         {

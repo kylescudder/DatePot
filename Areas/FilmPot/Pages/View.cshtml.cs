@@ -16,6 +16,7 @@ using static DatePot.Models.Site;
 using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using DatePot.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace DatePot.Areas.FilmPot.Pages
 {
@@ -62,9 +63,9 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             try
             {
+                int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
 				var user = await _userManager.GetUserAsync(User);
-				var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
-				PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+				PotAccess = await _siteData.GetPotAccess(user.Id.ToString());
 				int index = PotAccess.FindIndex(item => item.PotID == 1);
                 if (index == -1)
                 {
@@ -72,6 +73,10 @@ namespace DatePot.Areas.FilmPot.Pages
                 }
                 string cs = _config.GetConnectionString("Default");
                 FilmDetails = _filmData.GetFilmDetails(Id).Result.FirstOrDefault();
+                if (FilmDetails.UserGroupID != UserGroupID)
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
                 if (FilmDetails != null)
                 {
                     if (FilmDetails != null)
@@ -79,7 +84,7 @@ namespace DatePot.Areas.FilmPot.Pages
                         var genres = _filmData.GetGenreList();
                         var directors = _filmData.GetDirectorsList();
                         var platforms = _filmData.GetPlatformsList();
-                        var users = _filmData.GetUserList();
+                        var users = _filmData.GetUserList(UserGroupID);
 
                         //Genre = genres.Where(x => x.GenreID == FilmDetails.GenreID).FirstOrDefault()?.GenreText;
 

@@ -7,15 +7,13 @@ using Dapper;
 
 namespace DatePot.Areas.VinylPot.Data
 {
-    public class VinylData : IVinylData
+	public class VinylData : IVinylData
 	{
 		private readonly ISqlDb _dataAccess;
 		public VinylData(ISqlDb dataAccess
-			//, IHttpContextAccessor httpContextAccessor
 			)
 		{
 			_dataAccess = dataAccess;
-			//_httpContextAccessor = httpContextAccessor;
 		}
 
 		public async Task<List<VinylDetails>> GetVinylDetails(int VinylID)
@@ -47,21 +45,22 @@ namespace DatePot.Areas.VinylPot.Data
 				new { VinylID },
 				"Default");
 		}
-		public async Task<List<VinylList>> GetVinylList()
+		public async Task<List<VinylList>> GetVinylList(int? UserGroupID)
 		{
 			var recs = await _dataAccess.LoadData<VinylList, dynamic>(
 				"scud97_kssu.spGetVinylList",
-				new { },
+				new { UserGroupID },
 				"Default");
 			return recs;
 		}
-		public async Task<int> AddVinyl(string Name, string ArtistName, bool Purchased, int AddedByID)
+		public async Task<int> AddVinyl(string Name, string ArtistName, bool Purchased, int AddedByID, int? UserGroupID)
 		{
 			DynamicParameters p = new DynamicParameters();
 			p.Add("Name", Name);
 			p.Add("ArtistName", ArtistName);
 			p.Add("Purchased", Purchased);
 			p.Add("AddedByID", AddedByID);
+			p.Add("UserGroupID", UserGroupID);
 			p.Add("VinylID", DbType.Int32, direction: ParameterDirection.Output);
 
 			await _dataAccess.SaveData("scud97_kssu.spAddVinyl", p, "Default");

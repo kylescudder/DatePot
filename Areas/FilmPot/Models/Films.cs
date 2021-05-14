@@ -87,6 +87,7 @@ namespace DatePot.Areas.FilmPot.Models
             [DisplayName("Added by")]
             public string AddersName { get; set; }
             public int Runtime { get; set; }
+            public int UserGroupID { get; set; }
         }
         public class FilmGenres
         {

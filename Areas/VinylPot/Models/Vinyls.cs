@@ -52,6 +52,7 @@ namespace DatePot.Areas.VinylPot.Models
 			public bool Purchased { get; set; }
 			[Display(Name = "Who")]
 			public int AddedByID { get; set; }
+			public int? UserGroupID { get; set; }
 		}
 		public class UpdateVinylDetails : VinylDetails
 		{

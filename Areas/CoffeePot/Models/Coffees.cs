@@ -30,6 +30,7 @@ namespace DatePot.Areas.CoffeePot.Models
             public int RhiannExperience { get; set; }
             [Display(Name = "Average Rating")]
             public int AvgRating { get; set; }
+            public int? UserGroupID { get; set; }
             public List<RandomCoffee> RandomCoffee { get; set; }
         }
         public class NewCoffee

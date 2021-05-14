@@ -17,6 +17,7 @@ using DatePot.Areas.CoffeePot.Data;
 using DatePot.Areas.ActivityPot.Data;
 using DatePot.Areas.Identity.Data;
 using DatePot.Areas.VinylPot.Data;
+using WebPWrecover.Services;
 
 namespace DatePot
 {
@@ -32,6 +33,14 @@ namespace DatePot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(1200);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             services.AddDbContext<ApplicationDbContext>(options =>
                         options.UseSqlServer(
                             Configuration.GetConnectionString("Default")));
@@ -47,6 +56,7 @@ namespace DatePot
             services.AddSingleton<IVinylData, VinylData>();
             services.AddSingleton<ISiteData, SiteData>();
             services.AddSingleton<IIdentityData, IdentityData>();
+            services.AddSingleton<IEmailSender, EmailSender>();
 
             services.AddElmahIo(o =>
             {
@@ -94,7 +104,7 @@ namespace DatePot
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

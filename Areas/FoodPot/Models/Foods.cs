@@ -98,6 +98,7 @@ namespace DatePot.Areas.FoodPot.Models
             public string LocationText { get; set; }
             [Display(Name = "Location")]
             public int? LocationID { get; set; }
+            public int? UserGroupID { get; set; }
         }
         public class UpdateRestaurantDetails: RestaurantDetails
         {

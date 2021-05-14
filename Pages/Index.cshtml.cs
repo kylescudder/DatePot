@@ -9,6 +9,7 @@ using DatePot.Data;
 using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using static DatePot.Models.Site;
+using Microsoft.AspNetCore.Http;
 
 namespace DatePot.Pages
 {
@@ -37,8 +38,9 @@ namespace DatePot.Pages
             }
             else {
                 var user = await _userManager.GetUserAsync(User);
-                var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
-                PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+                PotAccess = await _siteData.GetPotAccess(user.Id.ToString());
+                int UserGroupID = await _siteData.GetUserGroupID(user.Id.ToString());
+                HttpContext.Session.SetInt32("UserGroupID", UserGroupID);
                 return Page();
             }
         }

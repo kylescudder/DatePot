@@ -14,10 +14,11 @@ using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using System.Linq;
 using static DatePot.Models.Site;
+using Microsoft.AspNetCore.Http;
 
 namespace DatePot.Areas.VinylPot.Pages
 {
-    [ValidateAntiForgeryToken]
+	[ValidateAntiForgeryToken]
 	public class IndexModel : PageModel
 	{
 		private readonly ILogger<IndexModel> _logger;
@@ -25,23 +26,23 @@ namespace DatePot.Areas.VinylPot.Pages
 		private readonly IVinylData _VinylData;
 		private readonly IFilmData _filmData;
 		private readonly UserManager<IdentityUser> _userManager;
-        private readonly IIdentityData _identityData;
-        private readonly ISiteData _siteData;
-		public IndexModel(ILogger<IndexModel> logger, 
-		IConfiguration config, 
-		IVinylData VinylData, 
+		private readonly IIdentityData _identityData;
+		private readonly ISiteData _siteData;
+		public IndexModel(ILogger<IndexModel> logger,
+		IConfiguration config,
+		IVinylData VinylData,
 		IFilmData filmData,
 		UserManager<IdentityUser> userManager,
-        IIdentityData identityData,
-        ISiteData siteData)
+		IIdentityData identityData,
+		ISiteData siteData)
 		{
 			_logger = logger;
 			_config = config;
 			_VinylData = VinylData;
 			_filmData = filmData;
-            _userManager = userManager;
-            _identityData = identityData;
-            _siteData = siteData;
+			_userManager = userManager;
+			_identityData = identityData;
+			_siteData = siteData;
 
 		}
 		public List<VinylList> Vinyls { get; set; }
@@ -55,34 +56,35 @@ namespace DatePot.Areas.VinylPot.Pages
 				return RedirectToPage("/Account/Login", new { area = "Identity" });
 			}
 			try
-            {
+			{
+				int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
 				var user = await _userManager.GetUserAsync(User);
-				var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
-				PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+				PotAccess = await _siteData.GetPotAccess(user.Id.ToString());
 				int index = PotAccess.FindIndex(item => item.PotID == 5);
-                if (index == -1)
-                {
-                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
-                }
-                Vinyls = _VinylData.GetVinylList().Result;
-                var users = _filmData.GetUserList();
+				if (index == -1)
+				{
+					return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+				}
+				Vinyls = _VinylData.GetVinylList(UserGroupID).Result;
+				var users = _filmData.GetUserList(UserGroupID);
 
-                Users = new List<SelectListItem>();
-                users.Result.ForEach(x =>
-                {
-                    Users.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.UserName });
-                });
-                return Page();
-            }
-            catch (Exception ex)
+				Users = new List<SelectListItem>();
+				users.Result.ForEach(x =>
+				{
+					Users.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.UserName });
+				});
+				return Page();
+			}
+			catch (Exception ex)
 			{
 				throw new Exception(ex.ToString());
 			}
 		}
-        public async Task<JsonResult> OnPost(string VinylName, string VinylArtistName, bool VinylPurchased, int VinylAddedByID)
+		public JsonResult OnPost(string VinylName, string VinylArtistName, bool VinylPurchased, int VinylAddedByID)
 		{
 			try
 			{
+				int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
 				JsonResult result = null;
 				if (ModelState.IsValid == false)
 				{
@@ -97,7 +99,7 @@ namespace DatePot.Areas.VinylPot.Pages
 					}
 					return result;
 				}
-				int VinylID = _VinylData.AddVinyl(VinylName, VinylArtistName, VinylPurchased, VinylAddedByID).Result;
+				int VinylID = _VinylData.AddVinyl(VinylName, VinylArtistName, VinylPurchased, VinylAddedByID, UserGroupID).Result;
 
 				result = new JsonResult(VinylID);
 				return result;

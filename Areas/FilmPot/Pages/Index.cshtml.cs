@@ -13,6 +13,7 @@ using DatePot.Data;
 using DatePot.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace DatePot.Areas.FilmPot.Pages
 {
@@ -59,16 +60,16 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             try
             {
+                int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
 				var user = await _userManager.GetUserAsync(User);
-				var UserID = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserID.ToString();
-				PotAccess = await _siteData.GetPotAccess(Convert.ToInt32(UserID));
+				PotAccess = await _siteData.GetPotAccess(user.Id.ToString());
 				int index = PotAccess.FindIndex(item => item.PotID == 1);
                 if (index == -1)
                 {
                     return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
                 }
-                Films = _filmData.GetFilmList().Result;
-                Users = _filmData.GetUserList().Result;
+                Films = _filmData.GetFilmList(UserGroupID).Result;
+                Users = _filmData.GetUserList(UserGroupID).Result;
 
                 var genres = _filmData.GetGenreList();
                 var directors = _filmData.GetDirectorsList();
@@ -91,7 +92,7 @@ namespace DatePot.Areas.FilmPot.Pages
                     Platform.Add(new SelectListItem { Value = x.PlatformID.ToString(), Text = x.PlatformText });
                 });
 
-                RandomFilm = _filmData.GetRandomFilm().Result;
+                RandomFilm = _filmData.GetRandomFilm(UserGroupID).Result;
 
 
                 return Page();
@@ -105,6 +106,7 @@ namespace DatePot.Areas.FilmPot.Pages
         {
             try
             {
+                int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
                 JsonResult result = null;
                 if (ModelState.IsValid == false)
                 {
@@ -119,7 +121,8 @@ namespace DatePot.Areas.FilmPot.Pages
                     }
                     return result;
                 }
-                int FilmID = await _filmData.AddFilm(AddersName, AddedDate, FilmName, ReleaseDate, Watched, Runtime);
+                var user = await _userManager.GetUserAsync(User);
+                int FilmID = await _filmData.AddFilm(AddersName, AddedDate, FilmName, ReleaseDate, Watched, Runtime, UserGroupID);
                 foreach (var item in Genres)
                 {
                     await _filmData.AddFilmGenres(FilmID, Convert.ToInt32(item));
