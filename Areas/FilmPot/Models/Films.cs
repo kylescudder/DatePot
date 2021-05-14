@@ -83,6 +83,7 @@ namespace DatePot.Areas.FilmPot.Models
             public DateTime ReleaseDate { get; set; }
             public DateTime AddedDate { get; set; }
             public bool Watched { get; set; }
+            [DisplayName("Added by")]
             public int AddedByID { get; set; }
             [DisplayName("Added by")]
             public string AddersName { get; set; }
