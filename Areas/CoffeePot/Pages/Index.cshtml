@@ -10,15 +10,22 @@
 </div>
 <div class="row pt-4">
     <div class="col-12">
-        <table id="CoffeeTable" class="table table-striped table-responsive table-stripedCoffeePot table-borderless ClientSearchTable Coffeerow">
+        <table id="CoffeeTable" class="table table-striped table-stripedCoffeePot table-borderless ClientSearchTable Coffeerow">
             <thead class="thead-darkCoffeetable">
                 <tr>
                     <th>Name</th>
                     <th>Kyle Taste</th>
+                    <th></th>
                     <th>Rhiann Taste</th>
+                    <th></th>
                     <th>Kyle Experience</th>
+                    <th></th>
                     <th>Rhiann Experience</th>
+                    <th></th>
+                    <th>Average Taste</th>
+                    <th></th>
                     <th>Average Rating</th>
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -33,16 +40,37 @@
                         <input value="@item.KyleTaste" class="starRating rating-loading" data-size="xs">
                     </td>
                     <td>
+                        @item.KyleTaste
+                    </td>
+                    <td>
                         <input value="@item.RhiannTaste" class="starRating rating-loading" data-size="xs">
+                    </td>
+                    <td>
+                        @item.RhiannTaste
                     </td>
                     <td>
                         <input value="@item.KyleExperience" class="starRating rating-loading" data-size="xs">
                     </td>
                     <td>
+                        @item.KyleExperience
+                    </td>
+                    <td>
                         <input value="@item.RhiannExperience" class="starRating rating-loading" data-size="xs">
                     </td>
                     <td>
+                        @item.RhiannExperience
+                    </td>
+                    <td>
+                        <input value="@item.AvgTaste" class="starRating rating-loading" data-size="xs">
+                    </td>
+                    <td>
+                        @item.AvgTaste
+                    </td>
+                    <td>
                         <input value="@item.AvgRating" class="starRating rating-loading" data-size="xs">
+                    </td>
+                    <td>
+                        @item.AvgRating
                     </td>
                     <td>
                         <a asp-page="/View" asp-route-Id="@item.CoffeeID">View</a>
@@ -117,34 +145,7 @@
                 showClear: false,
                 theme: 'krajee-svg'
             });
-            $('#CoffeeTable').dataTable({
-                "aoColumns": [
-                    { "sType": "html" },
-                    { "sType": "num" },
-                    { "sType": "num" },
-                    { "sType": "num" },
-                    { "sType": "num" },
-                    { "sType": "num" },
-                    { "sType": "html" }
-                ],
-                "columnDefs": [
-                    { responsivePriority: 1, "targets": 0 },
-                    { responsivePriority: 5, "targets": 1 },
-                    { responsivePriority: 4, "targets": 2 },
-                    { responsivePriority: 6, "targets": 3 },
-                    { responsivePriority: 7, "targets": 4 },
-                    { responsivePriority: 3, "targets": 5 },
-                    { responsivePriority: 2, orderable: false, "targets": 6 }
-                ],
-                "pagingType": "numbers",
-                "paging": false,
-                "responsive": true,
-                "order": [0, 'desc'],
-                "language": {
-                    "emptyTable": "No data available in table"
-                },
-                stateSave: true
-            });
+            dataTableInitialise();
         });
         $(".btnAddCoffee").on("click", function () {
             var pathname = window.location.pathname;
@@ -173,5 +174,53 @@
                 }
             });
         });
+         window.addEventListener("resize", function(){
+            dataTableInitialise();
+        });
+        function dataTableInitialise() {
+            $('#CoffeeTable').dataTable({
+                "aoColumns": [
+                    { "sType": "html" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "num" },
+                    { "sType": "html" }
+                ],
+                "columnDefs": [
+                    { responsivePriority: 1, "targets": 0 },
+                    { responsivePriority: 5, "targets": 1, "iDataSort": 2 },
+                    { responsivePriority: 15, "targets": 2, className: "never" },
+                    { responsivePriority: 6, "targets": 3, "iDataSort": 4 },
+                    { responsivePriority: 16, "targets": 4, className: "never" },
+                    { responsivePriority: 7, "targets": 5, "iDataSort": 6 },
+                    { responsivePriority: 15, "targets": 6, className: "never" },
+                    { responsivePriority: 8, "targets": 7, "iDataSort": 8 },
+                    { responsivePriority: 15, "targets": 8, className: "never" },
+                    { responsivePriority: 3, "targets": 9, "iDataSort": 10 },
+                    { responsivePriority: 15, "targets": 10, className: "never" },
+                    { responsivePriority: 4, "targets": 11, "iDataSort": 12 },
+                    { responsivePriority: 15, "targets": 12, className: "never" },
+                    { responsivePriority: 2, orderable: false, "targets": 13 }
+                ],
+                "pagingType": "numbers",
+                "paging": false,
+                "responsive": true,
+                "order": [0, 'desc'],
+                "destroy": true,
+                "language": {
+                    "emptyTable": "No data available in table"
+                },
+                stateSave: true
+            });
+        }
     </script>
 }

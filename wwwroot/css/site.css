@@ -153,3 +153,7 @@ body {
   margin-top: -3rem;
   margin-left: -2rem;
 }
+.dataTables_filter label {
+  float: right;
+}
+}
