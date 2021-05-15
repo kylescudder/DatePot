@@ -117,7 +117,7 @@ namespace DatePot.Areas.Identity.Pages.Account
                         <table align='center' border='0' cellpadding='0' cellspacing='0' width='600' style='border-collapse: collapse; border: 1px solid #cccccc;'>
                         <tr>
                             <td align='center' bgcolor='#70bbd9' style='padding: 40px 0 30px 0;'>
-                            <img src='https://assets.codepen.io/210284/h1_1.gif' alt='The Date Pot. Everything is my life needs it own website.' width='300' height='230' style='display: block;' />
+                            <img src='https://thedatepot.co.uk/main/images/emailImages/EMAIL_HEADER.svg' alt='The Date Pot. Everything is my life needs it own website.' width='300' height='230' style='display: block;' />
                             </td>
                         </tr>
                         <tr>
@@ -143,7 +143,7 @@ namespace DatePot.Areas.Identity.Pages.Account
                                         <table border='0' cellpadding='0' cellspacing='0' width='100%' style='border-collapse: collapse;'>
                                             <tr>
                                             <td>
-                                                <img src='https://assets.codepen.io/210284/left_1.gif' alt='' width='100%' height='140' style='display: block;' />
+                                                <img src='https://thedatepot.co.uk/main/images/emailImages/EMAIL_BOXES-01.svg' alt='' width='100%' height='140' style='display: block;' />
                                             </td>
                                             </tr>
                                             <tr>
@@ -158,7 +158,7 @@ namespace DatePot.Areas.Identity.Pages.Account
                                         <table border='0' cellpadding='0' cellspacing='0' width='100%' style='border-collapse: collapse;'>
                                             <tr>
                                             <td>
-                                                <img src='https://assets.codepen.io/210284/right_1.gif' alt='' width='100%' height='140' style='display: block;' />
+                                                <img src='https://thedatepot.co.uk/main/images/emailImages/EMAIL_BOXES-02.svg' alt='' width='100%' height='140' style='display: block;' />
                                             </td>
                                             </tr>
                                             <tr>
@@ -187,13 +187,13 @@ namespace DatePot.Areas.Identity.Pages.Account
                                     <tr>
                                         <td>
                                         <a href='https://www.instagram.com/scudderkyle/'>
-                                            <img src='https://assets.codepen.io/210284/tw.gif' alt='Twitter.' width='38' height='38' style='display: block;' border='0' />
+                                            <img src='https://thedatepot.co.uk/main/images/emailImages/LOGOS-01.svg' alt='Twitter.' width='38' height='38' style='display: block;' border='0' />
                                         </a>
                                         </td>
                                         <td style='font-size: 0; line-height: 0;' width='20'>&nbsp;</td>
                                         <td>
-                                        <a href='http://www.twitter.com/'>
-                                            <img src='https://assets.codepen.io/210284/fb.gif' alt='Facebook.' width='38' height='38' style='display: block;' border='0' />
+                                        <a href='https://github.com/kylescudder'>
+                                            <img src='https://thedatepot.co.uk/main/images/emailImages/LOGOS-02.svg' alt='Facebook.' width='38' height='38' style='display: block;' border='0' />
                                         </a>
                                         </td>
                                     </tr>
