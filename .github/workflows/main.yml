@@ -1,0 +1,28 @@
+on: push
+name: 🚀 Deploy on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v2.3.2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Publish DatePot
+      run: dotnet publish DatePot.csproj --framework net5.0 --output bin/Release/net5.0
+      
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      with:
+        server: ftp.websitelive.net
+        username: scud97_ftpuser
+        password: ${{ secrets.ftp_password }}
+        local-dir: bin/Release/net5.0/
+        server-dir: DatePot/
