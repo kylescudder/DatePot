@@ -28,6 +28,8 @@ namespace DatePot.Areas.CoffeePot.Models
             public int KyleExperience { get; set; }
             [Display(Name = "Rhiann Experience")]
             public int RhiannExperience { get; set; }
+            [Display(Name = "Average Taste")]
+            public int AvgTaste { get; set; }
             [Display(Name = "Average Rating")]
             public int AvgRating { get; set; }
             public int? UserGroupID { get; set; }
