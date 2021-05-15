@@ -1,3 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cup-fill" viewBox="0 0 16 16">
-  <path d="M1 2a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v1h.5A1.5 1.5 0 0 1 16 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-.55a2.5 2.5 0 0 1-2.45 2h-8A2.5 2.5 0 0 1 1 12.5V2zm13 10h.5a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5H14v8z"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 595.3 595.3" style="enable-background:new 0 0 595.3 595.3;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:13;stroke-miterlimit:10;}
+	.st1{fill:#FFFFFF;}
+</style>
+<path d="M188.1,343.5v-79.8c0,0-4.7-16.5,16.1-16.5s154.6,0,154.6,0v96.3c0,0,2.8,44.2-46,44.2s-77.5,0-77.5,0
+	S188.1,395,188.1,343.5z"/>
+<line class="st0" x1="151.8" y1="413.4" x2="439" y2="413.4"/>
+<path class="st0" d="M219.4,148.5c0,0-1,19.9,13.2,34.3s17,38.1,17.2,41.4"/>
+<path class="st0" d="M264.7,148.5c0,0-1,19.9,13.2,34.3c14.1,14.4,17,38.1,17.2,41.4"/>
+<path class="st0" d="M378.3,333.9c23.3,0,42.1-17.9,42.1-39.9c0-22-18.9-39.9-42.1-39.9h-19.4l2.2,79.8H378.3z"/>
 </svg>

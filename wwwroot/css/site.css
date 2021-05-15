@@ -144,6 +144,12 @@ body {
 #ValidationCheck .modal-footer {
     border-top: none;
 }
-.headerImage {
+.headerImageBS {
   height: 2.5rem;
+}
+.headerImage {
+  height: 6.5rem;
+  margin-bottom: -3rem;
+  margin-top: -3rem;
+  margin-left: -2rem;
 }
