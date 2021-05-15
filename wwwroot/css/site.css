@@ -156,4 +156,9 @@ body {
 .dataTables_filter label {
   float: right;
 }
+.headerImageBeer {
+  height: 3.5rem;
+  margin-bottom: -3rem;
+  margin-top: -3rem;
+  margin-left: -1rem;
 }

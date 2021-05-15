@@ -18,6 +18,7 @@ using DatePot.Areas.ActivityPot.Data;
 using DatePot.Areas.Identity.Data;
 using DatePot.Areas.VinylPot.Data;
 using WebPWrecover.Services;
+using DatePot.Areas.BeerPot.Data;
 
 namespace DatePot
 {
@@ -54,6 +55,7 @@ namespace DatePot
             services.AddSingleton<ICoffeeData, CoffeeData>();
             services.AddSingleton<IActivityData, ActivityData>();
             services.AddSingleton<IVinylData, VinylData>();
+            services.AddSingleton<IBeerData, BeerData>();
             services.AddSingleton<ISiteData, SiteData>();
             services.AddSingleton<IIdentityData, IdentityData>();
             services.AddSingleton<IEmailSender, EmailSender>();

@@ -18,33 +18,52 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script type="text/javascript" src="~/js/chosen.jquery.js"></script>
+    <link rel="stylesheet" href="~/css/component-chosen.css" />
+    <!-- optionally if you need to use a theme, then include the theme file as mentioned below -->
     <link href="~/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
     <script src="~/js/star-rating.js" type="text/javascript"></script>
-    <!-- These theme links are related to the star system for coffee and beer -->
     <link href="~/css/theme.css" media="all" rel="stylesheet" type="text/css" />
     <script src="~/js/theme.js" type="text/javascript"></script>
     <link href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>  
-    <script type="text/javascript" src="~/js/chosen.jquery.js"></script>
-    <link rel="stylesheet" href="~/css/component-chosen.css" />
+    <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">The Date Pot</a>
-                @if (ViewBag.Icon != "images/BeerLogo.svg") {
-                    <img src="@ViewBag.Icon" class="@(ViewBag.Icon == "images/CoffeeLogo.svg" || ViewBag.Icon == "images/RestaurantLogo.svg" ? "headerImage" : "headerImageBS")">   
-                } else {
-                    <img src="@ViewBag.Icon" class="headerImageBeer">
-                }
+                <a class="navbar-brand" asp-area="" asp-page="/Index">The Coffee Pot</a>
+                <img src="~/images/CoffeeLogo.svg" style="width: 25%;margin:-2rem;" alt="Coffee Pot Logo">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="FilmPot" asp-page="/Index">Film</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="FoodPot" asp-page="/Index">Food</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="ActivityPot" asp-page="/Index">Activity</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="CoffeePot" asp-page="/Index">Coffee</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="VinylPot" asp-page="/Index">Vinyl</a>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </nav>
