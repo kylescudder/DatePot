@@ -16,7 +16,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Publish DatePot
-      run: dotnet publish DatePot.csproj --framework net5.0 --output bin/Release/net5.0
+      run: dotnet publish -c Release
       
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
