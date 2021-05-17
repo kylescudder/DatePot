@@ -24,14 +24,15 @@
                 var sOptions ="";
                 $(".UpdateBeerUserList option").each(function()
                 {
-                    if (item.userID == (this).val) {
-                        sOptions += "<option value='" + $(this).text() + "' selected>" + $(this).text() + "</option>"
+                    if (item.userID == $(this).val()) {
+                        sOptions += "<option value='" + $(this).val() + "' selected>" + $(this).text() + "</option>"
                     }
-                    sOptions += "<option value='" + $(this).text() + "'>" + $(this).text() + "</option>"
+                    sOptions += "<option value='" + $(this).val() + "'>" + $(this).text() + "</option>"
                 }) 
                 $(".ratingList").append(`
                     <div class='row pt-2 rating'>
                         <div class='col-4'>
+                            <input type='hidden' id='BeerRatingID' value='` + item.beerRatingID + `' />
                             <label>Who</label>
                             <select class="form-control form-control-chosen AddRatingWhoID" data-placeholder="Choose a person..." required="required">
                                 ` + sOptions + `
@@ -60,11 +61,12 @@
             var sOptions ="";
             $(".UpdateBeerUserList option").each(function()
             {
-                sOptions += "<option value='" + $(this).text() + "'>" + $(this).text() + "</option>"
+                sOptions += "<option value='" + $(this).val() + "'>" + $(this).text() + "</option>"
             }) 
             $(".ratingList").append(`
                 <div class='row pt-2 rating'>
                     <div class='col-4'>
+                        <input type='hidden' id='BeerRatingID' value='0' />
                         <label>Who</label>
                         <select class="form-control form-control-chosen AddRatingWhoID" data-placeholder="Choose a person..." required="required">
                             ` + sOptions + `
@@ -91,8 +93,29 @@
         $(".btnUpdateBeer").on("click", function() {
             $(".rating").each(function() {
                 console.log($(this).find(".AddRatingWhoID").chosen().val())
-                console.log($(this).find(".WankynessVal").val())
-                console.log($(this).find(".TasteVal").val())
+                var BeerID = $(".hidBeerID").val();
+                var pathname = '?handler=UpdateBeerRatings';
+                $.ajax({
+                    dataType: 'json',
+                    url: pathname,
+                    type: 'POST',
+                    data: {
+                        UserID: $(this).find(".AddRatingWhoID").chosen().val(),
+                        Wankyness: $(this).find(".WankynessVal").val(),
+                        Taste: $(this).find(".TasteVal").val(),
+                        BeerRatingID: $(this).find("#BeerRatingID").val(),
+                        BeerID: BeerID
+                    },
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                    },
+                    error: function () {
+                        alert("AJAX Request Failed, Contact Support");
+                    }
+                });
             })
         })
     </script>

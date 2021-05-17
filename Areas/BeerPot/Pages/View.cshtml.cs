@@ -121,5 +121,33 @@ namespace DatePot.Areas.BeerPot.Pages
 				throw new Exception(ex.ToString());
 			}
 		}
+		public async Task<JsonResult> OnPostUpdateBeerRatings(string UserID, int Wankyness, int Taste, int BeerRatingID, int BeerID)
+		{
+			try
+			{
+				JsonResult result = null;
+				if (ModelState.IsValid == false)
+				{
+					foreach (var modelStateKey in ViewData.ModelState.Keys)
+					{
+						var value = ViewData.ModelState[modelStateKey];
+						foreach (var error in value.Errors)
+						{
+							var errorMessage = error.ErrorMessage;
+							result = new JsonResult(modelStateKey + ": " + errorMessage);
+						}
+					}
+					return result;
+				}
+				await _BeerData.UpdateBeerRating(UserID, Wankyness, Taste, BeerRatingID, BeerID);
+				result = new JsonResult(1);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.ToString());
+			}
+		}
+
 	}
 }

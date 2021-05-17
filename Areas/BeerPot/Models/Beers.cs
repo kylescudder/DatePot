@@ -50,6 +50,7 @@ namespace DatePot.Areas.BeerPot.Models
         }
         public class BeerRatings 
         {
+            public int BeerRatingID { get; set; }
             public int BeerID { get; set; }
             public string UserID { get; set; }
             public int Wankyness { get; set; }
