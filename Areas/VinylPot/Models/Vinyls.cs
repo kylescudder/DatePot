@@ -39,7 +39,7 @@ namespace DatePot.Areas.VinylPot.Models
 			public string ArtistName { get; set; }
 			public bool Purchased { get; set; }
 			[Display(Name = "Who")]
-			public int AddedByID { get; set; }
+			public string AddedByID { get; set; }
 		}
 		public class VinylDetails
 		{
@@ -51,7 +51,7 @@ namespace DatePot.Areas.VinylPot.Models
 			public string ArtistName { get; set; }
 			public bool Purchased { get; set; }
 			[Display(Name = "Who")]
-			public int AddedByID { get; set; }
+			public string AddedByID { get; set; }
 			public int? UserGroupID { get; set; }
 		}
 		public class UpdateVinylDetails : VinylDetails

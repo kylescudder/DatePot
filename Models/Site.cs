@@ -7,7 +7,7 @@ namespace DatePot.Models
         public class UserList
         {
             [Key]
-            public int UserID { get; set; }
+            public string UserID { get; set; }
             [Display(Name = "Name")]
             public string UserName { get; set; }
         }
