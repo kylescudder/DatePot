@@ -35,7 +35,7 @@
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">The Date Pot</a>
                 @if (ViewBag.Icon != "images/BeerLogo.svg") {
-                    <img src="@ViewBag.Icon" class="@(ViewBag.Icon == "images/CoffeeLogo.svg" || ViewBag.Icon == "images/RestaurantLogo.svg" ? "headerImage" : "headerImageBS")">   
+                    <img src="@ViewBag.Icon" class="@(ViewBag.Icon == "../images/CoffeeLogo.svg" || ViewBag.Icon == "../images/RestaurantLogo.svg" ? "headerImage" : "headerImageBS")">   
                 } else {
                     <img src="@ViewBag.Icon" class="headerImageBeer">
                 }

@@ -14,10 +14,10 @@ namespace DatePot.Areas.Identity.Data
         {
             _dataAccess = dataAccess;
         }
-        public Task<int> AddUser(string UserName, string Id)
+        public Task<int> AddUser(string Name, string Id)
         {
             DynamicParameters p = new DynamicParameters();
-            p.Add("UserName", UserName);
+            p.Add("Name", Name);
             p.Add("Id", Id);
 
             return _dataAccess.SaveData(
@@ -35,3 +35,4 @@ namespace DatePot.Areas.Identity.Data
         }
     }
 }
+

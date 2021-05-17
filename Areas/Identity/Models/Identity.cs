@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DatePot.Areas.Identity.Models
 {
@@ -13,9 +7,9 @@ namespace DatePot.Areas.Identity.Models
         public class UserList
         {
             [Key]
-            public int UserID { get; set; }
+            public string UserID { get; set; }
             [Display(Name = "Name")]
-            public string UserName { get; set; }
+            public string Name { get; set; }
         }
     }
 }

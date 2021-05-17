@@ -50,7 +50,7 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
         {
             string cs = _config.GetConnectionString("Default");
             var userName = await _userManager.GetUserNameAsync(user);
-            var UsersName = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().UserName.ToString();
+            var UsersName = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().Name.ToString();
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
