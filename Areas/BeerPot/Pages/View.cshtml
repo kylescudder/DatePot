@@ -1,18 +1,12 @@
 ﻿@page
 @model DatePot.Areas.BeerPot.Pages.ViewModel
+
 @{
     ViewData["Title"] = "View";
 }
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.form-control-chosen').chosen();
-            $(".starRating").rating({
-                step: 1,
-                showCaption: false,
-                showClear: true,
-                theme: 'krajee-svg'
-            });
             const urlParams = new URLSearchParams(window.location.search);
             const redirectParam = urlParams.get('redirect');
             if (redirectParam == "update") {
@@ -24,6 +18,43 @@
                     }, 1000);
                 }, 250);
             }
+            var items = @Html.Raw(Json.Serialize(Model.BeerRatingList));
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                var sOptions ="";
+                $(".UpdateBeerUserList option").each(function()
+                {
+                    if (item.userID == (this).val) {
+                        sOptions += "<option value='" + $(this).text() + "' selected>" + $(this).text() + "</option>"
+                    }
+                    sOptions += "<option value='" + $(this).text() + "'>" + $(this).text() + "</option>"
+                }) 
+                $(".ratingList").append(`
+                    <div class='row pt-2 rating'>
+                        <div class='col-4'>
+                            <label>Who</label>
+                            <select class="form-control form-control-chosen AddRatingWhoID" data-placeholder="Choose a person..." required="required">
+                                ` + sOptions + `
+                            </select>
+                        </div>
+                        <div class='col-4'>
+                            <label>Wankyness</label>
+                            <input class='starRating rating-loading WankynessVal' value=` + item.wankyness + ` data-size='xs'>
+                        </div>
+                        <div class='col-4'>
+                            <label>Taste</label>
+                            <input class='starRating rating-loading TasteVal' value=` + item.taste + `  data-size='xs'>
+                        </div>
+                    </div>`
+                )
+            }
+            $('.form-control-chosen').chosen();
+            $(".starRating").rating({
+                step: 1,
+                showCaption: false,
+                showClear: true,
+                theme: 'krajee-svg'
+            });
         });
         $(".btnAddRating").on("click", function() {
             var sOptions ="";
@@ -41,11 +72,11 @@
                     </div>
                     <div class='col-4'>
                         <label>Wankyness</label>
-                        <input class='starRating rating-loading' data-size='xs'>
+                        <input class='starRating rating-loading WankynessVal' data-size='xs'>
                     </div>
                     <div class='col-4'>
                         <label>Taste</label>
-                        <input class='starRating rating-loading' data-size='xs'>
+                        <input class='starRating rating-loading TasteVal' data-size='xs'>
                     </div>
                 </div>`
             )
@@ -60,6 +91,8 @@
         $(".btnUpdateBeer").on("click", function() {
             $(".rating").each(function() {
                 console.log($(this).find(".AddRatingWhoID").chosen().val())
+                console.log($(this).find(".WankynessVal").val())
+                console.log($(this).find(".TasteVal").val())
             })
         })
     </script>

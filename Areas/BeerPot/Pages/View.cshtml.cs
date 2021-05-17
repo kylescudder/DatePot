@@ -49,7 +49,7 @@ namespace DatePot.Areas.BeerPot.Pages
 		public UpdateBeerDetails UpdateBeerDetails { get; set; }
 
 		public BeerDetails BeerDetails { get; set; }
-		public BeerRatings BeerRatingList { get; set; }
+		public List<BeerRatings> BeerRatingList { get; set; }
 		public List<PotAccess> PotAccess { get; set; }
 		public List<SelectListItem> Users { get; set; }
 		public async Task<IActionResult> OnGet()
@@ -75,7 +75,7 @@ namespace DatePot.Areas.BeerPot.Pages
                     return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
                 }
 				var users = _filmData.GetUserList(UserGroupID);
-				BeerRatingList = _BeerData.GetBeerRatings(BeerDetails.BeerID);
+				BeerRatingList = await _BeerData.GetBeerRatings(BeerDetails.BeerID);
 				Users = new List<SelectListItem>();
 				users.Result.ForEach(x =>
 				{

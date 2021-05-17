@@ -74,12 +74,20 @@ namespace DatePot.Areas.BeerPot.Data
             return recs;
         }
         public async Task<List<UserList>> GetUserList(int? UserGroupID)
-		{
-			var recs = await _dataAccess.LoadData<UserList, dynamic>(
-				"scud97_kssu.spGetUserList",
-				new { UserGroupID },
-				"Default");
-			return recs;
-		}
+        {
+            var recs = await _dataAccess.LoadData<UserList, dynamic>(
+                "scud97_kssu.spGetUserList",
+                new { UserGroupID },
+                "Default");
+            return recs;
+        }
+        public async Task<List<BeerRatings>> GetBeerRatings(int? BeerID)
+        {
+            var recs = await _dataAccess.LoadData<BeerRatings, dynamic>(
+                "scud97_kssu.spGetBeerRatings",
+                new { BeerID },
+                "Default");
+            return recs;
+        }
     }
 }
