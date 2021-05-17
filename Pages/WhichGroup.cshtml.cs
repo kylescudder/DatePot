@@ -13,13 +13,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace DatePot.Pages
 {
-    public class IndexModel : PageModel
+    public class WhichGroupModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly ILogger<WhichGroupModel> _logger;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IIdentityData _identityData;
         private readonly ISiteData _siteData;
-        public IndexModel(ILogger<IndexModel> logger,
+        public WhichGroupModel(ILogger<WhichGroupModel> logger,
         UserManager<IdentityUser> userManager,
         IIdentityData identityData,
         ISiteData siteData)
@@ -39,19 +39,24 @@ namespace DatePot.Pages
             }
             else {
                 var user = await _userManager.GetUserAsync(User);
-                PotAccess = await _siteData.GetPotAccess(user.Id.ToString());
-                if (HttpContext.Session.GetInt32("UserGroupID") == null) {
-                    UserGroups = await _siteData.GetUserGroups(user.Id.ToString());
-                    int OwnUserGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
-                    for (int i = 0; i < UserGroups.Count(); i++)
-                    {
-                        if (OwnUserGroupID != UserGroups[i].UserGroupID) {
-                            return RedirectToPage("WhichGroup");
-                        }
+                UserGroups = await _siteData.GetUserGroups(user.Id.ToString());
+                var UsersName = _identityData.GetUser(user.Id.ToString()).Result.FirstOrDefault().Name.ToString();
+                for (int i = 0; i < UserGroups.Count(); i++)
+                {
+                    if (UserGroups[i].Name == UsersName.ToString()) {
+                        var Id = UserGroups[i].UserGroupID;
+                        UserGroups.RemoveAt(i);
+                        UserGroups.Add(new UserGroups{ UserGroupID = Id, Name = "Mine" });
                     }
                 }
                 return Page();
             }
+        }
+        public async Task<ActionResult> OnPost(IFormCollection collection) 
+        {
+            int i = Convert.ToInt32(collection["hidUserGroupID"]);
+            HttpContext.Session.SetInt32("UserGroupID", i);
+            return RedirectToPage("Index");
         }
     }
 }

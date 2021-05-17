@@ -4,10 +4,10 @@ using static DatePot.Models.Site;
 
 namespace DatePot.Data
 {
-	public interface ISiteData
-	{
-		Task<List<PotAccess>> GetPotAccess(string UserID);
-		Task<int> GetUserGroupID(string UserID);
-	}
+    public interface ISiteData
+    {
+        Task<List<PotAccess>> GetPotAccess(string UserID);
+        Task<List<UserGroups>> GetUserGroups(string UserID);
+        Task<int> GetUserOwnGroup(string UserID);
+    }
 }
-

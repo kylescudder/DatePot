@@ -15,5 +15,10 @@ namespace DatePot.Models
         {
             public int PotID { get; set; }
         }
+        public class UserGroups
+        {
+            public int UserGroupID { get; set; }
+            public string Name { get; set; }
+        }
     }
 }

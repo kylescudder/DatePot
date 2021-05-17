@@ -1,0 +1,21 @@
+﻿@page
+@model DatePot.Pages.WhichGroupModel
+@{
+    ViewBag.Title = "Which service";
+}
+<div class="row pt-5">
+    <div class="col-md-6 offset-md-3 text-center">
+        <p>It looks like you have access to a group pot! 
+            This means you can share lists with other, sharing is caring. ❤ <br />
+            Which pots would you like to add to today?</p>
+        @foreach (var item in Model.UserGroups)
+        {
+            <form method="POST" class="text-center">
+                <button type="submit" class="btn btn-lg btn-primary mt-2">
+                    <input type="hidden" value="@item.UserGroupID" id="hidUserGroupID" name="hidUserGroupID" />
+                        @item.Name
+                </button>
+            </form>
+        }
+    </div>
+</div>
