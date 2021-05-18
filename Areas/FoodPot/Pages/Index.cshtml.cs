@@ -65,7 +65,7 @@ namespace DatePot.Areas.FoodPot.Pages
 			{
 				int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
 				var user = await _userManager.GetUserAsync(User);
-				PotAccess = await _siteData.GetPotAccess(user.Id.ToString());
+				PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), UserGroupID);
 				int index = PotAccess.FindIndex(item => item.PotID == 2);
 				if (index == -1)
 				{

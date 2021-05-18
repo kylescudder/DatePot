@@ -41,8 +41,8 @@ namespace DatePot.Pages
             }
             else {
                 var user = await _userManager.GetUserAsync(User);
-                PotAccess = await _siteData.GetPotAccess(user.Id.ToString());
                 DefaultUserGroupID = await _siteData.GetDefaultUserGroupID(user.Id.ToString());
+                PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), DefaultUserGroupID);
                 if (DefaultUserGroupID == 0) {
                     if (HttpContext.Session.GetInt32("UserGroupID") == null) {
                         UserGroups = await _siteData.GetUserGroups(user.Id.ToString());
@@ -60,14 +60,15 @@ namespace DatePot.Pages
                 return Page();
             }
         }
-        public async Task<IActionResult> OnPost(IFormCollection collection)
+        public async Task<JsonResult> OnPost(IFormCollection collection)
         {
             try {
                 JsonResult result = null;
                 int UserGroupID = Convert.ToInt32(collection["hidUserGroupID"]);
                 var user = await _userManager.GetUserAsync(User);
                 await _siteData.SetDefaultUserGroupID(UserGroupID, user.Id.ToString());
-				return Page();
+                result = new JsonResult("success");
+				return result;
 			}
 			catch (Exception ex)
 			{

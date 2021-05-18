@@ -10,6 +10,26 @@
                 $('.defaultPotCard').fadeOut();
             })
         });
+        $(".btnSetDefaultUserGroup").on("click", function() {
+            var form = $(".setDefaultUserGroupForm").serialize();
+            $.ajax({
+                dataType: 'json',
+                url: window.location.pathname,
+                type: 'POST',
+                data: form,
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    $(".defaultPotCard").fadeOut()
+                },
+                error: function (ex) {
+                    alert("AJAX Request Failed, Contact Support");
+                    console.log(ex);
+                }
+            });
+        })
     </script>
 }
 @if (Model.DefaultUserGroupID == 0) {
@@ -30,9 +50,9 @@
             <p class="card-text">If you always select this pot when you log in then it can be set as your default pot and you will no longer have to pick.</p>
             <p class="card-text">Not to worry though, even if you do pick a default pot you can still switch as any time.</p>
             <p class="card-text">To set a default pot you can either click below to set this as your default pot, or go to your profile.</p>
-            <form method="POST">
+            <form method="POST" class="setDefaultUserGroupForm">
                 <input type="hidden" value="@Model.CurrentUserGroupID" name="hidUserGroupID" id="hidUserGroupID" />
-                <button type="submit" class="btn btn-primary">Make this one my default pot.</button>
+                <button type="button" class="btn btn-primary btnSetDefaultUserGroup">Make this one my default pot.</button>
             </form>
         </div>
     </div>

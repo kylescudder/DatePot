@@ -62,7 +62,7 @@ namespace DatePot.Areas.FilmPot.Pages
             {
                 int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
 				var user = await _userManager.GetUserAsync(User);
-				PotAccess = await _siteData.GetPotAccess(user.Id.ToString());
+				PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), UserGroupID);
 				int index = PotAccess.FindIndex(item => item.PotID == 1);
                 if (index == -1)
                 {
