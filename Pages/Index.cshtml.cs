@@ -57,6 +57,7 @@ namespace DatePot.Pages
                         CurrentUserGroupID = HttpContext.Session.GetInt32("UserGroupID");
                     }
                 }
+                HttpContext.Session.SetInt32("UserGroupID", DefaultUserGroupID.Value);
                 return Page();
             }
         }

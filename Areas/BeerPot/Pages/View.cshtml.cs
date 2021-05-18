@@ -63,7 +63,7 @@ namespace DatePot.Areas.BeerPot.Pages
 				int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
 				var user = await _userManager.GetUserAsync(User);
 				PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), UserGroupID);
-				int index = PotAccess.FindIndex(item => item.PotID == 4);
+				int index = PotAccess.FindIndex(item => item.PotID == 6);
 				if (index == -1)
 				{
 					return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });

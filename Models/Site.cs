@@ -20,5 +20,9 @@ namespace DatePot.Models
             public int UserGroupID { get; set; }
             public string Name { get; set; }
         }
+        public class UserAccess
+        {
+            public string UserName { get; set; }
+        }
     }
 }

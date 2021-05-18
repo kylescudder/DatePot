@@ -68,5 +68,14 @@ namespace DatePot.Data
                 p,
                 "Default");
         }
+        public async Task<List<UserAccess>> GetUserAccessToGroup(string UserID)
+        {
+            var recs = await _dataAccess.LoadData<UserAccess, dynamic>(
+                "scud97_kssu.spGetMyUserGroupMembers",
+                new { UserID },
+                "Default");
+            return recs;
+        }
+
     }
 }
