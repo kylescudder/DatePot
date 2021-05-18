@@ -3,6 +3,40 @@
 @{
     ViewBag.Title = "Which service";
 }
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.close').click(function(){
+                $('.defaultPotCard').fadeOut();
+            })
+        });
+    </script>
+}
+@if (Model.DefaultUserGroupID == 0) {
+    <div class="card mb-5 bg-light defaultPotCard">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    <h5 class="card-title">Make this pot your default?</h5>
+                </div>
+                <div class="col">
+                    <button type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="text-center card-body">
+            <p class="card-text">If you always select this pot when you log in then it can be set as your default pot and you will no longer have to pick.</p>
+            <p class="card-text">Not to worry though, even if you do pick a default pot you can still switch as any time.</p>
+            <p class="card-text">To set a default pot you can either click below to set this as your default pot, or go to your profile.</p>
+            <form method="POST">
+                <input type="hidden" value="@Model.CurrentUserGroupID" name="hidUserGroupID" id="hidUserGroupID" />
+                <button type="submit" class="btn btn-primary">Make this one my default pot.</button>
+            </form>
+        </div>
+    </div>
+}
 @foreach (var item in Model.PotAccess)
 {
     @if (item.PotID == 1) {

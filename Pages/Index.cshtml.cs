@@ -31,6 +31,8 @@ namespace DatePot.Pages
         }
         public List<PotAccess> PotAccess { get; set; }
         public List<UserGroups> UserGroups { get; set; }
+        public int? CurrentUserGroupID { get; set; }
+        public int? DefaultUserGroupID { get; set; }
         public async Task<ActionResult> OnGet()
         {
             if (!User.Identity.IsAuthenticated)
@@ -40,18 +42,37 @@ namespace DatePot.Pages
             else {
                 var user = await _userManager.GetUserAsync(User);
                 PotAccess = await _siteData.GetPotAccess(user.Id.ToString());
-                if (HttpContext.Session.GetInt32("UserGroupID") == null) {
-                    UserGroups = await _siteData.GetUserGroups(user.Id.ToString());
-                    int OwnUserGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
-                    for (int i = 0; i < UserGroups.Count(); i++)
-                    {
-                        if (OwnUserGroupID != UserGroups[i].UserGroupID) {
-                            return RedirectToPage("WhichGroup");
+                DefaultUserGroupID = await _siteData.GetDefaultUserGroupID(user.Id.ToString());
+                if (DefaultUserGroupID == 0) {
+                    if (HttpContext.Session.GetInt32("UserGroupID") == null) {
+                        UserGroups = await _siteData.GetUserGroups(user.Id.ToString());
+                        int OwnUserGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
+                        for (int i = 0; i < UserGroups.Count(); i++)
+                        {
+                            if (OwnUserGroupID != UserGroups[i].UserGroupID) {
+                                return RedirectToPage("WhichGroup");
+                            }
                         }
+                    } else {
+                        CurrentUserGroupID = HttpContext.Session.GetInt32("UserGroupID");
                     }
                 }
                 return Page();
             }
+        }
+        public async Task<IActionResult> OnPost(IFormCollection collection)
+        {
+            try {
+                JsonResult result = null;
+                int UserGroupID = Convert.ToInt32(collection["hidUserGroupID"]);
+                var user = await _userManager.GetUserAsync(User);
+                await _siteData.SetDefaultUserGroupID(UserGroupID, user.Id.ToString());
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.ToString());
+			}
         }
     }
 }

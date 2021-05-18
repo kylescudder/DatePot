@@ -54,9 +54,15 @@ namespace DatePot.Pages
         }
         public async Task<ActionResult> OnPost(IFormCollection collection) 
         {
-            int i = Convert.ToInt32(collection["hidUserGroupID"]);
-            HttpContext.Session.SetInt32("UserGroupID", i);
-            return RedirectToPage("Index");
+            try {
+                int i = Convert.ToInt32(collection["hidUserGroupID"]);
+                HttpContext.Session.SetInt32("UserGroupID", i);
+                return RedirectToPage("Index");
+            }
+			catch (Exception ex)
+			{
+				throw new Exception(ex.ToString());
+			}
         }
     }
 }

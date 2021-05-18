@@ -10,6 +10,7 @@ namespace DatePot.Areas.Identity.Models
             public string UserID { get; set; }
             [Display(Name = "Name")]
             public string Name { get; set; }
+            public int DefaultUserGroupID { get; set; }
         }
     }
 }
