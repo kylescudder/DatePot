@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using DatePot.Db;
+using static DatePot.Areas.Identity.Models.Identity;
 using static DatePot.Models.Site;
 
 namespace DatePot.Data
@@ -22,6 +23,18 @@ namespace DatePot.Data
 
             var recs = await _dataAccess.LoadData<PotAccess, dynamic>(
                 "scud97_kssu.spGetPotAccess",
+                p,
+                "Default");
+            return recs;
+        }
+        public async Task<List<UserAccessToGroup>> GetUserPotAccess(string UserID, int? UserGroupID)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("UserID", UserID);
+            p.Add("UserGroupID", UserGroupID);
+
+            var recs = await _dataAccess.LoadData<UserAccessToGroup, dynamic>(
+                "scud97_kssu.spGetUserPotAccess",
                 p,
                 "Default");
             return recs;

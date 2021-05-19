@@ -1,5 +1,7 @@
 @model List<DatePot.Areas.Identity.Models.Identity.UserAccessToGroup>
-@foreach (var item in Model.PotAccess)
+@foreach (var item in Model)
 {
-    <p>item.PotID</p>
+    <p>@item.PotID</p>
+    <input asp-for="@item.PotName" checked="@item.AccessGranted" type="checkbox" class="form-control UpdateVinylPurchased" />
+
 }

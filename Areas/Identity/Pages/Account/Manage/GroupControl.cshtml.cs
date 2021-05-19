@@ -40,8 +40,7 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
         [TempData]
         public string StatusMessage { get; set; }
 		public List<SelectListItem> UserAccessToGroup { get; set; }
-        public List<PotAccess> PotAccess { get; set; }
-
+        public List<UserAccessToGroup> UserAccessToGroupList { get; set; }
         private async Task LoadAsync(IdentityUser user)
         {
             var useraccesstogroup = _siteData.GetUserAccessToGroup(user.Id.ToString());
@@ -65,18 +64,17 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
-        public async Task<PartialViewResult> OnPostAsync(string UserID)
+        public async Task<PartialViewResult> OnGetUserAccessToGroup(string UserID)
         {
             try {
-                JsonResult result = null;
                 var user = await _userManager.GetUserAsync(User);
                 var ChosenUser = await _userManager.FindByEmailAsync(UserID);
                 int UserOwnGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
-                PotAccess = await _siteData.GetPotAccess(ChosenUser.Id.ToString(), UserOwnGroupID);
+                UserAccessToGroupList = await _siteData.GetUserPotAccess(ChosenUser.Id.ToString(), UserOwnGroupID);
 				return new PartialViewResult
 				{
 					ViewName = "_UserAccessToGroup",
-					ViewData = new ViewDataDictionary<List<UserAccessToGroup>>(ViewData, PotAccess)
+					ViewData = new ViewDataDictionary<List<UserAccessToGroup>>(ViewData, UserAccessToGroupList)
 				};                
                 // result = new JsonResult("success");
 				// return result;

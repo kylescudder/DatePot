@@ -10,6 +10,11 @@
         <select asp-items="Model.UserAccessToGroup" class="form-control-chosen ddlUserAccessToGroup"></select>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="divUserAccessToGroup">
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
@@ -19,25 +24,8 @@
             generateContent();
         });
         function generateContent() {
-            $.ajax({
-                dataType: 'json',
-                url: window.location.pathname,
-                type: 'POST',
-                data: {
-                    UserID: $(".ddlUserAccessToGroup").chosen().val()
-                },
-                headers: {
-                    RequestVerificationToken:
-                        $('input:hidden[name="__RequestVerificationToken"]').val()
-                },
-                success: function (response) {
-                    console.log(response)
-                },
-                error: function (ex) {
-                    alert("AJAX Request Failed, Contact Support");
-                    console.log(ex);
-                }
-            });
+            var UserID = $(".ddlUserAccessToGroup").chosen().val();
+            $('.divUserAccessToGroup').load('?handler=UserAccessToGroup', "UserID=" + UserID);
         }
     </script>
 }

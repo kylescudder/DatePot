@@ -14,9 +14,10 @@ namespace DatePot.Areas.Identity.Models
             public string Name { get; set; }
             public int DefaultUserGroupID { get; set; }
         }
-        public class UserAccessToGroup 
-        {
-            public List<PotAccess> PotAccess { get; set; }
+        public class UserAccessToGroup : PotAccess 
+        { 
+            public string PotName { get; set; }
+            public bool AccessGranted { get; set; }
         }
     }
 }
