@@ -80,7 +80,7 @@ namespace DatePot.Areas.VinylPot.Pages
 				throw new Exception(ex.ToString());
 			}
 		}
-		public JsonResult OnPost(string VinylName, string VinylArtistName, bool VinylPurchased, int VinylAddedByID)
+		public JsonResult OnPost(string VinylName, string VinylArtistName, bool VinylPurchased, string VinylAddedByID)
 		{
 			try
 			{

@@ -53,7 +53,7 @@ namespace DatePot.Areas.VinylPot.Data
 				"Default");
 			return recs;
 		}
-		public async Task<int> AddVinyl(string Name, string ArtistName, bool Purchased, int AddedByID, int? UserGroupID)
+		public async Task<int> AddVinyl(string Name, string ArtistName, bool Purchased, string AddedByID, int? UserGroupID)
 		{
 			DynamicParameters p = new DynamicParameters();
 			p.Add("Name", Name);

@@ -6,7 +6,7 @@ namespace DatePot.Areas.VinylPot.Data
 {
 	public interface IVinylData
 	{
-		Task<int> AddVinyl(string Name, string ArtistName, bool Purchased, int AddedByID, int? UserGroupID);
+		Task<int> AddVinyl(string Name, string ArtistName, bool Purchased, string AddedByID, int? UserGroupID);
 		Task<int> ArchiveVinyl(int VinylID);
 		Task<List<VinylDetails>> GetVinylDetails(int VinylID);
 		Task<List<VinylList>> GetVinylList(int? UserGroupID);
