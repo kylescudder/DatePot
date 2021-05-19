@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using static DatePot.Areas.Identity.Models.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace DatePot.Areas.Identity.Pages.Account.Manage
 {
@@ -71,6 +72,7 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
                 var ChosenUser = await _userManager.FindByEmailAsync(UserID);
                 int UserOwnGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
                 UserAccessToGroupList = await _siteData.GetUserPotAccess(ChosenUser.Id.ToString(), UserOwnGroupID);
+                HttpContext.Session.SetInt32("UserAccessToGroupList", UserAccessToGroupList.Count());
 				return new PartialViewResult
 				{
 					ViewName = "_UserAccessToGroup",
@@ -84,5 +86,24 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 				throw new Exception(ex.ToString());
 			}
         }
+        public async Task<IActionResult> OnPostUserGroupUpdated()
+		{
+			try
+			{
+                var PotItem = Request.Form["item.AccessGranted"];
+                int? PotCount = HttpContext.Session.GetInt32("UserAccessToGroupList");
+                int PotID = 0;
+                for (int i = 0; i < PotCount; i++)
+                {
+                    PotID = i++;
+                    var t = PotItem[i];
+                }
+				return RedirectToPage("./Index", new { @redirect = "RestaurantAttended" });
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.ToString());
+			}
+		}
     }
 }
