@@ -11,6 +11,8 @@ using static DatePot.Models.Site;
 using DatePot.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using static DatePot.Areas.Identity.Models.Identity;
 
 namespace DatePot.Areas.Identity.Pages.Account.Manage
 {
@@ -63,46 +65,26 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string UserID)
+        public async Task<PartialViewResult> OnPostAsync(string UserID)
         {
             try {
+                JsonResult result = null;
                 var user = await _userManager.GetUserAsync(User);
                 var ChosenUser = await _userManager.FindByEmailAsync(UserID);
                 int UserOwnGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
                 PotAccess = await _siteData.GetPotAccess(ChosenUser.Id.ToString(), UserOwnGroupID);
-                //return Partial("_UserAccessToGroup", gcm);
+				return new PartialViewResult
+				{
+					ViewName = "_UserAccessToGroup",
+					ViewData = new ViewDataDictionary<List<UserAccessToGroup>>(ViewData, PotAccess)
+				};                
+                // result = new JsonResult("success");
+				// return result;
             }
             catch (Exception ex)
 			{
 				throw new Exception(ex.ToString());
 			}
-            // var user = await _userManager.GetUserAsync(User);
-            // if (user == null)
-            // {
-            //     return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            // }
-
-            // if (!ModelState.IsValid)
-            // {
-            //     await LoadAsync(user);
-            //     return Page();
-            // }
-
-            // var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            // await _siteData.SetDefaultUserGroupID(Input.DefaultUserGroupID, user.Id.ToString());
-            // if (Input.PhoneNumber != phoneNumber)
-            // {
-            //     var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-            //     if (!setPhoneResult.Succeeded)
-            //     {
-            //         StatusMessage = "Unexpected error when trying to set phone number.";
-            //         return RedirectToPage();
-            //     }
-            // }
-
-            //await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
-            return RedirectToPage();
         }
     }
 }
