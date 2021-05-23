@@ -57,6 +57,7 @@ namespace DatePot.Pages
                         }
                     } else {
                         CurrentUserGroupID = HttpContext.Session.GetInt32("UserGroupID");
+                        DefaultUserGroupID = CurrentUserGroupID;
                         PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), CurrentUserGroupID);
                         return Page();
                     }
