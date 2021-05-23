@@ -12,7 +12,7 @@ namespace DatePot.Data
         Task<int> GetDefaultUserGroupID(string UserID);
         Task<List<PotAccess>> GetPotAccess(string UserID, int? UserGroupID);
         Task<int> GetPotCount();
-        Task<List<UserAccess>> GetUserAccessToGroup(string UserID, int GetUserAccessToGroup);
+        Task<List<UserAccess>> GetUserAccessToGroup(string UserID, int UserGroupID);
         Task<List<UserGroups>> GetUserGroups(string UserID);
         Task<int> GetUserOwnGroup(string UserID);
         Task<List<Identity.UserAccessToGroup>> GetUserPotAccess(string UserID, int? UserGroupID);
