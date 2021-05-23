@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using DatePot.Data;
 
 namespace DatePot.Areas.Identity.Pages.Account
 {
@@ -14,11 +15,15 @@ namespace DatePot.Areas.Identity.Pages.Account
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _sender;
+        private readonly ISiteData _siteData;
 
-        public RegisterConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(UserManager<IdentityUser> userManager, 
+        IEmailSender sender,
+        ISiteData siteData)
         {
             _userManager = userManager;
             _sender = sender;
+            _siteData = siteData;
         }
 
         public string Email { get; set; }
@@ -46,6 +51,7 @@ namespace DatePot.Areas.Identity.Pages.Account
             if (DisplayConfirmAccountLink)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
+                _siteData.AddUserGroup(userId.ToString());
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 EmailConfirmationUrl = Url.Page(

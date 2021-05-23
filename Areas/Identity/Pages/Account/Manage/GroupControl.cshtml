@@ -9,13 +9,52 @@
     <div class="col-md-6">
         <select asp-items="Model.UserAccessToGroup" class="form-control-chosen ddlUserAccessToGroup"></select>
     </div>
+    <div class="col-md-6">
+        <button type="button" class="btn btn-primary btnAddUserAccess">Add someone to your group</button>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-12">
         <div class="divUserAccessToGroup">
     </div>
 </div>
-
+<div class="modal fade" id="AddUserAccessModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add someone to your group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-page-handler="AddUserAccess">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div lcass="form-group">
+                        <div class="row">
+                            <div class="col-12">
+                                <p>Please enter the email address of the person you would like to invite to your group. <br />
+                                    If they have an account registered with them they will be email an invite.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label asp-for="NewUserAccess.UserEmail" class="control-label"></label>
+                                <input asp-for="NewUserAccess.UserEmail" class="form-control NewUserAccessUserEmail" type="email" />
+                                <span asp-validation-for="NewUserAccess.UserEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Invite 📫</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
@@ -23,9 +62,15 @@
             $('.form-control-chosen').chosen();
             generateContent();
         });
+        $(".ddlUserAccessToGroup").on("change", function() {
+            generateContent();
+        })
         function generateContent() {
             var UserID = $(".ddlUserAccessToGroup").chosen().val();
             $('.divUserAccessToGroup').load('?handler=UserAccessToGroup', "UserID=" + UserID);
         }
+        $(".btnAddUserAccess").on("click", function () {
+            $('#AddUserAccessModal').modal();
+        })
     </script>
 }

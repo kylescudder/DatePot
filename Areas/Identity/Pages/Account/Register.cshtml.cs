@@ -89,7 +89,6 @@ namespace DatePot.Areas.Identity.Pages.Account
                     string cs = _config.GetConnectionString("Default");
                     _identityData.AddUser(Input.Name.ToString(), user.Id);
                     _logger.LogInformation("User created a new account with password.");
-
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

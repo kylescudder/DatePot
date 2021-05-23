@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Dapper;
+using DapperParameters;
 using DatePot.Db;
 using static DatePot.Areas.Identity.Models.Identity;
 using static DatePot.Models.Site;
@@ -27,16 +29,20 @@ namespace DatePot.Data
                 "Default");
             return recs;
         }
-        public async Task<List<UserAccessToGroup>> GetUserPotAccess(string UserID, int? UserGroupID)
+        public async Task<List<Areas.Identity.Models.Identity.UserAccessToGroup>> GetUserPotAccess(string UserID, int? UserGroupID)
         {
             DynamicParameters p = new DynamicParameters();
             p.Add("UserID", UserID);
             p.Add("UserGroupID", UserGroupID);
 
-            var recs = await _dataAccess.LoadData<UserAccessToGroup, dynamic>(
+            var recs = await _dataAccess.LoadData<Areas.Identity.Models.Identity.UserAccessToGroup, dynamic>(
                 "scud97_kssu.spGetUserPotAccess",
                 p,
                 "Default");
+            foreach (var item in recs)
+            {
+                item.UserID = UserID;
+            }
             return recs;
         }
         public async Task<int> GetUserOwnGroup(string UserID)
@@ -81,14 +87,42 @@ namespace DatePot.Data
                 p,
                 "Default");
         }
-        public async Task<List<UserAccess>> GetUserAccessToGroup(string UserID)
+        public async Task<List<UserAccess>> GetUserAccessToGroup(string UserID, int UserGroupID)
         {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("UserID", UserID);
+            p.Add("UserGroupID", UserGroupID);
             var recs = await _dataAccess.LoadData<UserAccess, dynamic>(
                 "scud97_kssu.spGetMyUserGroupMembers",
-                new { UserID },
+                p,
                 "Default");
             return recs;
         }
-
+        public Task<int> UpdateUserAccessToGroup(List<Models.Site.UserAccessToGroup> uatg, string UserID, int UserGroupID)
+        {
+            var p = new DynamicParameters();
+            p.AddTable("@tblUserGroups", "tblusergroupstype ", uatg);
+            p.Add("UserID", UserID);
+            p.Add("UserGroupID", UserGroupID);
+            return _dataAccess.SaveData(
+                "scud97_kssu.spUpdateUserAccessToGroup",
+                p,
+                "Default");
+        }
+        public async Task<int> GetPotCount()
+        {
+            var recs = await _dataAccess.LoadData<int, dynamic>(
+                "scud97_kssu.spGetPotCount",
+                new { },
+                "Default");
+            return recs[0];
+        }
+        public Task<int> AddUserGroup(string UserID)
+        {
+            return _dataAccess.SaveData(
+                "scud97_kssu.spAddUserGroup",
+                new { UserID },
+                "Default");
+        }
     }
 }

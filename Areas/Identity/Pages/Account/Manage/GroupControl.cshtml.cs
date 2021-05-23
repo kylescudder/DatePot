@@ -14,10 +14,11 @@ using System;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using static DatePot.Areas.Identity.Models.Identity;
 using Microsoft.AspNetCore.Http;
+using System.Data;
 
 namespace DatePot.Areas.Identity.Pages.Account.Manage
 {
-	public partial class GroupControlModel : PageModel
+    public partial class GroupControlModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -40,11 +41,15 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
         }
         [TempData]
         public string StatusMessage { get; set; }
-		public List<SelectListItem> UserAccessToGroup { get; set; }
-        public List<UserAccessToGroup> UserAccessToGroupList { get; set; }
+        public List<SelectListItem> UserAccessToGroup { get; set; }
+        public List<Models.Identity.UserAccessToGroup> UserAccessToGroupList { get; set; }
+        [BindProperty]
+        public NewUserAccess NewUserAccess { get; set; }
         private async Task LoadAsync(IdentityUser user)
         {
-            var useraccesstogroup = _siteData.GetUserAccessToGroup(user.Id.ToString());
+            int UserOwnGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
+            HttpContext.Session.SetInt32("UserOwnGroupID", UserOwnGroupID);
+            var useraccesstogroup = _siteData.GetUserAccessToGroup(user.Id.ToString(), UserOwnGroupID);
             UserAccessToGroup = new List<SelectListItem>();
 
             useraccesstogroup.Result.ForEach(x =>
@@ -67,43 +72,80 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 
         public async Task<PartialViewResult> OnGetUserAccessToGroup(string UserID)
         {
-            try {
+            try
+            {
                 var user = await _userManager.GetUserAsync(User);
                 var ChosenUser = await _userManager.FindByEmailAsync(UserID);
-                int UserOwnGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
+                int? UserOwnGroupID = HttpContext.Session.GetInt32("UserOwnGroupID");
                 UserAccessToGroupList = await _siteData.GetUserPotAccess(ChosenUser.Id.ToString(), UserOwnGroupID);
                 HttpContext.Session.SetInt32("UserAccessToGroupList", UserAccessToGroupList.Count());
-				return new PartialViewResult
-				{
-					ViewName = "_UserAccessToGroup",
-					ViewData = new ViewDataDictionary<List<UserAccessToGroup>>(ViewData, UserAccessToGroupList)
-				};                
+                return new PartialViewResult
+                {
+                    ViewName = "_UserAccessToGroup",
+                    ViewData = new ViewDataDictionary<List<Models.Identity.UserAccessToGroup>>(ViewData, UserAccessToGroupList)
+                };
                 // result = new JsonResult("success");
-				// return result;
+                // return result;
             }
             catch (Exception ex)
-			{
-				throw new Exception(ex.ToString());
-			}
+            {
+                throw new Exception(ex.ToString());
+            }
         }
         public async Task<IActionResult> OnPostUserGroupUpdated()
-		{
-			try
-			{
-                var PotItem = Request.Form["item.AccessGranted"];
+        {
+            try
+            {
                 int? PotCount = HttpContext.Session.GetInt32("UserAccessToGroupList");
-                int PotID = 0;
-                for (int i = 0; i < PotCount; i++)
+                string UserID = Request.Form["UserID"];
+                List<DatePot.Models.Site.UserAccessToGroup> uatg = new List<DatePot.Models.Site.UserAccessToGroup>();
+                foreach (var item in Request.Form.Keys)
                 {
-                    PotID = i++;
-                    var t = PotItem[i];
+                    if (item != "UserID" && item != "__RequestVerificationToken")
+                    {
+                        uatg.Add(new DatePot.Models.Site.UserAccessToGroup() { 
+                            UserID = UserID, 
+                            PotID = Convert.ToInt32(item),
+                            UserGroupID = HttpContext.Session.GetInt32("UserOwnGroupID").Value
+                        });
+                    }
                 }
-				return RedirectToPage("./Index", new { @redirect = "RestaurantAttended" });
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.ToString());
-			}
-		}
+                await _siteData.UpdateUserAccessToGroup(uatg, UserID, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
+                //TODO-Show Saved successful modal
+                return RedirectToPage("./Index", new { @redirect = "RestaurantAttended" });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+        public async Task<IActionResult> OnPostAddUserAccess()
+        {
+            try
+            {
+                //TODO-Email recipient
+                var ChosenUser = await _userManager.FindByEmailAsync(Request.Form["NewUserAccess.UserEmail"][0]);
+                if (ChosenUser != null) {
+                    int PotCount = await _siteData.GetPotCount();
+                    List<DatePot.Models.Site.UserAccessToGroup> uatg = new List<DatePot.Models.Site.UserAccessToGroup>();
+                    for (int i = 0; i < PotCount; i++)
+                    {
+                        uatg.Add(new DatePot.Models.Site.UserAccessToGroup { 
+                            UserID = ChosenUser.Id, 
+                            PotID = i + 1,
+                            UserGroupID = HttpContext.Session.GetInt32("UserOwnGroupID").Value
+                        });
+                    }
+                    await _siteData.UpdateUserAccessToGroup(uatg, ChosenUser.Id.ToString(), HttpContext.Session.GetInt32("UserOwnGroupID").Value);
+                } else {
+                    //TODO-Email cant be found
+                }
+                return RedirectToPage("./Index", new { @redirect = "RestaurantAttended" });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
     }
 }

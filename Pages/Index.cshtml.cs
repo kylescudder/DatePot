@@ -42,7 +42,6 @@ namespace DatePot.Pages
             else {
                 var user = await _userManager.GetUserAsync(User);
                 DefaultUserGroupID = await _siteData.GetDefaultUserGroupID(user.Id.ToString());
-                PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), DefaultUserGroupID);
                 if (DefaultUserGroupID == 0) {
                     if (HttpContext.Session.GetInt32("UserGroupID") == null) {
                         UserGroups = await _siteData.GetUserGroups(user.Id.ToString());
@@ -51,12 +50,18 @@ namespace DatePot.Pages
                         {
                             if (OwnUserGroupID != UserGroups[i].UserGroupID) {
                                 return RedirectToPage("WhichGroup");
+                            } else {
+                                DefaultUserGroupID = OwnUserGroupID;
+                                PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), DefaultUserGroupID);
                             }
                         }
                     } else {
                         CurrentUserGroupID = HttpContext.Session.GetInt32("UserGroupID");
+                        PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), CurrentUserGroupID);
+                        return Page();
                     }
                 }
+                PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), DefaultUserGroupID);
                 HttpContext.Session.SetInt32("UserGroupID", DefaultUserGroupID.Value);
                 return Page();
             }

@@ -1,5 +1,6 @@
 @model List<DatePot.Areas.Identity.Models.Identity.UserAccessToGroup>
 <form method="POST" asp-page-handler="UserGroupUpdated">
+    <input type="hidden" value="@Model[0].UserID" name="UserID" id="UserID" />
     @foreach (var item in Model)
     {
         <div class="row mt-3">
@@ -7,7 +8,7 @@
                 <label class="control-label">@item.PotName</label>
             </div>
             <div class="col">
-                <input asp-for="@item.AccessGranted" PotID="@item.PotID" checked="@item.AccessGranted" type="checkbox" class="form-control" />
+                <input PotID="@item.PotID" checked="@item.AccessGranted" type="checkbox" class="form-control" name="@item.PotID" />
             </div>
         </div>
     }
