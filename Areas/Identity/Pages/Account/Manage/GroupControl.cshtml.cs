@@ -138,35 +138,21 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
                         var user = await _userManager.GetUserAsync(User);
                         int PotCount = await _siteData.GetPotCount();
                         List<RejectAudit> ra = await _siteData.GetRejectAudit(user.Id, ChosenUser.Id);
-                        TimeSpan diff = DateTime.Now - ra.Last().RejectedDate;
-                        if (diff.Days < 1) {
-                            result = new JsonResult("tooquick");
+                        if (ra.Count > 2) {
+                            result = new JsonResult("takeahint");
                             return result;
-                        } else {
-                            if (ra.Count < 4) {
-                                int existingCount = await _siteData.GetExistingPotAccess(ChosenUser.Id, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
-                                if (existingCount == 0) {
-                                    emailUser(ChosenUser, user, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
-                                    List<DatePot.Models.Site.UserAccessToGroup> uatg = new List<DatePot.Models.Site.UserAccessToGroup>();
-                                    for (int i = 0; i < PotCount; i++)
-                                    {
-                                        uatg.Add(new DatePot.Models.Site.UserAccessToGroup { 
-                                            UserID = ChosenUser.Id, 
-                                            PotID = i + 1,
-                                            UserGroupID = HttpContext.Session.GetInt32("UserOwnGroupID").Value
-                                        });
-                                    }
-                                    await _siteData.UpdateUserAccessToGroup(uatg, ChosenUser.Id.ToString(), HttpContext.Session.GetInt32("UserOwnGroupID").Value);
-                                    result = new JsonResult("success");
-                                    return result;
-                                } else {
-                                    result = new JsonResult("useralreadyhasaccess");
-                                    return result;    
-                                }
+                        } else if (ra.Count != 0) {
+                            TimeSpan diff = DateTime.Now - ra.Last().RejectedDate;
+                            if (diff.Days < 1) {
+                                result = await UpdateUserAccessToGroup(ChosenUser, PotCount, user, result);
+                                return result;
                             } else {
-                                result = new JsonResult("takeahint");
+                                result = new JsonResult("tooquick");
                                 return result;
                             }
+                        } else {
+                            result = await UpdateUserAccessToGroup(ChosenUser, PotCount, user, result);
+                            return result;
                         }
                     } else {
                         result = new JsonResult("emailnotfound");
@@ -291,6 +277,27 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 			m.Body = sBody;
             client.Send(m);
             return Page();
+        }
+        public async Task<JsonResult> UpdateUserAccessToGroup(IdentityUser ChosenUser, int PotCount, IdentityUser user, JsonResult result) {
+            int existingCount = await _siteData.GetExistingPotAccess(ChosenUser.Id, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
+            if (existingCount == 0) {
+                emailUser(ChosenUser, user, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
+                List<DatePot.Models.Site.UserAccessToGroup> uatg = new List<DatePot.Models.Site.UserAccessToGroup>();
+                for (int i = 0; i < PotCount; i++)
+                {
+                    uatg.Add(new DatePot.Models.Site.UserAccessToGroup { 
+                        UserID = ChosenUser.Id, 
+                        PotID = i + 1,
+                        UserGroupID = HttpContext.Session.GetInt32("UserOwnGroupID").Value
+                    });
+                }
+                await _siteData.UpdateUserAccessToGroup(uatg, ChosenUser.Id.ToString(), HttpContext.Session.GetInt32("UserOwnGroupID").Value);
+                result = new JsonResult("success");
+                return result;
+            } else {
+                result = new JsonResult("useralreadyhasaccess");
+                return result;    
+            }
         }
     }
 }
