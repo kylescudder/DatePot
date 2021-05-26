@@ -2,6 +2,7 @@
 
 [![.NET](https://github.com/kylescudder/DatePot/actions/workflows/dotnet.yml/badge.svg)](https://github.com/kylescudder/DatePot/actions/workflows/dotnet.yml)
 [![🚀 Deploy](https://github.com/kylescudder/DatePot/actions/workflows/main.yml/badge.svg)](https://github.com/kylescudder/DatePot/actions/workflows/main.yml)
+[![CodeQL](https://github.com/kylescudder/DatePot/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/kylescudder/DatePot/actions/workflows/codeql-analysis.yml)
 
 ## What is The Date Pot
 The Date Pot allows Kyle and Rhiann to add films to their To Watch list, restuarants to their eat list, activities to their To Do list, Coffee to the to drink list and Vinyls to their Spend too much money on hisper stuff list.
