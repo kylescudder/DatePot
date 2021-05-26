@@ -124,5 +124,50 @@ namespace DatePot.Data
                 new { UserID },
                 "Default");
         }
+        public Task<int> AcceptInvite(string UserID, int UserGroupID)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("UserID", UserID);
+            p.Add("UserGroupID", UserGroupID);
+            return _dataAccess.SaveData(
+                "scud97_kssu.spAcceptInvite",
+                p,
+                "Default");
+        }
+        public Task<int> RejectInvite(string UserID, int UserGroupID, string SentByID)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("UserID", UserID);
+            p.Add("UserGroupID", UserGroupID);
+            p.Add("SentByID", SentByID);
+            return _dataAccess.SaveData(
+                "scud97_kssu.spRejectInvite",
+                p,
+                "Default");
+        }
+        public async Task<int> GetExistingPotAccess(string UserID, int UserGroupID)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("UserID", UserID);
+            p.Add("UserGroupID", UserGroupID);
+
+            var recs = await _dataAccess.LoadData<int, dynamic>(
+                "scud97_kssu.spGetExistingPotAccess",
+                p,
+                "Default");
+            return recs[0];
+        }
+        public async Task<List<RejectAudit>> GetRejectAudit(string UserID, string ChosenUserID)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("UserID", UserID);
+            p.Add("ChosenUserID", ChosenUserID);
+            var recs = await _dataAccess.LoadData<RejectAudit, dynamic>(
+                "scud97_kssu.spGetRejectAudit",
+                p,
+                "Default");
+            return recs;
+        }
+
     }
 }

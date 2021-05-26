@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -37,6 +38,9 @@ namespace DatePot.Models
             [MinLength(2, ErrorMessage = "Names must be at least 2 characters long")]
             [DisplayName("Email")]
             public string UserEmail { get; set; }
+        }
+        public class RejectAudit {
+            public DateTime RejectedDate { get; set; }
         }
     }
 }
