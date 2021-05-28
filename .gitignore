@@ -351,3 +351,5 @@ MigrationBackup/
 
 # Added By kylescudder
 /Errors/
+appsettings.json
+appsettings.Development.json
