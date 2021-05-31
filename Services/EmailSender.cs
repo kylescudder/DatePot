@@ -20,7 +20,7 @@ namespace WebPWrecover.Services
 		public Task Execute(string subject, string message, string email)
 		{
 			MailMessage m = new MailMessage();
-			m.From = new MailAddress(_config.GetSection("SMTP")["From"]);
+			m.From = new MailAddress(_config.GetSection("SMTP")["RegistrationFrom"]);
 			m.To.Add(new MailAddress(email));
 			m.Subject = subject;
 			m.IsBodyHtml = true;

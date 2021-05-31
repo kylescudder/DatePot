@@ -274,7 +274,7 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
                 EnableSsl = true 
             };
             MailMessage m = new MailMessage();
-			m.From = new MailAddress(_config.GetSection("SMTP")["From"]);
+			m.From = new MailAddress(_config.GetSection("SMTP")["InviteFrom"]);
 			m.To.Add(new MailAddress(ChosenUser.NormalizedEmail));
 			m.Subject = "DatePot - You've been invited! 📧";
 			m.IsBodyHtml = true;
