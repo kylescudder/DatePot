@@ -143,7 +143,7 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
                             return result;
                         } else if (ra.Count != 0) {
                             TimeSpan diff = DateTime.Now - ra.Last().RejectedDate;
-                            if (diff.Days < 1) {
+                            if (diff.TotalHours > 24) {
                                 result = await UpdateUserAccessToGroup(ChosenUser, PotCount, user, result);
                                 return result;
                             } else {
@@ -264,6 +264,10 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
                 </table>
                 </body>
                 </html>";
+            string[] callbackUrlArray = HtmlEncoder.Default.Encode(callbackUrl).Split("?");
+            string[] InviteLinkArray = callbackUrlArray[1].Split("response");
+            string InviteLink = InviteLinkArray[0];
+            await _siteData.AddInviteLink(InviteLink, false);
             var client = new SmtpClient(_config.GetSection("SMTP")["Host"], Convert.ToInt16(_config.GetSection("SMTP")["Port"]))
             {
                 Credentials = new NetworkCredential(_config.GetSection("SMTP")["Username"], _config.GetSection("SMTP")["Password"]),

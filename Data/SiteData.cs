@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -168,6 +169,35 @@ namespace DatePot.Data
                 "Default");
             return recs;
         }
+        public Task<int> AddInviteLink(string InviteLink, bool IsConsumed)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("InviteLink", InviteLink);
+            p.Add("IsConsumed", IsConsumed);
+            return _dataAccess.SaveData(
+                "scud97_kssu.spAddInviteLink",
+                p,
+                "Default");
+        }
+        public Task<int> ConsumeLink(string InviteLink)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("InviteLink", InviteLink);
+            return _dataAccess.SaveData(
+                "scud97_kssu.spConsumeLink",
+                p,
+                "Default");
+        }
+        public async Task<bool> IsLinkConsumed(string InviteLink)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("InviteLink", InviteLink);
+            p.Add("LinkConsumed", DbType.Int32, direction: ParameterDirection.Output);
 
+            await _dataAccess.SaveData("scud97_kssu.spIsLinkConsumed", p, "Default");
+
+            var i = p.Get<int>("LinkConsumed");
+            return Convert.ToBoolean(i);
+        }
     }
 }
