@@ -21,6 +21,7 @@ namespace DatePot.Data
         Task<List<UserGroups>> GetUserGroups(string UserID);
         Task<int> GetUserOwnGroup(string UserID);
         Task<List<Identity.UserAccessToGroup>> GetUserPotAccess(string UserID, int? UserGroupID);
+        Task<bool> HasLinkExpired(string InviteLink);
         Task<bool> IsLinkConsumed(string InviteLink);
         Task<int> RejectInvite(string UserID, int UserGroupID, string SentByID);
         Task<int> SetDefaultUserGroupID(int UserGroupID, string UserID);

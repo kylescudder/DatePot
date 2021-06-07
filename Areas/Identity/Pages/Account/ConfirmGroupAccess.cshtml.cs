@@ -36,6 +36,12 @@ namespace DatePot.Areas.Identity.Pages.Account
                 ViewData["Title"] = "You have already responded!";
                 return Page();
             }
+            if (await _siteData.HasLinkExpired("userID=" + userId + "&amp;chosenUserId="
+                + chosenUserId + "&amp;UserGroupID=" + UserGroupID + "&amp;")) {
+                ViewData["ResponseText"] = "This link has expired and can no longer be used. Sorry slow poke. 🦥";
+                ViewData["Title"] = "This link is old 👴";
+                return Page();
+            }
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {

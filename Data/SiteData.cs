@@ -199,5 +199,16 @@ namespace DatePot.Data
             var i = p.Get<int>("LinkConsumed");
             return Convert.ToBoolean(i);
         }
+        public async Task<bool> HasLinkExpired(string InviteLink)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("InviteLink", InviteLink);
+            p.Add("LinkExpired", DbType.Int32, direction: ParameterDirection.Output);
+
+            await _dataAccess.SaveData("scud97_kssu.spHasLinkExpired", p, "Default");
+
+            var i = p.Get<int>("LinkExpired");
+            return Convert.ToBoolean(i);
+        }
     }
 }
