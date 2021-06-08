@@ -19,6 +19,7 @@ using DatePot.Areas.Identity.Data;
 using DatePot.Areas.VinylPot.Data;
 using WebPWrecover.Services;
 using DatePot.Areas.BeerPot.Data;
+using Microsoft.Extensions.Hosting;
 
 namespace DatePot
 {
@@ -84,17 +85,17 @@ namespace DatePot
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
-            //{
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-            //}
-            //else
-            //{
-            //    app.UseExceptionHandler("/Error");
-            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //    app.UseHsts();
-            //}
+            }
+            else
+            {
+               app.UseExceptionHandler("/Error");
+               // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+               app.UseHsts();
+            }
 
             app.UseHttpsRedirection();
             app.UseElmahIo();
