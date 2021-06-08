@@ -120,21 +120,14 @@ namespace DatePot.Areas.FilmPot.Data
 			return recs;
 		}
 
-		public async Task<int> AddFilm(string AddersName, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, int? UserGroupID)
+		public async Task<int> AddFilm(string AddersID, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, int? UserGroupID)
 		{
-			int AddedByID = 0;
-			if (AddersName == "Kyle")
-			{
-				AddedByID = 1;
-			}
-			else { AddedByID = 2; }
-
 			DynamicParameters p = new DynamicParameters();
 			p.Add("FilmName", FilmName);
 			p.Add("ReleaseDate", ReleaseDate);
 			p.Add("AddedDate", AddedDate);
 			p.Add("Watched", Watched);
-			p.Add("AddedByID", AddedByID);
+			p.Add("AddedByID", AddersID);
 			p.Add("Runtime", Runtime);
 			p.Add("UserGroupID", UserGroupID);
 			p.Add("FilmID", DbType.Int32, direction: ParameterDirection.Output);

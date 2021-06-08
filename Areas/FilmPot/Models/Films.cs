@@ -36,8 +36,6 @@ namespace DatePot.Areas.FilmPot.Models
         }
         public class NewFilm
         {
-            [Required]
-            [DisplayName("Added by")]
             public string AddersName { get; set; }
             [Required]
             [MaxLength(100, ErrorMessage = "Names must not exceed 100 characters")]

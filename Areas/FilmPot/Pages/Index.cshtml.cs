@@ -42,6 +42,7 @@ namespace DatePot.Areas.FilmPot.Pages
         }
         public List<FilmList> Films { get; set; }
         public List<UserList> Users { get; set; }
+        public List<SelectListItem> UserList { get; set; }
         public List<SelectListItem> Genre { get; set; }
         public List<SelectListItem> Director { get; set; }
         public List<SelectListItem> Platform { get; set; }
@@ -70,15 +71,20 @@ namespace DatePot.Areas.FilmPot.Pages
                 }
                 Films = _filmData.GetFilmList(UserGroupID).Result;
                 Users = _filmData.GetUserList(UserGroupID).Result;
-
+                var UsersList = _filmData.GetUserList(UserGroupID);
                 var genres = _filmData.GetGenreList();
                 var directors = _filmData.GetDirectorsList();
                 var platforms = _filmData.GetPlatformsList();
 
+                UserList = new List<SelectListItem>();
                 Genre = new List<SelectListItem>();
                 Director = new List<SelectListItem>();
                 Platform = new List<SelectListItem>();
 
+                UsersList.Result.ForEach(x =>
+                {
+                    UserList.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.UserName });
+                });
                 genres.Result.ForEach(x =>
                 {
                     Genre.Add(new SelectListItem { Value = x.GenreID.ToString(), Text = x.GenreText });
@@ -102,7 +108,7 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<JsonResult> OnPost(string AddersName, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, List<int>Genres, List<int> Directors, List<int> Platforms)
+        public async Task<JsonResult> OnPost(string AddersID, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, List<int>Genres, List<int> Directors, List<int> Platforms)
         {
             try
             {
@@ -122,7 +128,7 @@ namespace DatePot.Areas.FilmPot.Pages
                     return result;
                 }
                 var user = await _userManager.GetUserAsync(User);
-                int FilmID = await _filmData.AddFilm(AddersName, AddedDate, FilmName, ReleaseDate, Watched, Runtime, UserGroupID);
+                int FilmID = await _filmData.AddFilm(AddersID, AddedDate, FilmName, ReleaseDate, Watched, Runtime, UserGroupID);
                 foreach (var item in Genres)
                 {
                     await _filmData.AddFilmGenres(FilmID, Convert.ToInt32(item));
@@ -203,9 +209,6 @@ namespace DatePot.Areas.FilmPot.Pages
             try
             {
                 await _filmData.FilmWatched(Convert.ToInt32(Request.Form["FilmID"]));
-
-                //return RedirectToPage("./Index", new { @redirect = "directordupe", @value = Request.Form["NewDirector.DirectorText"].ToString() });
-
                 return RedirectToPage("./Index", new { @redirect = "FilmWatched" });
             }
             catch (Exception ex)

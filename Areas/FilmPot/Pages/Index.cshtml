@@ -10,7 +10,7 @@
             @foreach (var item in Model.Users)
             {
 
-                <button type="button" class="btn btn-primary btnAddFilmModal btnAddGenre btnFilmButtons pb-2" data-toggle="modal" data-target="#AddFilmModal" data-adder="@item.UserName">Add film by @item.UserName</button>
+                <button type="button" class="btn btn-primary btnAddFilmModal btnAddGenre btnFilmButtons pb-2" data-toggle="modal" data-target="#AddFilmModal" data-adderID="@item.UserID" data-adder="@item.UserName">Add film by @item.UserName</button>
             }
         }
         <button type="button" class="btn btn-primary float-right btnRandomFilm btnAddGenre btnFilmButtons" data-toggle="modal" data-target="#RandomFilmModal">Give me a film</button>
@@ -91,15 +91,7 @@
 
                             <input value="@item.FilmID" type="hidden" name="FilmID" />
                             <p>
-                                Tonight you guys are going to watch <strong>@item.FilmName</strong>, and it is @item.AddersName's pick. It is @item.Runtime minutes long . Sorry
-                                @if (item.AddersName == "Rhiann")
-                                {
-                                    <text>Kyle</text>
-                                }
-                                else
-                                {
-                                    <text>Rhiann</text>
-                                }
+                                Tonight you guys are going to watch <strong>@item.FilmName</strong>, and it is @item.AddersName's pick. It is @item.Runtime minutes long .
                             </p>
                         }
 
@@ -140,7 +132,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <label asp-for="NewFilm.AddersName" class="control-label"></label>
-                                <input asp-for="NewFilm.AddersName" class="form-control adders-name NewFilmAddersName" required="required" type="text" />
+                                <select asp-items="Model.UserList" asp-for="NewFilm.AddersName" class="form-control form-control-chosen adders-name NewFilmAddersName" data-placeholder="Choose a user..." required="required"></select>
                                 <span asp-validation-for="NewFilm.AddersName" class="text-danger"></span>
                             </div>
                         </div>
@@ -429,7 +421,7 @@
         });
         $('#AddFilmModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('adder') // Extract info from data-* attributes
+            var recipient = button.attr('data-adder') // Extract info from data-* attributes
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $(this)
@@ -438,7 +430,9 @@
             } else {
                 modal.find('.modal-title').text('Film added by ' + recipient)
             }
-            modal.find('.modal-body .adders-name').val(recipient)
+            var recipientID = button.attr('data-adderID')
+            modal.find('.modal-body .adders-name').val(recipientID)
+            $('.form-control-chosen').trigger("chosen:updated");
         })
         function AnotherRandom() {
             if (window.location.href.indexOf("FilmPot/Index?redirect=RandomFilm") > -1)
@@ -450,7 +444,7 @@
         }
         $(".btnAddFilm").on("click", function () {
             var pathname = window.location.pathname;
-            var AddersName = $(".NewFilmAddersName").val();
+            var AddersID = $(".NewFilmAddersName").val();
             var AddedDate = $(".NewFilmAddedDate").val();
             var FilmName = $(".NewFilmFilmName").val();
             var RunTime = $(".NewFilmRunTime").val();
@@ -462,7 +456,7 @@
                 url: pathname,
                 type: 'POST',
                 data: {
-                    AddersName: AddersName,
+                    AddersID: AddersID,
                     AddedDate: AddedDate,
                     FilmName: FilmName,
                     ReleaseDate: ReleaseDate,
