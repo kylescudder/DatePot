@@ -20,14 +20,6 @@ namespace DatePot.Areas.CoffeePot.Models
             public int CoffeeID { get; set; }
             [Display(Name = "Name")]
             public string CoffeeName { get; set; }
-            [Display(Name = "Kyle Taste")]
-            public int KyleTaste { get; set; }
-            [Display(Name = "Rhiann Taste")]
-            public int RhiannTaste { get; set; }
-            [Display(Name = "Kyle Experience")]
-            public int KyleExperience { get; set; }
-            [Display(Name = "Rhiann Experience")]
-            public int RhiannExperience { get; set; }
             [Display(Name = "Average Taste")]
             public int AvgTaste { get; set; }
             [Display(Name = "Average Rating")]
