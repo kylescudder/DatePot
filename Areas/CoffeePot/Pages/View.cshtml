@@ -1,18 +1,12 @@
 ﻿@page
 @model DatePot.Areas.CoffeePot.Pages.ViewModel
+
 @{
     ViewData["Title"] = "View";
 }
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.form-control-chosen').chosen();
-            $(".starRating").rating({
-                step: 1,
-                showCaption: false,
-                showClear: true,
-                theme: 'krajee-svg'
-            });
             const urlParams = new URLSearchParams(window.location.search);
             const redirectParam = urlParams.get('redirect');
             if (redirectParam == "update") {
@@ -24,7 +18,108 @@
                     }, 1000);
                 }, 250);
             }
+            var items = @Html.Raw(Json.Serialize(Model.CoffeeRatingList));
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                var sOptions ="";
+                $(".UpdateCoffeeUserList option").each(function()
+                {
+                    if (item.userID == $(this).val()) {
+                        sOptions += "<option value='" + $(this).val() + "' selected>" + $(this).text() + "</option>"
+                    } else {
+                        sOptions += "<option value='" + $(this).val() + "'>" + $(this).text() + "</option>"
+                    }
+                }) 
+                $(".ratingList").append(`
+                    <div class='row pt-2 rating'>
+                        <div class='col-4'>
+                            <input type='hidden' id='CoffeeRatingID' value='` + item.coffeeRatingID + `' />
+                            <label>Who</label>
+                            <select class="form-control form-control-chosen AddRatingWhoID" data-placeholder="Choose a person..." required="required">
+                                ` + sOptions + `
+                            </select>
+                        </div>
+                        <div class='col-4'>
+                            <label>Experience</label>
+                            <input class='starRating ExperienceVal' value=` + item.experience + ` data-size='xs'>
+                        </div>
+                        <div class='col-4'>
+                            <label>Taste</label>
+                            <input class='starRating TasteVal' value=` + item.taste + `  data-size='xs'>
+                        </div>
+                    </div>`
+                )
+            }
+            $('.form-control-chosen').chosen();
+            $(".starRating").rating({
+                step: 1,
+                showCaption: false,
+                showClear: true,
+                theme: 'krajee-svg'
+            });
         });
+        $(".btnAddRating").on("click", function() {
+            var sOptions ="";
+            $(".UpdateCoffeeUserList option").each(function()
+            {
+                sOptions += "<option value='" + $(this).val() + "'>" + $(this).text() + "</option>"
+            }) 
+            $(".ratingList").append(`
+                <div class='row pt-2 rating'>
+                    <div class='col-4'>
+                        <input type='hidden' id='CoffeeRatingID' value='0' />
+                        <label>Who</label>
+                        <select class="form-control form-control-chosen AddRatingWhoID" data-placeholder="Choose a person..." required="required">
+                            ` + sOptions + `
+                        </select>
+                    </div>
+                    <div class='col-4'>
+                        <label>Experience</label>
+                        <input class='starRating ExperienceVal' data-size='xs'>
+                    </div>
+                    <div class='col-4'>
+                        <label>Taste</label>
+                        <input class='starRating TasteVal' data-size='xs'>
+                    </div>
+                </div>`
+            )
+            $('.form-control-chosen').chosen();
+            $(".starRating").rating({
+                step: 1,
+                showCaption: false,
+                showClear: true,
+                theme: 'krajee-svg'
+            });
+        })
+        $(".btnUpdateCoffee").on("click", function() {
+            $(".rating").each(function() {
+                var CoffeeID = $(".hidCoffeeID").val();
+                var pathname = '?handler=UpdateCoffeeRatings';
+                $.ajax({
+                    dataType: 'json',
+                    url: pathname,
+                    type: 'POST',
+                    data: {
+                        UserID: $(this).find(".AddRatingWhoID").chosen().val(),
+                        Experience: $(this).find(".ExperienceVal").val(),
+                        Taste: $(this).find(".TasteVal").val(),
+                        CoffeeRatingID: $(this).find("#CoffeeRatingID").val(),
+                        CoffeeID: CoffeeID
+                    },
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        console.log(response)
+                    },
+                    error: function (response) {
+                        alert("AJAX Request Failed, Contact Support");
+                    }
+                });
+            })
+            $("#fCoffeeUpdate").submit();
+        })
     </script>
 }
 <div class="modal fade savedAlert" tabindex="-1" role="dialog">
@@ -80,9 +175,10 @@ else
             </form>
         </div>
     </div>
+    <select asp-items="Model.Users" class="form-control UpdateCoffeeUserList d-none"></select>
     <div class="card bg-light mb-2">
         <div class="card-body">
-            <form method="post">
+            <form method="post" id="fCoffeeUpdate">
                 @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input asp-for="UpdateCoffeeDetails.CoffeeID" value="@Model.CoffeeDetails.CoffeeID" type="hidden" class="hidCoffeeID" />
@@ -96,37 +192,28 @@ else
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <label asp-for="UpdateCoffeeDetails.KyleTaste" class="control-label"></label>
-                            <input value="@Model.CoffeeDetails.KyleTaste" class="starRating rating-loading" asp-for="UpdateCoffeeDetails.KyleTaste" data-size="xs">
-                            <span asp-validation-for="UpdateCoffeeDetails.KyleTaste" class="text-danger"></span>
+                            <label class="control-label">Rating</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <label asp-for="UpdateCoffeeDetails.RhiannTaste" class="control-label"></label>
-                            <input value="@Model.CoffeeDetails.RhiannTaste" class="starRating rating-loading" asp-for="UpdateCoffeeDetails.RhiannTaste" data-size="xs">
-                            <span asp-validation-for="UpdateCoffeeDetails.RhiannTaste" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <label asp-for="UpdateCoffeeDetails.KyleExperience" class="control-label"></label>
-                            <input value="@Model.CoffeeDetails.KyleExperience" class="starRating rating-loading" asp-for="UpdateCoffeeDetails.KyleExperience" data-size="xs">
-                            <span asp-validation-for="UpdateCoffeeDetails.KyleExperience" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <label asp-for="UpdateCoffeeDetails.RhiannExperience" class="control-label"></label>
-                            <input value="@Model.CoffeeDetails.RhiannExperience" class="starRating rating-loading" asp-for="UpdateCoffeeDetails.RhiannExperience" data-size="xs">
-                            <span asp-validation-for="UpdateCoffeeDetails.RhiannExperience" class="text-danger"></span>
+                            <div class="card">
+                                <div class="card-body ratingList">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button type="button" class="btn btn-primary btnAddRating">Add Rating</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary btnUpdateCoffee" />
+                    <input type="button" value="Save" class="btn btn-primary btnUpdateCoffee" />
                 </div>
             </form>
+
         </div>
     </div>
 }

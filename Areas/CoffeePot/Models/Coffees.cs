@@ -50,5 +50,13 @@ namespace DatePot.Areas.CoffeePot.Models
         {
         }
         public class RandomCoffee : CoffeeDetails { }
+        public class CoffeeRatings 
+        {
+            public int CoffeeRatingID { get; set; }
+            public int CoffeeID { get; set; }
+            public string UserID { get; set; }
+            public int Experience { get; set; }
+            public int Taste { get; set; }
+        }
     }
 }

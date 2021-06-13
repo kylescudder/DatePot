@@ -4,10 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using static DatePot.Areas.BeerPot.Models.Beers;
 using DatePot.Areas.BeerPot.Data;
@@ -20,7 +18,7 @@ using DatePot.Areas.FilmPot.Data;
 
 namespace DatePot.Areas.BeerPot.Pages
 {
-	[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
 	public class ViewModel : PageModel
 	{
 		private readonly IConfiguration _config;

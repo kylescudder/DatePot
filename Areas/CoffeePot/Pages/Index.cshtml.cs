@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using Microsoft.AspNetCore.Http;
+using DatePot.Areas.FilmPot.Data;
 
 namespace DatePot.Areas.CoffeePot.Pages
 {
@@ -30,12 +31,14 @@ namespace DatePot.Areas.CoffeePot.Pages
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly IIdentityData _identityData;
 		private readonly ISiteData _siteData;
+		private readonly IFilmData _filmData;
 		public IndexModel(ILogger<IndexModel> logger,
 		IConfiguration config,
 		ICoffeeData coffeeData,
 		UserManager<IdentityUser> userManager,
 		IIdentityData identityData,
-		ISiteData siteData)
+		ISiteData siteData,
+		IFilmData filmData)
 		{
 			_logger = logger;
 			_config = config;
@@ -43,11 +46,15 @@ namespace DatePot.Areas.CoffeePot.Pages
 			_userManager = userManager;
 			_identityData = identityData;
 			_siteData = siteData;
+			_filmData = filmData;
 		}
 		public List<CoffeeList> Coffees { get; set; }
 		public NewCoffee NewCoffee { get; set; }
 		public List<RandomCoffee> RandomCoffees { get; set; }
 		public List<PotAccess> PotAccess { get; set; }
+		public List<CoffeeRatings> CoffeeRatingsList = new List<CoffeeRatings>();
+		public List<UserList> Users = new List<UserList>();
+
 		public async Task<ActionResult> OnGet()
 		{
 			if (!User.Identity.IsAuthenticated)
@@ -65,7 +72,22 @@ namespace DatePot.Areas.CoffeePot.Pages
 					return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
 				}
 				Coffees = _coffeeData.GetCoffeeList(UserGroupID).Result;
+				var users = _filmData.GetUserList(UserGroupID);
+				users.Result.ForEach(x =>
+				{
+					Users.Add(x);
+				});
 
+				foreach (var item in Coffees)
+				{
+					var crl = _coffeeData.GetCoffeeRatings(item.CoffeeID).Result;
+					foreach (var rating in crl)
+					{
+						CoffeeRatings cr = new CoffeeRatings();
+						cr = rating;
+						CoffeeRatingsList.Add(cr);
+					}
+				}
 				return Page();
 			}
 			catch (Exception ex)
