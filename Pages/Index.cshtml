@@ -4,168 +4,202 @@
     ViewBag.Title = "Which service";
 }
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.close').click(function(){
-                $('.defaultPotCard').fadeOut();
-            })
-        });
-        $(".btnSetDefaultUserGroup").on("click", function() {
-            var form = $(".setDefaultUserGroupForm").serialize();
-            $.ajax({
-                dataType: 'json',
-                url: window.location.pathname,
-                type: 'POST',
-                data: form,
-                headers: {
-                    RequestVerificationToken:
-                        $('input:hidden[name="__RequestVerificationToken"]').val()
-                },
-                success: function (response) {
-                    $(".defaultPotCard").fadeOut()
-                },
-                error: function (ex) {
-                    alert("AJAX Request Failed, Contact Support");
-                    console.log(ex);
-                }
-            });
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.close').click(function () {
+            $('.defaultPotCard').fadeOut();
         })
-    </script>
+    });
+    $(".btnSetDefaultUserGroup").on("click", function () {
+        var form = $(".setDefaultUserGroupForm").serialize();
+        $.ajax({
+            dataType: 'json',
+            url: window.location.pathname,
+            type: 'POST',
+            data: form,
+            headers: {
+                RequestVerificationToken:
+                    $('input:hidden[name="__RequestVerificationToken"]').val()
+            },
+            success: function (response) {
+                $(".defaultPotCard").fadeOut()
+            },
+            error: function (ex) {
+                alert("AJAX Request Failed, Contact Support");
+                console.log(ex);
+            }
+        });
+    })
+</script>
 }
-@if (Model.DefaultUserGroupID == 0) {
-    <div class="card mb-5 bg-light defaultPotCard">
-        <div class="card-header">
-            <div class="row">
-                <div class="col">
-                    <h5 class="card-title">Make this pot your default?</h5>
+<div class="fadeIn">
+    @if (Model.DefaultUserGroupID == 0)
+    {
+        <div class="card mb-5 bg-light defaultPotCard">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title">Make this pot your default?</h5>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="col">
-                    <button type="button" class="close" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            </div>
+            <div class="text-center card-body">
+                <p class="card-text">If you always select this pot when you log in then it can be set as your default pot
+                    and
+                    you will no longer have to pick.</p>
+                <p class="card-text">Not to worry though, even if you do pick a default pot you can still switch as any
+                    time.
+                </p>
+                <p class="card-text">To set a default pot you can either click below to set this as your default pot, or go
+                    to
+                    your profile.</p>
+                <form method="POST" class="setDefaultUserGroupForm">
+                    <input type="hidden" value="@Model.CurrentUserGroupID" name="hidUserGroupID" id="hidUserGroupID" />
+                    <button type="button" class="btn btn-primary btnSetDefaultUserGroup">Make this one my default
+                        pot.</button>
+                </form>
+            </div>
+        </div>
+    }
+    @foreach (var item in Model.PotAccess)
+    {
+        @if (item.PotID == 1)
+        {
+            <div class="row pb-5" id="1">
+                <div class="col-8 offset-2 section" style="background-color: #ffccff">
+                    <a asp-area="FilmPot" asp-page="/Index">
+                        <div class="row text-black">
+                            <div class="col-12">
+                                <p class="ml-4 pt-3 text-center">Film
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path fill-rule="evenodd"
+                                    d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                                    </svg>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
-        </div>
-        <div class="text-center card-body">
-            <p class="card-text">If you always select this pot when you log in then it can be set as your default pot and you will no longer have to pick.</p>
-            <p class="card-text">Not to worry though, even if you do pick a default pot you can still switch as any time.</p>
-            <p class="card-text">To set a default pot you can either click below to set this as your default pot, or go to your profile.</p>
-            <form method="POST" class="setDefaultUserGroupForm">
-                <input type="hidden" value="@Model.CurrentUserGroupID" name="hidUserGroupID" id="hidUserGroupID" />
-                <button type="button" class="btn btn-primary btnSetDefaultUserGroup">Make this one my default pot.</button>
-            </form>
-        </div>
-    </div>
-}
-@foreach (var item in Model.PotAccess)
-{
-    @if (item.PotID == 1) {
-        <div class="row pb-5" id="1">
-            <div class="col-8 offset-2 section" style="background-color: #ffccff">
-                <a asp-area="FilmPot" asp-page="/Index">
-                    <div class="row text-black">
-                        <div class="col-6">
-                            <p class="ml-4 pt-3 float-right">Film</p>
+        }
+        @if (item.PotID == 2)
+        {
+            <div class="row pb-5" id="2">
+                <div class="col-8 offset-2 section" style="background-color:#9ec9ed">
+                    <a asp-area="FoodPot" asp-page="/Index">
+                        <div class="row text-black">
+                            <div class="col-12">
+                                <p class="ml-4 pt-3 text-center">Food
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path fill-rule="evenodd"
+                                    d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                                    </svg>
+                                </p>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle mt-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
-        </div>
-    }
-    @if (item.PotID == 2) {
-        <div class="row pb-5" id="2">
-            <div class="col-8 offset-2 section" style="background-color:#9ec9ed">
-                <a asp-area="FoodPot" asp-page="/Index">
-                    <div class="row text-black">
-                        <div class="col-6">
-                            <p class="ml-4 pt-3 float-right">Food</p>
+        }
+        @if (item.PotID == 3)
+        {
+            <div class="row pb-5" id="3">
+                <div class="col-8 offset-2 section" style="background-color: #f9f19a">
+                    <a asp-area="ActivityPot" asp-page="/Index">
+                        <div class="row text-black">
+                            <div class="col-12">
+                                <p class="ml-4 pt-3 text-center">Activity
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path fill-rule="evenodd"
+                                    d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                                    </svg>
+                                </p>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle mt-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
-        </div>
-    }
-    @if (item.PotID == 3) {
-        <div class="row pb-5" id="3">
-            <div class="col-8 offset-2 section" style="background-color: #f9f19a">
-                <a asp-area="ActivityPot" asp-page="/Index">
-                    <div class="row text-black">
-                        <div class="col-6">
-                            <p class="ml-4 pt-3 float-right">Activity</p>
+        }
+        @if (item.PotID == 4)
+        {
+            <div class="row pb-5" id="4">
+                <div class="col-8 offset-2 section" style="background-color: #754043">
+                    <a asp-area="CoffeePot" asp-page="/Index">
+                        <div class="row text-black">
+                            <div class="col-12">
+                                <p class="ml-4 pt-3 text-center">Coffee
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path fill-rule="evenodd"
+                                    d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                                    </svg>
+                                </p>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle mt-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
-        </div>
-    }
-    @if (item.PotID == 4) {
-        <div class="row pb-5" id="4">
-            <div class="col-8 offset-2 section"style="background-color: #754043">
-                <a asp-area="CoffeePot" asp-page="/Index">
-                    <div class="row text-black">
-                        <div class="col-6">
-                            <p class="ml-4 pt-3 float-right">Coffee</p>
+        }
+        @if (item.PotID == 5)
+        {
+            <div class="row pb-5" id="5">
+                <div class="col-8 offset-2 section" style="background-color: #03708a">
+                    <a asp-area="VinylPot" asp-page="/Index">
+                        <div class="row text-black">
+                            <div class="col-12">
+                                <p class="ml-4 pt-3 text-center">Vinyls
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path fill-rule="evenodd"
+                                    d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                                    </svg>
+                                </p>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle mt-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
-        </div>
-    }
-    @if (item.PotID == 5) {
-        <div class="row pb-5" id="5">
-            <div class="col-8 offset-2 section"style="background-color: #754043">
-                <a asp-area="VinylPot" asp-page="/Index">
-                    <div class="row text-black">
-                        <div class="col-6">
-                            <p class="ml-4 pt-3 float-right">Vinyls</p>
+        }
+        @if (item.PotID == 6)
+        {
+            <div class="row pb-5" id="6">
+                <div class="col-8 offset-2 section" style="background-color: #F28E1C">
+                    <a asp-area="BeerPot" asp-page="/Index">
+                        <div class="row text-black">
+                            <div class="col-12">
+                                <p class="ml-4 pt-3 text-center">Beer
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path fill-rule="evenodd"
+                                    d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                                    </svg>
+                                </p>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle mt-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
-        </div>
-    }
-    @if (item.PotID == 6) {
-        <div class="row pb-5" id="6">
-            <div class="col-8 offset-2 section"style="background-color: #754043">
-                <a asp-area="BeerPot" asp-page="/Index">
-                    <div class="row text-black">
-                        <div class="col-6">
-                            <p class="ml-4 pt-3 float-right">Beer</p>
-                        </div>
-                        <div class="col-6">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle mt-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
-                            </svg>
+        }
         @if (item.PotID == 7)
         {
             <div class="row pb-5" id="7">
@@ -189,4 +223,4 @@
             </div>
         }
     }
-}
+</div>
