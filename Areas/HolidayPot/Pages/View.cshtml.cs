@@ -108,7 +108,7 @@ namespace DatePot.Areas.HolidayPot.Pages
                     Request.Form["UpdateHolidayDetails.Country"].ToString(),
                     Request.Form["UpdateHolidayDetails.City"].ToString(),
                     Convert.ToBoolean(Request.Form["UpdateHolidayDetails.Been"].ToString()),
-                    Convert.ToDateTime(Request.Form["UpdateHolidayDetails.DateBeen"]));
+                    Request.Form["UpdateHolidayDetails.DateBeen"].ToString());
                 return RedirectToPage("./View", new { @Id = Request.Form["UpdateHolidayDetails.HolidayID"].ToString(), @redirect = "update" });
             }
             catch (Exception ex)
