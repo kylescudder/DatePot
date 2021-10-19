@@ -1,9 +1,9 @@
 ﻿fbtnAddRestaurant /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 a.navbar-brand {
-    white-space: normal;
-    text-align: center;
-    word-break: break-all;
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
@@ -17,7 +17,8 @@ a {
   border-color: #1861ac;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
@@ -42,7 +43,7 @@ html {
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
 }
 
 button.accept-policy {
@@ -69,80 +70,79 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 .section {
-    border-radius: 5px;
-    height: 100px;
-    font-size: 29pt;
-    color: black;
+  border-radius: 5px;
+  height: 100px;
+  font-size: 29pt;
+  color: black;
 }
 
 .section:hover {
-    text-decoration: none;
+  text-decoration: none;
 }
 .btnFoodButtons {
-    background-color: #e8a79a !important;
-    border: none !important;
+  background-color: #e8a79a !important;
+  border: none !important;
 }
-.table .thead-dark th{
-    background-color: #eb6e67 !important;
-    border: none !important;
+.table .thead-dark th {
+  background-color: #eb6e67 !important;
+  border: none !important;
 }
 .table-stripedFoodPot tbody tr:nth-of-type(odd) {
-    background-color: #f6dbd8 !important;
-    border: none !important;
+  background-color: #f6dbd8 !important;
+  border: none !important;
 }
 .table-stripedFoodPot tbody tr:nth-of-type(even) {
-    background-color: #fad0be !important;
-    border: none !important;
+  background-color: #fad0be !important;
+  border: none !important;
 }
 .btnFilmButtons {
-    background-color: #51bbbb !important;
-    border: none !important;
+  background-color: #51bbbb !important;
+  border: none !important;
 }
-.table .thead-darkfilmtable th{
-    background-color: #874f5e !important;
-    border: none !important;
+.table .thead-darkfilmtable th {
+  background-color: #874f5e !important;
+  border: none !important;
 }
-.table-stripedFilmPot tbody tr:nth-of-type(odd){
-    background-color: #e8c5c5 !important;
-    border: none !important;
+.table-stripedFilmPot tbody tr:nth-of-type(odd) {
+  background-color: #e8c5c5 !important;
+  border: none !important;
 }
 .table-stripedFilmPot tbody tr:nth-of-type(even) {
-    background-color: #eaecd5 !important;
-    border: none !important;
+  background-color: #eaecd5 !important;
+  border: none !important;
 }
 .text-black {
-    color: black !important;
+  color: black !important;
 }
-
 
 .btnAddCoffeeModal {
-    background-color: #fab83c !important;
-    border: none !important;
+  background-color: #fab83c !important;
+  border: none !important;
 }
 .table .thead-darkCoffeetable {
-    background-color: #c2905e !important;
-    border: none !important;
+  background-color: #c2905e !important;
+  border: none !important;
 }
 .table-stripedCoffeePot tbody tr:nth-of-type(odd) {
-    background-color: #fef6e3 !important;
-    border: none !important;
+  background-color: #fef6e3 !important;
+  border: none !important;
 }
 
 .table-stripedCoffeePot tbody tr:nth-of-type(even) {
-    background-color: #fee7c8 !important;
-    border: none !important;
+  background-color: #fee7c8 !important;
+  border: none !important;
 }
 .mainPB {
-    padding-bottom: 5rem;
+  padding-bottom: 5rem;
 }
 #ValidationCheck .modal-content {
-    background-color: lightcoral;
+  background-color: lightcoral;
 }
 #ValidationCheck .modal-header {
-    border-bottom: none;
+  border-bottom: none;
 }
 #ValidationCheck .modal-footer {
-    border-top: none;
+  border-top: none;
 }
 .headerImageBS {
   height: 2.5rem;
@@ -161,4 +161,73 @@ body {
   margin-bottom: -3rem;
   margin-top: -3rem;
   margin-left: -1rem;
+}
+.custom-file-input-holiday::-webkit-file-upload-button {
+  display: inline-block;
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.custom-file-input-holiday::-webkit-file-upload-button:hover {
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+.custom-file-input-holiday::-webkit-file-upload-button:active{
+  color: #fff;
+  background-color: #0062cc;
+  border-color: #005cbf;
+}
+.custom-file-input-holiday::-webkit-file-upload-button:focus {
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0062cc;
+  box-shadow: 0 0 0 0.2rem rgb(38 143 255 / 50%);
+}
+.fadeIn {
+  animation: fadeIn 1s;
+  -webkit-animation: fadeIn 1s;
+  -moz-animation: fadeIn 1s;
+  -o-animation: fadeIn 1s;
+  -ms-animation: fadeIn 1s;
+}
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-moz-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-webkit-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-o-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-ms-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
 }

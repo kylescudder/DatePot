@@ -3,65 +3,70 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<div class="row">
-    <div class="col-12">
-        <button type="button" class="btn btn-primary btnAddBeerModal" data-toggle="modal" data-target="#AddBeerModal">Add Beer</button>
+<div class="fadeIn">
+    <div class="row">
+        <div class="col-12">
+            <button type="button" class="btn btn-primary btnAddBeerModal" data-toggle="modal"
+                data-target="#AddBeerModal">Add Beer</button>
+        </div>
+    </div>
+    <div class="row pt-4">
+        <div class="col-12">
+            <table id="BeerTable"
+                class="table table-striped table-stripedBeerPot table-borderless ClientSearchTable Beerrow">
+                <thead class="thead-darkBeertable">
+                    <tr>
+                        <th>Name</th>
+                        <th>Brewery</th>
+                        <th>Average Wankyness</th>
+                        <th></th>
+                        <th>Average Taste</th>
+                        <th></th>
+                        <th>Average Rating</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Beers)
+                    {
+                        <tr>
+                            <td>
+                                @item.BeerName
+                            </td>
+                            <td>
+                                @item.Brewery
+                            </td>
+                            <td>
+                                <input value="@item.AvgWankyness" class="starRating rating-loading" data-size="xs">
+                            </td>
+                            <td>
+                                @item.AvgWankyness
+                            </td>
+                            <td>
+                                <input value="@item.AvgTaste" class="starRating rating-loading" data-size="xs">
+                            </td>
+                            <td>
+                                @item.AvgTaste
+                            </td>
+                            <td>
+                                <input value="@item.AvgRating" class="starRating rating-loading" data-size="xs">
+                            </td>
+                            <td>
+                                @item.AvgRating
+                            </td>
+                            <td>
+                                <a asp-page="/View" asp-route-Id="@item.BeerID">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-<div class="row pt-4">
-    <div class="col-12">
-        <table id="BeerTable" class="table table-striped table-stripedBeerPot table-borderless ClientSearchTable Beerrow">
-            <thead class="thead-darkBeertable">
-                <tr>
-                    <th>Name</th>
-                    <th>Brewery</th>
-                    <th>Average Wankyness</th>
-                    <th></th>
-                    <th>Average Taste</th>
-                    <th></th>
-                    <th>Average Rating</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Beers)
-                {
-                <tr>
-                    <td>
-                        @item.BeerName
-                    </td>
-                    <td>
-                        @item.Brewery
-                    </td>
-                    <td>
-                        <input value="@item.AvgWankyness" class="starRating rating-loading" data-size="xs">
-                    </td>
-                    <td>
-                        @item.AvgWankyness
-                    </td>
-                    <td>
-                        <input value="@item.AvgTaste" class="starRating rating-loading" data-size="xs">
-                    </td>
-                    <td>
-                        @item.AvgTaste
-                    </td>
-                    <td>
-                        <input value="@item.AvgRating" class="starRating rating-loading" data-size="xs">
-                    </td>
-                    <td>
-                        @item.AvgRating
-                    </td>
-                    <td>
-                        <a asp-page="/View" asp-route-Id="@item.BeerID">View</a>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="modal fade" id="AddBeerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="AddBeerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -78,14 +83,16 @@
                         <div class="row">
                             <div class="col-12">
                                 <label asp-for="NewBeer.BeerName" class="control-label"></label>
-                                <input asp-for="NewBeer.BeerName" class="form-control NewBeerBeerName" required="required" type="text" />
+                                <input asp-for="NewBeer.BeerName" class="form-control NewBeerBeerName"
+                                    required="required" type="text" />
                                 <span asp-validation-for="NewBeer.BeerName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <label asp-for="NewBeer.Brewery" class="control-label"></label>
-                                <input asp-for="NewBeer.Brewery" class="form-control NewBeerBrewery" required="required" type="text" />
+                                <input asp-for="NewBeer.Brewery" class="form-control NewBeerBrewery" required="required"
+                                    type="text" />
                                 <span asp-validation-for="NewBeer.Brewery" class="text-danger"></span>
                             </div>
                         </div>
@@ -99,7 +106,8 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="ValidationCheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="ValidationCheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -122,84 +130,84 @@
     </div>
 </div>
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.form-control-chosen').chosen();
-            $(".starRating").rating({
-                displayOnly: true,
-                step: 0.5,
-                showCaption: false,
-                showClear: false,
-                theme: 'krajee-svg'
-            });
-            dataTableInitialise();
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.form-control-chosen').chosen();
+        $(".starRating").rating({
+            displayOnly: true,
+            step: 0.5,
+            showCaption: false,
+            showClear: false,
+            theme: 'krajee-svg'
         });
-        $(".btnAddBeer").on("click", function () {
-            var pathname = window.location.pathname;
-            var BeerName = $(".NewBeerBeerName").val();
-            var Brewery = $(".NewBeerBrewery").val();
-            $.ajax({
-                dataType: 'json',
-                url: pathname,
-                type: 'POST',
-                data: {
-                    BeerName: BeerName,
-                    Brewery: Brewery
-                },
-                headers: {
-                    RequestVerificationToken:
-                        $('input:hidden[name="__RequestVerificationToken"]').val()
-                },
-                success: function (response) {
-                    if (Number.isInteger(response)) {
-                        window.location.replace("BeerPot/View?Id=" + response);
-                    } else {
-                        $("#ValidationCheck").modal();
-                        $(".errorText").text(response);
-                    }
-                },
-                error: function () {
-                    alert("AJAX Request Failed, Contact Support");
+        dataTableInitialise();
+    });
+    $(".btnAddBeer").on("click", function () {
+        var pathname = window.location.pathname;
+        var BeerName = $(".NewBeerBeerName").val();
+        var Brewery = $(".NewBeerBrewery").val();
+        $.ajax({
+            dataType: 'json',
+            url: pathname,
+            type: 'POST',
+            data: {
+                BeerName: BeerName,
+                Brewery: Brewery
+            },
+            headers: {
+                RequestVerificationToken:
+                    $('input:hidden[name="__RequestVerificationToken"]').val()
+            },
+            success: function (response) {
+                if (Number.isInteger(response)) {
+                    window.location.replace("BeerPot/View?Id=" + response);
+                } else {
+                    $("#ValidationCheck").modal();
+                    $(".errorText").text(response);
                 }
-            });
+            },
+            error: function () {
+                alert("AJAX Request Failed, Contact Support");
+            }
         });
-         window.addEventListener("resize", function(){
-            dataTableInitialise();
+    });
+    window.addEventListener("resize", function () {
+        dataTableInitialise();
+    });
+    function dataTableInitialise() {
+        $('#BeerTable').dataTable({
+            "aoColumns": [
+                { "sType": "html" },
+                { "sType": "string" },
+                { "sType": "string" },
+                { "sType": "num" },
+                { "sType": "num" },
+                { "sType": "num" },
+                { "sType": "num" },
+                { "sType": "num" },
+                { "sType": "html" }
+            ],
+            "columnDefs": [
+                { responsivePriority: 1, "targets": 0 },
+                { responsivePriority: 6, "targets": 1 },
+                { responsivePriority: 5, "targets": 2, "iDataSort": 3 },
+                { responsivePriority: 15, "targets": 3, className: "never" },
+                { responsivePriority: 3, "targets": 4, "iDataSort": 5 },
+                { responsivePriority: 15, "targets": 5, className: "never" },
+                { responsivePriority: 4, "targets": 6, "iDataSort": 7 },
+                { responsivePriority: 15, "targets": 7, className: "never" },
+                { responsivePriority: 2, orderable: false, "targets": 8 }
+            ],
+            "pagingType": "numbers",
+            "paging": false,
+            "responsive": true,
+            "order": [0, 'desc'],
+            "destroy": true,
+            "language": {
+                "emptyTable": "No data available in table"
+            },
+            stateSave: true
         });
-        function dataTableInitialise() {
-            $('#BeerTable').dataTable({
-                "aoColumns": [
-                    { "sType": "html" },
-                    { "sType": "string" },
-                    { "sType": "string" },
-                    { "sType": "num" },
-                    { "sType": "num" },
-                    { "sType": "num" },
-                    { "sType": "num" },
-                    { "sType": "num" },
-                    { "sType": "html" }
-                ],
-                "columnDefs": [
-                    { responsivePriority: 1, "targets": 0 },
-                    { responsivePriority: 6, "targets": 1 },
-                    { responsivePriority: 5, "targets": 2, "iDataSort": 3 },
-                    { responsivePriority: 15, "targets": 3, className: "never" },
-                    { responsivePriority: 3, "targets": 4, "iDataSort": 5 },
-                    { responsivePriority: 15, "targets": 5, className: "never" },
-                    { responsivePriority: 4, "targets": 6, "iDataSort": 7 },
-                    { responsivePriority: 15, "targets": 7, className: "never" },
-                    { responsivePriority: 2, orderable: false, "targets": 8 }
-                ],
-                "pagingType": "numbers",
-                "paging": false,
-                "responsive": true,
-                "order": [0, 'desc'],
-                "destroy": true,
-                "language": {
-                    "emptyTable": "No data available in table"
-                },
-                stateSave: true
-            });
-        }
-    </script>
+    }
+</script>
 }
