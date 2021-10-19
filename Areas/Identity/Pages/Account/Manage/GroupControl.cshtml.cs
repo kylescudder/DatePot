@@ -184,7 +184,7 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
                 values: new { 
                     area = "Identity", 
                     userId = user.Id, 
-                    chosenUserId = ChosenUser.Id, 
+                    chosenUserId = ChosenUser.Id,
                     UserGroupID = UserGroupID,
                     response = false },
                 protocol: Request.Scheme);

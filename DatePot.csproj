@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\images\Holiday\**" />
+    <Content Remove="wwwroot\images\Holiday\**" />
+    <EmbeddedResource Remove="wwwroot\images\Holiday\**" />
+    <None Remove="wwwroot\images\Holiday\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="bootstrap" Version="4.5.3" />
     <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="Dapper.ParameterExtensions" Version="0.2.0" />
