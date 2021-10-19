@@ -20,6 +20,7 @@ using DatePot.Areas.VinylPot.Data;
 using WebPWrecover.Services;
 using DatePot.Areas.BeerPot.Data;
 using Microsoft.Extensions.Hosting;
+using DatePot.Areas.HolidayPot.Data;
 
 namespace DatePot
 {
@@ -60,6 +61,7 @@ namespace DatePot
             services.AddSingleton<ISiteData, SiteData>();
             services.AddSingleton<IIdentityData, IdentityData>();
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton<IHolidayData, HolidayData>();
 
             services.AddElmahIo(o =>
             {
