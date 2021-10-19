@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using DatePot.Areas.FilmPot.Data;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Sentry;
 
 namespace DatePot.Areas.HolidayPot.Pages
 {
@@ -96,6 +97,7 @@ namespace DatePot.Areas.HolidayPot.Pages
             }
             catch (Exception ex)
             {
+				SentrySdk.CaptureException(ex);
                 throw new Exception(ex.ToString());
             }
         }
