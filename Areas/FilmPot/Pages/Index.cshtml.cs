@@ -14,6 +14,7 @@ using DatePot.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace DatePot.Areas.FilmPot.Pages
 {
@@ -26,8 +27,8 @@ namespace DatePot.Areas.FilmPot.Pages
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IIdentityData _identityData;
         private readonly ISiteData _siteData;
-        public IndexModel(ILogger<IndexModel> logger, 
-        IConfiguration config, 
+        public IndexModel(ILogger<IndexModel> logger,
+        IConfiguration config,
         IFilmData filmData,
         UserManager<IdentityUser> userManager,
         IIdentityData identityData,
@@ -53,8 +54,9 @@ namespace DatePot.Areas.FilmPot.Pages
         public NewPlatform NewPlatform { get; set; }
         public List<RandomFilm> RandomFilm { get; set; }
         public List<PotAccess> PotAccess { get; set; }
+        public List<RandomFilm> RandomFilms { get; set; }
         public async Task<ActionResult> OnGet()
-         {
+        {
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
@@ -98,9 +100,6 @@ namespace DatePot.Areas.FilmPot.Pages
                     Platform.Add(new SelectListItem { Value = x.PlatformID.ToString(), Text = x.PlatformText });
                 });
 
-                RandomFilm = _filmData.GetRandomFilm(UserGroupID).Result;
-
-
                 return Page();
             }
             catch (Exception ex)
@@ -108,7 +107,7 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<JsonResult> OnPost(string AddersID, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, List<int>Genres, List<int> Directors, List<int> Platforms)
+        public async Task<JsonResult> OnPost(string AddersID, DateTime AddedDate, string FilmName, DateTime ReleaseDate, bool Watched, int Runtime, List<int> Genres, List<int> Directors, List<int> Platforms)
         {
             try
             {
@@ -216,5 +215,23 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
+        public PartialViewResult OnGetRandomFilm()
+        {
+            try
+            {
+                int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
+                RandomFilms = _filmData.GetRandomFilm(UserGroupID).Result;
+                return new PartialViewResult
+                {
+                    ViewName = "_RandomFilm",
+                    ViewData = new ViewDataDictionary<List<RandomFilm>>(ViewData, RandomFilms)
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
     }
 }

@@ -1,0 +1,33 @@
+﻿@model List<DatePot.Areas.FilmPot.Models.Films.RandomFilm>
+<form method="post" asp-page-handler="AddFilm">
+    @Html.AntiForgeryToken()
+    @if (Model.Count > 0)
+    {
+        <div class="modal-body">
+            @foreach (var item in Model)
+            {
+
+                <input value="@item.FilmID" type="hidden" name="FilmID" />
+                <p>
+                    Tonight you guys are going to watch <strong>@item.FilmName</strong>, and it is
+                    @item.AddersName's pick. It is @item.Runtime minutes long .
+                </p>
+            }
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick="return AnotherRandom();">No,
+                another!!</button>
+            <input type="submit" value="Let's watch it!" class="btn btn-primary" />
+        </div>
+    }
+    else
+    {
+        <div class="modal-body">
+            <p>Looks like you are out of unwatched films. Add more to films to the list and try again!</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Will do boss</button>
+        </div>
+    }
+</form>
