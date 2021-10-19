@@ -71,7 +71,7 @@ namespace DatePot.Areas.VinylPot.Pages
                 }
 				if (VinylDetails != null)
 				{
-					var users = _filmData.GetUserList(UserGroupID);
+					var users = _siteData.GetUserList(UserGroupID, 5);
 
 					Users = new List<SelectListItem>();
 					users.Result.ForEach(x =>

@@ -51,7 +51,7 @@ namespace DatePot.Areas.VinylPot.Pages
 		public List<PotAccess> PotAccess { get; set; }
 		public async Task<ActionResult> OnGet()
 		{
-			if (!User.Identity.IsAuthenticated)
+			if (!User.Identity.IsAuthenticated)       
 			{
 				return RedirectToPage("/Account/Login", new { area = "Identity" });
 			}
@@ -66,7 +66,7 @@ namespace DatePot.Areas.VinylPot.Pages
 					return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
 				}
 				Vinyls = _VinylData.GetVinylList(UserGroupID).Result;
-				var users = _filmData.GetUserList(UserGroupID);
+				var users = _siteData.GetUserList(UserGroupID, 5);
 
 				Users = new List<SelectListItem>();
 				users.Result.ForEach(x =>

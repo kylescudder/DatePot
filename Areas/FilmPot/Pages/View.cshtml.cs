@@ -84,7 +84,7 @@ namespace DatePot.Areas.FilmPot.Pages
                         var genres = _filmData.GetGenreList();
                         var directors = _filmData.GetDirectorsList();
                         var platforms = _filmData.GetPlatformsList();
-                        var users = _filmData.GetUserList(UserGroupID);
+                        var users = _siteData.GetUserList(UserGroupID, 1);
 
                         //Genre = genres.Where(x => x.GenreID == FilmDetails.GenreID).FirstOrDefault()?.GenreText;
 
@@ -133,7 +133,7 @@ namespace DatePot.Areas.FilmPot.Pages
                 throw new Exception(ex.ToString());
             }
         }
-        public async Task<JsonResult> OnPost(int FilmID, int AddedByID, string FilmName, DateTime ReleaseDate, DateTime AddedDate, bool Watched, int Runtime, List<int> Genre, List<int> Director, List<int> Platform)
+        public async Task<JsonResult> OnPost(int FilmID, string AddedByID, string FilmName, DateTime ReleaseDate, DateTime AddedDate, bool Watched, int Runtime, List<int> Genre, List<int> Director, List<int> Platform)
         {
             try
             {

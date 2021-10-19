@@ -62,16 +62,16 @@ namespace DatePot.Areas.FilmPot.Pages
             try
             {
                 int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
-				var user = await _userManager.GetUserAsync(User);
-				PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), UserGroupID);
-				int index = PotAccess.FindIndex(item => item.PotID == 1);
+                var user = await _userManager.GetUserAsync(User);
+                PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), UserGroupID);
+                int index = PotAccess.FindIndex(item => item.PotID == 1);
                 if (index == -1)
                 {
                     return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
                 }
                 Films = _filmData.GetFilmList(UserGroupID).Result;
-                Users = _filmData.GetUserList(UserGroupID).Result;
-                var UsersList = _filmData.GetUserList(UserGroupID);
+                var UsersList = _siteData.GetUserList(UserGroupID, 1);
+                Users = UsersList.Result;
                 var genres = _filmData.GetGenreList();
                 var directors = _filmData.GetDirectorsList();
                 var platforms = _filmData.GetPlatformsList();

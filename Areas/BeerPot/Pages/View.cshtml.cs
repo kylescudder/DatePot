@@ -72,7 +72,7 @@ namespace DatePot.Areas.BeerPot.Pages
                 {
                     return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
                 }
-				var users = _filmData.GetUserList(UserGroupID);
+				var users = _siteData.GetUserList(UserGroupID, 6);
 				BeerRatingList = await _BeerData.GetBeerRatings(BeerDetails.BeerID);
 				Users = new List<SelectListItem>();
 				users.Result.ForEach(x =>

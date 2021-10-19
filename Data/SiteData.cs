@@ -210,5 +210,17 @@ namespace DatePot.Data
             var i = p.Get<int>("LinkExpired");
             return Convert.ToBoolean(i);
         }
+        public async Task<List<Models.Site.UserList>> GetUserList(int? UserGroupID, int PotID)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("UserGroupID", UserGroupID);
+            p.Add("PotID", PotID);
+
+            var recs = await _dataAccess.LoadData<Models.Site.UserList, dynamic>(
+                "scud97_kssu.spGetUserList",
+                p,
+                "Default");
+            return recs;
+        }
     }
 }

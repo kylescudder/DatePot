@@ -19,6 +19,7 @@ namespace DatePot.Data
         Task<List<RejectAudit>> GetRejectAudit(string UserID, string ChosenUserID);
         Task<List<UserAccess>> GetUserAccessToGroup(string UserID, int UserGroupID);
         Task<List<UserGroups>> GetUserGroups(string UserID);
+        Task<List<Site.UserList>> GetUserList(int? UserGroupID, int PotID);
         Task<int> GetUserOwnGroup(string UserID);
         Task<List<Identity.UserAccessToGroup>> GetUserPotAccess(string UserID, int? UserGroupID);
         Task<bool> HasLinkExpired(string InviteLink);

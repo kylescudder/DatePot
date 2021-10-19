@@ -72,7 +72,7 @@ namespace DatePot.Areas.CoffeePot.Pages
                 {
                     return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
                 }
-				var users = _filmData.GetUserList(UserGroupID);
+				var users = _siteData.GetUserList(UserGroupID, 6);
 				CoffeeRatingList = await _CoffeeData.GetCoffeeRatings(CoffeeDetails.CoffeeID);
 				Users = new List<SelectListItem>();
 				users.Result.ForEach(x =>
