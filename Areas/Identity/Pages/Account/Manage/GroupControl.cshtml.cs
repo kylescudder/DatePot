@@ -22,173 +22,213 @@ using System.Net.Mail;
 
 namespace DatePot.Areas.Identity.Pages.Account.Manage
 {
-    public partial class GroupControlModel : PageModel
-    {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IConfiguration _config;
-        private readonly IIdentityData _identityData;
-        private readonly ISiteData _siteData;
-        private readonly IEmailSender _emailSender;
+	public partial class GroupControlModel : PageModel
+	{
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly SignInManager<IdentityUser> _signInManager;
+		private readonly IConfiguration _config;
+		private readonly IIdentityData _identityData;
+		private readonly ISiteData _siteData;
+		private readonly IEmailSender _emailSender;
 
-        public GroupControlModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            IConfiguration config,
-            IIdentityData identityData,
-            ISiteData siteData,
-            IEmailSender emailSender)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _config = config;
-            _identityData = identityData;
-            _siteData = siteData;
-            _emailSender = emailSender;
-        }
-        [TempData]
-        public string StatusMessage { get; set; }
-        public List<SelectListItem> UserAccessToGroup { get; set; }
-        public List<Models.Identity.UserAccessToGroup> UserAccessToGroupList { get; set; }
-        [BindProperty]
-        public NewUserAccess NewUserAccess { get; set; }
-        private async Task LoadAsync(IdentityUser user)
-        {
-            int UserOwnGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
-            HttpContext.Session.SetInt32("UserOwnGroupID", UserOwnGroupID);
-            var useraccesstogroup = _siteData.GetUserAccessToGroup(user.Id.ToString(), UserOwnGroupID);
-            UserAccessToGroup = new List<SelectListItem>();
+		public GroupControlModel(
+				UserManager<IdentityUser> userManager,
+				SignInManager<IdentityUser> signInManager,
+				IConfiguration config,
+				IIdentityData identityData,
+				ISiteData siteData,
+				IEmailSender emailSender)
+		{
+			_userManager = userManager;
+			_signInManager = signInManager;
+			_config = config;
+			_identityData = identityData;
+			_siteData = siteData;
+			_emailSender = emailSender;
+		}
+		[TempData]
+		public string StatusMessage { get; set; }
+		public List<SelectListItem> UserAccessToGroup { get; set; }
+		public List<Models.Identity.UserAccessToGroup> UserAccessToGroupList { get; set; }
+		[BindProperty]
+		public NewUserAccess NewUserAccess { get; set; }
+		private async Task LoadAsync(IdentityUser user)
+		{
+			try
+			{
+				int UserOwnGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
+				HttpContext.Session.SetInt32("UserOwnGroupID", UserOwnGroupID);
+				var useraccesstogroup = _siteData.GetUserAccessToGroup(user.Id.ToString(), UserOwnGroupID);
+				UserAccessToGroup = new List<SelectListItem>();
 
-            useraccesstogroup.Result.ForEach(x =>
-            {
-                UserAccessToGroup.Add(new SelectListItem { Value = x.UserName.ToString(), Text = x.UserName });
-            });
-        }
+				useraccesstogroup.Result.ForEach(x =>
+				{
+					UserAccessToGroup.Add(new SelectListItem { Value = x.UserName.ToString(), Text = x.UserName });
+				});
+			}
+			catch (Exception er)
+			{
+				SentrySdk.CaptureException(ex);
+				throw new Exception(er.ToString());
+			}
+		}
 
-        public async Task<IActionResult> OnGetAsync()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+		public async Task<IActionResult> OnGetAsync()
+		{
+			try
+			{
+				var user = await _userManager.GetUserAsync(User);
+				if (user == null)
+				{
+					return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+				}
 
-            await LoadAsync(user);
-            return Page();
-        }
+				await LoadAsync(user);
+				return Page();
+			}
+			catch (Exception er)
+			{
+				SentrySdk.CaptureException(ex);
+				throw new Exception(er.ToString());
+			}
+		}
 
-        public async Task<PartialViewResult> OnGetUserAccessToGroup(string UserID)
-        {
-            try
-            {
-                var user = await _userManager.GetUserAsync(User);
-                var ChosenUser = await _userManager.FindByEmailAsync(UserID);
-                int? UserOwnGroupID = HttpContext.Session.GetInt32("UserOwnGroupID");
-                UserAccessToGroupList = await _siteData.GetUserPotAccess(ChosenUser.Id.ToString(), UserOwnGroupID);
-                HttpContext.Session.SetInt32("UserAccessToGroupList", UserAccessToGroupList.Count());
-                return new PartialViewResult
-                {
-                    ViewName = "_UserAccessToGroup",
-                    ViewData = new ViewDataDictionary<List<Models.Identity.UserAccessToGroup>>(ViewData, UserAccessToGroupList)
-                };
-                // result = new JsonResult("success");
-                // return result;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
-        public async Task<IActionResult> OnPostUserGroupUpdated(IFormCollection collection)
-        {
-            try
-            {
-                JsonResult result = null;
-                int? PotCount = HttpContext.Session.GetInt32("UserAccessToGroupList");
-                string UserID = Request.Form["UserID"];
-                List<DatePot.Models.Site.UserAccessToGroup> uatg = new List<DatePot.Models.Site.UserAccessToGroup>();
-                foreach (var item in Request.Form.Keys)
-                {
-                    if (item != "UserID" && item != "__RequestVerificationToken")
-                    {
-                        uatg.Add(new DatePot.Models.Site.UserAccessToGroup() { 
-                            UserID = UserID, 
-                            PotID = Convert.ToInt32(item),
-                            UserGroupID = HttpContext.Session.GetInt32("UserOwnGroupID").Value
-                        });
-                    }
-                }
-                await _siteData.UpdateUserAccessToGroup(uatg, UserID, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
+		public async Task<PartialViewResult> OnGetUserAccessToGroup(string UserID)
+		{
+			try
+			{
+				var user = await _userManager.GetUserAsync(User);
+				var ChosenUser = await _userManager.FindByEmailAsync(UserID);
+				int? UserOwnGroupID = HttpContext.Session.GetInt32("UserOwnGroupID");
+				UserAccessToGroupList = await _siteData.GetUserPotAccess(ChosenUser.Id.ToString(), UserOwnGroupID);
+				HttpContext.Session.SetInt32("UserAccessToGroupList", UserAccessToGroupList.Count());
+				return new PartialViewResult
+				{
+					ViewName = "_UserAccessToGroup",
+					ViewData = new ViewDataDictionary<List<Models.Identity.UserAccessToGroup>>(ViewData, UserAccessToGroupList)
+				};
+				// result = new JsonResult("success");
+				// return result;
+			}
+			catch (Exception ex)
+			{
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
+			}
+		}
+		public async Task<IActionResult> OnPostUserGroupUpdated(IFormCollection collection)
+		{
+			try
+			{
+				JsonResult result = null;
+				int? PotCount = HttpContext.Session.GetInt32("UserAccessToGroupList");
+				string UserID = Request.Form["UserID"];
+				List<DatePot.Models.Site.UserAccessToGroup> uatg = new List<DatePot.Models.Site.UserAccessToGroup>();
+				foreach (var item in Request.Form.Keys)
+				{
+					if (item != "UserID" && item != "__RequestVerificationToken")
+					{
+						uatg.Add(new DatePot.Models.Site.UserAccessToGroup()
+						{
+							UserID = UserID,
+							PotID = Convert.ToInt32(item),
+							UserGroupID = HttpContext.Session.GetInt32("UserOwnGroupID").Value
+						});
+					}
+				}
+				await _siteData.UpdateUserAccessToGroup(uatg, UserID, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
 				result = new JsonResult("success");
 				return result;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
-        public async Task<IActionResult> OnPostAddUserAccess(IFormCollection collection)
-        {
-            try
-            {
-                JsonResult result = null;
-                if (ModelState.IsValid) {
-                    var ChosenUser = await _userManager.FindByEmailAsync(Request.Form["NewUserAccess.UserEmail"][0]);
-                    if (ChosenUser != null) {
-                        var user = await _userManager.GetUserAsync(User);
-                        int PotCount = await _siteData.GetPotCount();
-                        List<RejectAudit> ra = await _siteData.GetRejectAudit(user.Id, ChosenUser.Id);
-                        if (ra.Count > 2) {
-                            result = new JsonResult("takeahint");
-                            return result;
-                        } else if (ra.Count != 0) {
-                            TimeSpan diff = DateTime.Now - ra.Last().RejectedDate;
-                            if (diff.TotalHours > 24) {
-                                result = await UpdateUserAccessToGroup(ChosenUser, PotCount, user, result);
-                                return result;
-                            } else {
-                                result = new JsonResult("tooquick");
-                                return result;
-                            }
-                        } else {
-                            result = await UpdateUserAccessToGroup(ChosenUser, PotCount, user, result);
-                            return result;
-                        }
-                    } else {
-                        result = new JsonResult("emailnotfound");
-                        return result;
-                    }
-                }
-                result = new JsonResult("emailnotvalid");
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
-        public async Task<IActionResult> emailUser(IdentityUser ChosenUser, IdentityUser user, int UserGroupID) {
-            var callbackUrl = Url.Page(
-                "/Account/ConfirmGroupAccess",
-                pageHandler: null,
-                values: new { 
-                    area = "Identity", 
-                    userId = user.Id, 
-                    chosenUserId = ChosenUser.Id, 
-                    UserGroupID = UserGroupID,
-                    response = true },
-                protocol: Request.Scheme);
-            var callbackUrlReject = Url.Page(
-                "/Account/ConfirmGroupAccess",
-                pageHandler: null,
-                values: new { 
-                    area = "Identity", 
-                    userId = user.Id, 
-                    chosenUserId = ChosenUser.Id,
-                    UserGroupID = UserGroupID,
-                    response = false },
-                protocol: Request.Scheme);
-            string sBody = @"<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+			}
+			catch (Exception ex)
+			{
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
+			}
+		}
+		public async Task<IActionResult> OnPostAddUserAccess(IFormCollection collection)
+		{
+			try
+			{
+				JsonResult result = null;
+				if (ModelState.IsValid)
+				{
+					var ChosenUser = await _userManager.FindByEmailAsync(Request.Form["NewUserAccess.UserEmail"][0]);
+					if (ChosenUser != null)
+					{
+						var user = await _userManager.GetUserAsync(User);
+						int PotCount = await _siteData.GetPotCount();
+						List<RejectAudit> ra = await _siteData.GetRejectAudit(user.Id, ChosenUser.Id);
+						if (ra.Count > 2)
+						{
+							result = new JsonResult("takeahint");
+							return result;
+						}
+						else if (ra.Count != 0)
+						{
+							TimeSpan diff = DateTime.Now - ra.Last().RejectedDate;
+							if (diff.TotalHours > 24)
+							{
+								result = await UpdateUserAccessToGroup(ChosenUser, PotCount, user, result);
+								return result;
+							}
+							else
+							{
+								result = new JsonResult("tooquick");
+								return result;
+							}
+						}
+						else
+						{
+							result = await UpdateUserAccessToGroup(ChosenUser, PotCount, user, result);
+							return result;
+						}
+					}
+					else
+					{
+						result = new JsonResult("emailnotfound");
+						return result;
+					}
+				}
+				result = new JsonResult("emailnotvalid");
+				return result;
+			}
+			catch (Exception ex)
+			{
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
+			}
+		}
+		public async Task<IActionResult> emailUser(IdentityUser ChosenUser, IdentityUser user, int UserGroupID)
+		{
+			try
+			{
+
+				var callbackUrl = Url.Page(
+						"/Account/ConfirmGroupAccess",
+						pageHandler: null,
+						values: new
+						{
+							area = "Identity",
+							userId = user.Id,
+							chosenUserId = ChosenUser.Id,
+							UserGroupID = UserGroupID,
+							response = true
+						},
+						protocol: Request.Scheme);
+				var callbackUrlReject = Url.Page(
+						"/Account/ConfirmGroupAccess",
+						pageHandler: null,
+						values: new
+						{
+							area = "Identity",
+							userId = user.Id,
+							chosenUserId = ChosenUser.Id,
+							UserGroupID = UserGroupID,
+							response = false
+						},
+						protocol: Request.Scheme);
+				string sBody = @"<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
                 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-GB'>
                 <head>
                 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
@@ -264,44 +304,63 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
                 </table>
                 </body>
                 </html>";
-            string[] callbackUrlArray = HtmlEncoder.Default.Encode(callbackUrl).Split("?");
-            string[] InviteLinkArray = callbackUrlArray[1].Split("response");
-            string InviteLink = InviteLinkArray[0];
-            await _siteData.AddInviteLink(InviteLink, false);
-            var client = new SmtpClient(_config.GetSection("SMTP")["Host"], Convert.ToInt16(_config.GetSection("SMTP")["Port"]))
-            {
-                Credentials = new NetworkCredential(_config.GetSection("SMTP")["Username"], _config.GetSection("SMTP")["Password"]),
-                EnableSsl = true 
-            };
-            MailMessage m = new MailMessage();
-			m.From = new MailAddress(_config.GetSection("SMTP")["InviteFrom"]);
-			m.To.Add(new MailAddress(ChosenUser.NormalizedEmail));
-			m.Subject = "DatePot - You've been invited! 📧";
-			m.IsBodyHtml = true;
-			m.Body = sBody;
-            client.Send(m);
-            return Page();
-        }
-        public async Task<JsonResult> UpdateUserAccessToGroup(IdentityUser ChosenUser, int PotCount, IdentityUser user, JsonResult result) {
-            int existingCount = await _siteData.GetExistingPotAccess(ChosenUser.Id, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
-            if (existingCount == 0) {
-                emailUser(ChosenUser, user, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
-                List<DatePot.Models.Site.UserAccessToGroup> uatg = new List<DatePot.Models.Site.UserAccessToGroup>();
-                for (int i = 0; i < PotCount; i++)
-                {
-                    uatg.Add(new DatePot.Models.Site.UserAccessToGroup { 
-                        UserID = ChosenUser.Id, 
-                        PotID = i + 1,
-                        UserGroupID = HttpContext.Session.GetInt32("UserOwnGroupID").Value
-                    });
-                }
-                await _siteData.UpdateUserAccessToGroup(uatg, ChosenUser.Id.ToString(), HttpContext.Session.GetInt32("UserOwnGroupID").Value);
-                result = new JsonResult("success");
-                return result;
-            } else {
-                result = new JsonResult("useralreadyhasaccess");
-                return result;    
-            }
-        }
-    }
+				string[] callbackUrlArray = HtmlEncoder.Default.Encode(callbackUrl).Split("?");
+				string[] InviteLinkArray = callbackUrlArray[1].Split("response");
+				string InviteLink = InviteLinkArray[0];
+				await _siteData.AddInviteLink(InviteLink, false);
+				var client = new SmtpClient(_config.GetSection("SMTP")["Host"], Convert.ToInt16(_config.GetSection("SMTP")["Port"]))
+				{
+					Credentials = new NetworkCredential(_config.GetSection("SMTP")["Username"], _config.GetSection("SMTP")["Password"]),
+					EnableSsl = true
+				};
+				MailMessage m = new MailMessage();
+				m.From = new MailAddress(_config.GetSection("SMTP")["InviteFrom"]);
+				m.To.Add(new MailAddress(ChosenUser.NormalizedEmail));
+				m.Subject = "DatePot - You've been invited! 📧";
+				m.IsBodyHtml = true;
+				m.Body = sBody;
+				client.Send(m);
+				return Page();
+			}
+			catch (Exception er)
+			{
+				SentrySdk.CaptureException(ex);
+				throw new Exception(er.ToString());
+			}
+		}
+		public async Task<JsonResult> UpdateUserAccessToGroup(IdentityUser ChosenUser, int PotCount, IdentityUser user, JsonResult result)
+		{
+			try
+			{
+				int existingCount = await _siteData.GetExistingPotAccess(ChosenUser.Id, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
+				if (existingCount == 0)
+				{
+					emailUser(ChosenUser, user, HttpContext.Session.GetInt32("UserOwnGroupID").Value);
+					List<DatePot.Models.Site.UserAccessToGroup> uatg = new List<DatePot.Models.Site.UserAccessToGroup>();
+					for (int i = 0; i < PotCount; i++)
+					{
+						uatg.Add(new DatePot.Models.Site.UserAccessToGroup
+						{
+							UserID = ChosenUser.Id,
+							PotID = i + 1,
+							UserGroupID = HttpContext.Session.GetInt32("UserOwnGroupID").Value
+						});
+					}
+					await _siteData.UpdateUserAccessToGroup(uatg, ChosenUser.Id.ToString(), HttpContext.Session.GetInt32("UserOwnGroupID").Value);
+					result = new JsonResult("success");
+					return result;
+				}
+				else
+				{
+					result = new JsonResult("useralreadyhasaccess");
+					return result;
+				}
+			}
+			catch (Exception er)
+			{
+				SentrySdk.CaptureException(ex);
+				throw new Exception(er.ToString());
+			}
+		}
+	}
 }

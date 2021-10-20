@@ -130,7 +130,8 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
             }
         }
         public async Task<JsonResult> OnPost(int FilmID, string AddedByID, string FilmName, DateTime ReleaseDate, DateTime AddedDate, bool Watched, int Runtime, List<int> Genre, List<int> Director, List<int> Platform)
@@ -184,7 +185,8 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
             }
         }
         public async Task<JsonResult> OnPostDeleteGenre(int FilmGenreID, int FilmID)
@@ -213,7 +215,8 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
             }
         }
         public async Task<JsonResult> OnPostDeleteDirector(int FilmDirectorID, int FilmID)
@@ -229,7 +232,8 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
             }
         }
         public async Task<JsonResult> OnPostDeletePlatform(int FilmPlatformID, int FilmID)
@@ -258,7 +262,8 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
             }
         }
         public async Task<IActionResult> OnPostArchive()
@@ -276,7 +281,8 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
             }
         }
     }

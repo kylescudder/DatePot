@@ -115,7 +115,8 @@ namespace DatePot.Areas.HolidayPot.Pages
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
             }
         }
         public async Task<IActionResult> OnPostFileUploadAsync(IFormFile[] photos)
@@ -140,7 +141,8 @@ namespace DatePot.Areas.HolidayPot.Pages
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
             }
         }
         public async Task<IActionResult> OnPostArchive()
@@ -158,7 +160,8 @@ namespace DatePot.Areas.HolidayPot.Pages
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
             }
         }
     }

@@ -83,6 +83,7 @@ namespace DatePot.Areas.CoffeePot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -97,6 +98,7 @@ namespace DatePot.Areas.CoffeePot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -115,6 +117,7 @@ namespace DatePot.Areas.CoffeePot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -142,6 +145,7 @@ namespace DatePot.Areas.CoffeePot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}

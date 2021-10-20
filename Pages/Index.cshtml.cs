@@ -39,7 +39,7 @@ namespace DatePot.Pages
             {
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
-            else {
+            try {
                 var user = await _userManager.GetUserAsync(User);
                 DefaultUserGroupID = await _siteData.GetDefaultUserGroupID(user.Id.ToString());
                 if (DefaultUserGroupID == 0) {
@@ -65,7 +65,10 @@ namespace DatePot.Pages
                 PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), DefaultUserGroupID);
                 HttpContext.Session.SetInt32("UserGroupID", DefaultUserGroupID.Value);
                 return Page();
-            }
+            } catch (Exception er) {
+				SentrySdk.CaptureException(ex);
+				throw new Exception(ex.ToString());
+			}
         }
         public async Task<JsonResult> OnPost(IFormCollection collection)
         {
@@ -79,6 +82,7 @@ namespace DatePot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
         }

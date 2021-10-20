@@ -108,6 +108,7 @@ namespace DatePot.Areas.ActivityPot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -145,6 +146,7 @@ namespace DatePot.Areas.ActivityPot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -162,6 +164,7 @@ namespace DatePot.Areas.ActivityPot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -190,6 +193,7 @@ namespace DatePot.Areas.ActivityPot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}

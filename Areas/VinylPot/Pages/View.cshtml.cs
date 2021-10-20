@@ -90,6 +90,7 @@ namespace DatePot.Areas.VinylPot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -106,6 +107,7 @@ namespace DatePot.Areas.VinylPot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -124,6 +126,7 @@ namespace DatePot.Areas.VinylPot.Pages
 			}
 			catch (Exception ex)
 			{
+				SentrySdk.CaptureException(ex);
 				throw new Exception(ex.ToString());
 			}
 		}
