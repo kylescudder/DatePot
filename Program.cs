@@ -22,14 +22,16 @@ namespace DatePot
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
+			string version = configuration.GetSection("Version")["Major"] + "." + configuration.GetSection("Version")["Minor"] + "." + configuration.GetSection("Version")["Revision"];
 			using (SentrySdk.Init(o =>
             {
+                o.Release = "the-date-pot@" + version;
                 o.Dsn = "https://8f7807e0fb4d48d2ac11d1b3cec2412a@o1044877.ingest.sentry.io/6020109";
-                            // When configuring for the first time, to see what the SDK is doing:
-                            o.Debug = true;
-                            // Set traces_sample_rate to 1.0 to capture 100% of transactions for performance monitoring.
-                            // We recommend adjusting this value in production.
-                            o.TracesSampleRate = 1.0;
+                // When configuring for the first time, to see what the SDK is doing:
+                o.Debug = true;
+                // Set traces_sample_rate to 1.0 to capture 100% of transactions for performance monitoring.
+                // We recommend adjusting this value in production.
+                o.TracesSampleRate = 1.0;
             }))
 			{
 				// App code goes here. Dispose the SDK before exiting to flush events.
