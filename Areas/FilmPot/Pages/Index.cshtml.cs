@@ -12,13 +12,13 @@ using static DatePot.Models.Site;
 using DatePot.Data;
 using DatePot.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Serilog;
 
 namespace DatePot.Areas.FilmPot.Pages
 {
-	[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
 	public class IndexModel : PageModel
 	{
 		private readonly ILogger<IndexModel> _logger;
@@ -104,7 +104,7 @@ namespace DatePot.Areas.FilmPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -149,7 +149,7 @@ namespace DatePot.Areas.FilmPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				JsonResult result = null;
 				result = new JsonResult(ex);
 				return result;
@@ -168,7 +168,7 @@ namespace DatePot.Areas.FilmPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -185,7 +185,7 @@ namespace DatePot.Areas.FilmPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -202,7 +202,7 @@ namespace DatePot.Areas.FilmPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -216,7 +216,7 @@ namespace DatePot.Areas.FilmPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -234,7 +234,7 @@ namespace DatePot.Areas.FilmPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}

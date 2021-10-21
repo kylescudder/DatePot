@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -12,17 +11,17 @@ using DatePot.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using static DatePot.Areas.Identity.Models.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Data;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Net;
 using System.Net.Mail;
+using Serilog;
 
 namespace DatePot.Areas.Identity.Pages.Account.Manage
 {
-	public partial class GroupControlModel : PageModel
+    public partial class GroupControlModel : PageModel
 	{
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly SignInManager<IdentityUser> _signInManager;
@@ -66,10 +65,10 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 					UserAccessToGroup.Add(new SelectListItem { Value = x.UserName.ToString(), Text = x.UserName });
 				});
 			}
-			catch (Exception er)
+			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
-				throw new Exception(er.ToString());
+				Log.Error(ex.ToString());
+				throw new Exception(ex.ToString());
 			}
 		}
 
@@ -86,10 +85,10 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 				await LoadAsync(user);
 				return Page();
 			}
-			catch (Exception er)
+			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
-				throw new Exception(er.ToString());
+				Log.Error(ex.ToString());
+				throw new Exception(ex.ToString());
 			}
 		}
 
@@ -112,7 +111,7 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -142,7 +141,7 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -195,7 +194,7 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -322,10 +321,10 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 				client.Send(m);
 				return Page();
 			}
-			catch (Exception er)
+			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
-				throw new Exception(er.ToString());
+				Log.Error(ex.ToString());
+				throw new Exception(ex.ToString());
 			}
 		}
 		public async Task<JsonResult> UpdateUserAccessToGroup(IdentityUser ChosenUser, int PotCount, IdentityUser user, JsonResult result)
@@ -356,10 +355,10 @@ namespace DatePot.Areas.Identity.Pages.Account.Manage
 					return result;
 				}
 			}
-			catch (Exception er)
+			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
-				throw new Exception(er.ToString());
+				Log.Error(ex.ToString());
+				throw new Exception(ex.ToString());
 			}
 		}
 	}

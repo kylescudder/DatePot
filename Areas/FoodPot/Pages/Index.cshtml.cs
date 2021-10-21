@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,16 +10,16 @@ using Microsoft.Extensions.Logging;
 using static DatePot.Areas.FoodPot.Models.Food;
 using DatePot.Areas.FoodPot.Data;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using DatePot.Areas.FilmPot.Data;
 using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using static DatePot.Models.Site;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace DatePot.Areas.FoodPot.Pages
 {
-	[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
 	public class IndexModel : PageModel
 	{
 		private readonly ILogger<IndexModel> _logger;
@@ -103,7 +101,7 @@ namespace DatePot.Areas.FoodPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -142,7 +140,7 @@ namespace DatePot.Areas.FoodPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -159,7 +157,7 @@ namespace DatePot.Areas.FoodPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -176,7 +174,7 @@ namespace DatePot.Areas.FoodPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -188,7 +186,7 @@ namespace DatePot.Areas.FoodPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -206,7 +204,7 @@ namespace DatePot.Areas.FoodPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using DatePot.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Elmah.Io.AspNetCore;
 using Serilog;
 using Microsoft.AspNetCore.DataProtection;
 using System.IO;
@@ -63,11 +62,6 @@ namespace DatePot
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddSingleton<IHolidayData, HolidayData>();
 
-            services.AddElmahIo(o =>
-            {
-                o.ApiKey = "98744865cb034c31a1719586a0f73cbe";
-                o.LogId = new Guid("95fe989e-1120-4361-835f-8f6d61e91879");
-            });
             // Configure Identity
             services.Configure<IdentityOptions>(options =>
             {
@@ -100,7 +94,6 @@ namespace DatePot
             }
 
             app.UseHttpsRedirection();
-            app.UseElmahIo();
             app.UseStaticFiles();
 
             app.UseSerilogRequestLogging();

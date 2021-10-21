@@ -4,10 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 //using MySql.Data.MySqlClient;
 using static DatePot.Areas.FilmPot.Models.Films;
@@ -17,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace DatePot.Areas.FilmPot.Pages
 {
@@ -130,7 +129,7 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
             }
         }
@@ -185,7 +184,7 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
             }
         }
@@ -215,7 +214,7 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
             }
         }
@@ -232,7 +231,7 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
             }
         }
@@ -262,7 +261,7 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
             }
         }
@@ -281,7 +280,7 @@ namespace DatePot.Areas.FilmPot.Pages
             }
             catch (Exception ex)
             {
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
             }
         }

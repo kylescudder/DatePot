@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using static DatePot.Models.Site;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace DatePot.Pages
 {
@@ -39,23 +40,31 @@ namespace DatePot.Pages
             {
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
-            try {
+            try
+            {
                 var user = await _userManager.GetUserAsync(User);
                 DefaultUserGroupID = await _siteData.GetDefaultUserGroupID(user.Id.ToString());
-                if (DefaultUserGroupID == 0) {
-                    if (HttpContext.Session.GetInt32("UserGroupID") == null) {
+                if (DefaultUserGroupID == 0)
+                {
+                    if (HttpContext.Session.GetInt32("UserGroupID") == null)
+                    {
                         UserGroups = await _siteData.GetUserGroups(user.Id.ToString());
                         int OwnUserGroupID = await _siteData.GetUserOwnGroup(user.Id.ToString());
                         for (int i = 0; i < UserGroups.Count(); i++)
                         {
-                            if (OwnUserGroupID != UserGroups[i].UserGroupID) {
+                            if (OwnUserGroupID != UserGroups[i].UserGroupID)
+                            {
                                 return RedirectToPage("WhichGroup");
-                            } else {
+                            }
+                            else
+                            {
                                 DefaultUserGroupID = OwnUserGroupID;
                                 PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), DefaultUserGroupID);
                             }
                         }
-                    } else {
+                    }
+                    else
+                    {
                         CurrentUserGroupID = HttpContext.Session.GetInt32("UserGroupID");
                         DefaultUserGroupID = CurrentUserGroupID;
                         PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), CurrentUserGroupID);
@@ -65,26 +74,29 @@ namespace DatePot.Pages
                 PotAccess = await _siteData.GetPotAccess(user.Id.ToString(), DefaultUserGroupID);
                 HttpContext.Session.SetInt32("UserGroupID", DefaultUserGroupID.Value);
                 return Page();
-            } catch (Exception er) {
-				SentrySdk.CaptureException(ex);
-				throw new Exception(ex.ToString());
-			}
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw new Exception(ex.ToString());
+            }
         }
         public async Task<JsonResult> OnPost(IFormCollection collection)
         {
-            try {
+            try
+            {
                 JsonResult result = null;
                 int UserGroupID = Convert.ToInt32(collection["hidUserGroupID"]);
                 var user = await _userManager.GetUserAsync(User);
                 await _siteData.SetDefaultUserGroupID(UserGroupID, user.Id.ToString());
                 result = new JsonResult("success");
-				return result;
-			}
-			catch (Exception ex)
-			{
-				SentrySdk.CaptureException(ex);
-				throw new Exception(ex.ToString());
-			}
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw new Exception(ex.ToString());
+            }
         }
     }
 }

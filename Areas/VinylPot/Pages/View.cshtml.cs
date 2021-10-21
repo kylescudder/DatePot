@@ -14,10 +14,11 @@ using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using static DatePot.Models.Site;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace DatePot.Areas.VinylPot.Pages
 {
-	[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
 	public class ViewModel : PageModel
 	{
 		private readonly IConfiguration _config;
@@ -90,7 +91,7 @@ namespace DatePot.Areas.VinylPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -107,7 +108,7 @@ namespace DatePot.Areas.VinylPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -126,7 +127,7 @@ namespace DatePot.Areas.VinylPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}

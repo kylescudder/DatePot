@@ -15,6 +15,7 @@ using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using Microsoft.AspNetCore.Http;
 using DatePot.Areas.FilmPot.Data;
+using Serilog;
 
 namespace DatePot.Areas.BeerPot.Pages
 {
@@ -83,7 +84,7 @@ namespace DatePot.Areas.BeerPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -99,7 +100,7 @@ namespace DatePot.Areas.BeerPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -118,7 +119,7 @@ namespace DatePot.Areas.BeerPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -146,7 +147,7 @@ namespace DatePot.Areas.BeerPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}

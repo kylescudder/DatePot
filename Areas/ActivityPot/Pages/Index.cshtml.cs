@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace DatePot.Areas.ActivityPot.Pages
 {
@@ -90,7 +89,7 @@ namespace DatePot.Areas.ActivityPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -125,7 +124,7 @@ namespace DatePot.Areas.ActivityPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -142,7 +141,7 @@ namespace DatePot.Areas.ActivityPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}

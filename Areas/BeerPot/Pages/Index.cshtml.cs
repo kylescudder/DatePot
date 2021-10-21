@@ -1,23 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 //using MySqlConnector;
 using static DatePot.Areas.BeerPot.Models.Beers;
 using DatePot.Areas.BeerPot.Data;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using static DatePot.Models.Site;
 using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace DatePot.Areas.BeerPot.Pages
 {
@@ -70,7 +67,7 @@ namespace DatePot.Areas.BeerPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -100,7 +97,7 @@ namespace DatePot.Areas.BeerPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}

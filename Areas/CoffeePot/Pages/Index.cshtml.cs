@@ -1,24 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 //using MySqlConnector;
 using static DatePot.Areas.CoffeePot.Models.Coffees;
 using DatePot.Areas.CoffeePot.Data;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using static DatePot.Models.Site;
 using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using Microsoft.AspNetCore.Http;
 using DatePot.Areas.FilmPot.Data;
+using Serilog;
 
 namespace DatePot.Areas.CoffeePot.Pages
 {
@@ -92,7 +89,7 @@ namespace DatePot.Areas.CoffeePot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -122,7 +119,7 @@ namespace DatePot.Areas.CoffeePot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}

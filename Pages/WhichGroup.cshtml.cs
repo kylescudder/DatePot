@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using static DatePot.Models.Site;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace DatePot.Pages
 {
-	public class WhichGroupModel : PageModel
+    public class WhichGroupModel : PageModel
 	{
 		private readonly ILogger<WhichGroupModel> _logger;
 		private readonly UserManager<IdentityUser> _userManager;
@@ -53,9 +54,9 @@ namespace DatePot.Pages
 				}
 				return Page();
 			}
-			catch (Exception er)
+			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -69,7 +70,7 @@ namespace DatePot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}

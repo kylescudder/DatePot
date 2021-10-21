@@ -12,13 +12,13 @@ using DatePot.Areas.FilmPot.Data;
 using Microsoft.AspNetCore.Identity;
 using DatePot.Areas.Identity.Data;
 using DatePot.Data;
-using System.Linq;
 using static DatePot.Models.Site;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace DatePot.Areas.VinylPot.Pages
 {
-	[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
 	public class IndexModel : PageModel
 	{
 		private readonly ILogger<IndexModel> _logger;
@@ -77,7 +77,7 @@ namespace DatePot.Areas.VinylPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}
@@ -107,7 +107,7 @@ namespace DatePot.Areas.VinylPot.Pages
 			}
 			catch (Exception ex)
 			{
-				SentrySdk.CaptureException(ex);
+				Log.Error(ex.ToString());
 				throw new Exception(ex.ToString());
 			}
 		}

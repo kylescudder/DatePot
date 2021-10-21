@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
-using Sentry;
+using Serilog.Events;
 
 namespace DatePot
 {
@@ -19,38 +15,36 @@ namespace DatePot
                 .AddJsonFile("appsettings.json")
                 .Build();
 
+            string version = configuration.GetSection("Version")["Major"] + "." + configuration.GetSection("Version")["Minor"] + "." + configuration.GetSection("Version")["Revision"];
+
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
-                .CreateLogger();
-			string version = configuration.GetSection("Version")["Major"] + "." + configuration.GetSection("Version")["Minor"] + "." + configuration.GetSection("Version")["Revision"];
-			using (SentrySdk.Init(o =>
+            .ReadFrom.Configuration(configuration)
+            .WriteTo.Sentry(o =>
             {
                 o.Release = "the-date-pot@" + version;
                 o.Dsn = "https://8f7807e0fb4d48d2ac11d1b3cec2412a@o1044877.ingest.sentry.io/6020109";
-                // When configuring for the first time, to see what the SDK is doing:
-                o.Debug = true;
-                // Set traces_sample_rate to 1.0 to capture 100% of transactions for performance monitoring.
-                // We recommend adjusting this value in production.
+                // Debug and higher are stored as breadcrumbs (default is Information)
+                o.MinimumBreadcrumbLevel = LogEventLevel.Information;
+                // Warning and higher is sent as event (default is Error)
+                o.MinimumEventLevel = LogEventLevel.Information;
                 o.TracesSampleRate = 1.0;
-            }))
-			{
-				// App code goes here. Dispose the SDK before exiting to flush events.
+            })
+            .CreateLogger();
 
-				try
-				{
-					SentrySdk.CaptureMessage("Appliation Starting Up");
-					CreateHostBuilder(args).Build().Run();
-				}
-				catch (Exception ex)
-				{
-					SentrySdk.CaptureException(ex);
-				}
-				finally
-				{
-					Log.CloseAndFlush();
-				}
-			}
-		}
+            try
+            {
+                Log.Information("Appliation Starting Up");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
