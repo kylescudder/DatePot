@@ -79,58 +79,8 @@ body {
 .section:hover {
   text-decoration: none;
 }
-.btnFoodButtons {
-  background-color: #e8a79a !important;
-  border: none !important;
-}
-.table .thead-dark th {
-  background-color: #eb6e67 !important;
-  border: none !important;
-}
-.table-stripedFoodPot tbody tr:nth-of-type(odd) {
-  background-color: #f6dbd8 !important;
-  border: none !important;
-}
-.table-stripedFoodPot tbody tr:nth-of-type(even) {
-  background-color: #fad0be !important;
-  border: none !important;
-}
-.btnFilmButtons {
-  background-color: #51bbbb !important;
-  border: none !important;
-}
-.table .thead-darkfilmtable th {
-  background-color: #874f5e !important;
-  border: none !important;
-}
-.table-stripedFilmPot tbody tr:nth-of-type(odd) {
-  background-color: #e8c5c5 !important;
-  border: none !important;
-}
-.table-stripedFilmPot tbody tr:nth-of-type(even) {
-  background-color: #eaecd5 !important;
-  border: none !important;
-}
 .text-black {
   color: black !important;
-}
-
-.btnAddCoffeeModal {
-  background-color: #fab83c !important;
-  border: none !important;
-}
-.table .thead-darkCoffeetable {
-  background-color: #c2905e !important;
-  border: none !important;
-}
-.table-stripedCoffeePot tbody tr:nth-of-type(odd) {
-  background-color: #fef6e3 !important;
-  border: none !important;
-}
-
-.table-stripedCoffeePot tbody tr:nth-of-type(even) {
-  background-color: #fee7c8 !important;
-  border: none !important;
 }
 .mainPB {
   padding-bottom: 5rem;
@@ -230,4 +180,124 @@ body {
 @-ms-keyframes fadeIn {
   0% {opacity:0;}
   100% {opacity:1;}
+}
+/* CUSTOM COLOURS */
+/*Films*/
+.btnFilmButtons {
+  background-color: #51bbbb !important;
+  border: none !important;
+}
+.table .thead-darkfilmtable th {
+  background-color: #874f5e !important;
+  border: none !important;
+}
+.table-stripedFilmPot tbody tr:nth-of-type(odd) {
+  background-color: #e8c5c5 !important;
+  border: none !important;
+}
+.table-stripedFilmPot tbody tr:nth-of-type(even) {
+  background-color: #eaecd5 !important;
+  border: none !important;
+}
+/*Food*/
+.btnFoodButtons {
+  background-color: #e8a79a !important;
+  border: none !important;
+}
+.table .thead-dark th {
+  background-color: #eb6e67 !important;
+  border: none !important;
+}
+.table-stripedFoodPot tbody tr:nth-of-type(odd) {
+  background-color: #f6dbd8 !important;
+  border: none !important;
+}
+.table-stripedFoodPot tbody tr:nth-of-type(even) {
+  background-color: #fad0be !important;
+  border: none !important;
+}
+/*Coffee*/
+.btnCoffeeButtons {
+  background-color: #fab83c !important;
+  border: none !important;
+}
+.table .thead-darkCoffeetable {
+  background-color: #c2905e !important;
+  border: none !important;
+}
+.table-stripedCoffeePot tbody tr:nth-of-type(odd) {
+  background-color: #fef6e3 !important;
+  border: none !important;
+}
+.table-stripedCoffeePot tbody tr:nth-of-type(even) {
+  background-color: #fee7c8 !important;
+  border: none !important;
+}
+/*Vinyl*/
+.btnVinylButtons {
+  background-color: #fab83c !important;
+  border: none !important;
+}
+.table .thead-darkVinyltable {
+  background-color: #c2905e !important;
+  border: none !important;
+}
+.table-stripedVinylPot tbody tr:nth-of-type(odd) {
+  background-color: #fef6e3 !important;
+  border: none !important;
+}
+.table-stripedVinylPot tbody tr:nth-of-type(even) {
+  background-color: #fee7c8 !important;
+  border: none !important;
+}
+/*Beer*/
+.btnBeerButtons {
+  background-color: #fab83c !important;
+  border: none !important;
+}
+.table .thead-darkBeertable {
+  background-color: #c2905e !important;
+  border: none !important;
+}
+.table-stripedBeerPot tbody tr:nth-of-type(odd) {
+  background-color: #fef6e3 !important;
+  border: none !important;
+}
+.table-stripedBeerPot tbody tr:nth-of-type(even) {
+  background-color: #fee7c8 !important;
+  border: none !important;
+}
+/*Holiday*/
+.btnHolidayButtons {
+  background-color: #fab83c !important;
+  border: none !important;
+}
+.table .thead-darkHolidaytable {
+  background-color: #c2905e !important;
+  border: none !important;
+}
+.table-stripedHolidayPot tbody tr:nth-of-type(odd) {
+  background-color: #fef6e3 !important;
+  border: none !important;
+}
+.table-stripedHolidayPot tbody tr:nth-of-type(even) {
+  background-color: #fee7c8 !important;
+  border: none !important;
+}
+/*Holiday*/
+.btnActivityButtons {
+  background-color: #fab83c !important;
+  border: none !important;
+}
+.table .thead-darkActivitytable {
+  background-color: #c2905e !important;
+  border: none !important;
+}
+.table-stripedActivityPot tbody tr:nth-of-type(odd) {
+  background-color: #fef6e3 !important;
+  border: none !important;
+}
+.table-stripedActivityPot tbody tr:nth-of-type(even) {
+  background-color: #fee7c8 !important;
+  border: none !important;
 }
