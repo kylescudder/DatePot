@@ -88,14 +88,14 @@ namespace DatePot.Areas.CoffeePot.Pages
 				throw new Exception(ex.ToString());
 			}
 		}
-		public async Task<IActionResult> OnPost()
+		public async Task<JsonResult> OnPost(int CoffeeID, string CoffeeName)
 		{
 			try
 			{
 				string cs = _config.GetConnectionString("Default");
-				await _CoffeeData.UpdateCoffee(Convert.ToInt16(Request.Form["UpdateCoffeeDetails.CoffeeID"]),
-					Request.Form["UpdateCoffeeDetails.CoffeeName"].ToString());
-				return RedirectToPage("./View", new { @Id = Request.Form["UpdateCoffeeDetails.CoffeeID"].ToString(), @redirect = "update" });
+				await _CoffeeData.UpdateCoffee(CoffeeID, CoffeeName);
+				return new JsonResult(CoffeeID);
+				//return RedirectToPage("./View", new { @Id = CoffeeID, @redirect = "update" });
 			}
 			catch (Exception ex)
 			{

@@ -90,8 +90,8 @@
         });
     })
     $(".btnUpdateCoffee").on("click", function () {
+        var CoffeeID = $(".hidCoffeeID").val();
         $(".rating").each(function () {
-            var CoffeeID = $(".hidCoffeeID").val();
             var pathname = '?handler=UpdateCoffeeRatings';
             $.ajax({
                 dataType: 'json',
@@ -110,12 +110,30 @@
                 },
                 success: function (response) {
                     console.log(response)
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'POST',                
+                        data: {
+                            CoffeeID: CoffeeID,
+                            CoffeeName: $(".UpdateCoffeeCoffeeName").val()
+                        },
+                        headers: {
+                            RequestVerificationToken:
+                                $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            window.location.replace("View?Id=" + response + '&redirect=update');
+                        },
+                        error: function(error){
+                            console.log(error);
+                        }
+                    });
                 },
-                error: function (response) {
+                error: function(error){
+                    console.log(error);
                 }
             });
         })
-        $("#fCoffeeUpdate").submit();
     })
 </script>
 }
@@ -179,7 +197,7 @@
         <select asp-items="Model.Users" class="form-control UpdateCoffeeUserList d-none"></select>
         <div class="card bg-light mb-2">
             <div class="card-body">
-                <form method="post" id="fCoffeeUpdate">
+                <form method="post">
                     @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="UpdateCoffeeDetails.CoffeeID" value="@Model.CoffeeDetails.CoffeeID" type="hidden"

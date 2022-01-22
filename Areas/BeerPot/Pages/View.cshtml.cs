@@ -88,15 +88,14 @@ namespace DatePot.Areas.BeerPot.Pages
 				throw new Exception(ex.ToString());
 			}
 		}
-		public async Task<IActionResult> OnPost()
+		public async Task<JsonResult> OnPost(int BeerID, string BeerName, string Brewery)
 		{
 			try
 			{
 				string cs = _config.GetConnectionString("Default");
-				await _BeerData.UpdateBeer(Convert.ToInt16(Request.Form["UpdateBeerDetails.BeerID"]),
-					Request.Form["UpdateBeerDetails.BeerName"].ToString(),
-					Request.Form["UpdateBeerDetails.Brewery"].ToString());
-				return RedirectToPage("./View", new { @Id = Request.Form["UpdateBeerDetails.BeerID"].ToString(), @redirect = "update" });
+				await _BeerData.UpdateBeer(BeerID, BeerName, Brewery);
+				return new JsonResult(BeerID);
+
 			}
 			catch (Exception ex)
 			{

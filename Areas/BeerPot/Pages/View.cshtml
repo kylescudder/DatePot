@@ -89,9 +89,9 @@
         });
     })
     $(".btnUpdateBeer").on("click", function () {
+        var BeerID = $(".hidBeerID").val();
         $(".rating").each(function () {
             console.log($(this).find(".AddRatingWhoID").chosen().val())
-            var BeerID = $(".hidBeerID").val();
             var pathname = '?handler=UpdateBeerRatings';
             $.ajax({
                 dataType: 'json',
@@ -109,6 +109,25 @@
                         $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
                 success: function (response) {
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'POST',
+                        data: {
+                            BeerID: BeerID,
+                            BeerName: $(".UpdateBeerBeerName").val(),
+                            Brewery: $(".UpdateBeerBrewery").val()
+                        },
+                        headers: {
+                            RequestVerificationToken:
+                                $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            window.location.replace("View?Id=" + response + '&redirect=update');
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
                 },
                 error: function () {
                     alert("AJAX Request Failed, Contact Support");
