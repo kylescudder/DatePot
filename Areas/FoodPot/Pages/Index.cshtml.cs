@@ -208,6 +208,5 @@ namespace DatePot.Areas.FoodPot.Pages
 				throw new Exception(ex.ToString());
 			}
 		}
-
 	}
 }

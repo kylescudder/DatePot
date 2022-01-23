@@ -1,4 +1,13 @@
-﻿fbtnAddRestaurant /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+﻿:root {
+  --film-color: #51bbbb !important;
+  --food-color: #e8a79a !important;
+  --activity-color: #394045 !important;
+  --coffee-color: #fab83c !important;
+  --vinyl-color: #3f584f !important;
+  --beer-color: #143110 !important;
+  --holiday-color: #89a9c0 !important;
+}
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 a.navbar-brand {
   white-space: normal;
@@ -184,7 +193,7 @@ body {
 /* CUSTOM COLOURS */
 /*Films*/
 .btnFilmButtons {
-  background-color: #51bbbb !important;
+  background-color: var(--film-color) !important;
   border: none !important;
 }
 .table .thead-darkfilmtable th {
@@ -201,7 +210,7 @@ body {
 }
 /*Food*/
 .btnFoodButtons {
-  background-color: #e8a79a !important;
+  background-color: var(--food-color) !important;
   border: none !important;
 }
 .table .thead-dark th {
@@ -216,9 +225,26 @@ body {
   background-color: #fad0be !important;
   border: none !important;
 }
+/*Activity*/
+.btnActivityButtons {
+  background-color: var(--activity-color) !important;
+  border: none !important;
+}
+.table .thead-darkActivitytable {
+  background-color: #4d5d4e !important;
+  border: none !important;
+}
+.table-stripedActivityPot tbody tr:nth-of-type(odd) {
+  background-color: #92a495 !important;
+  border: none !important;
+}
+.table-stripedActivityPot tbody tr:nth-of-type(even) {
+  background-color: #abad7a !important;
+  border: none !important;
+}
 /*Coffee*/
 .btnCoffeeButtons {
-  background-color: #fab83c !important;
+  background-color: var(--coffee-color) !important;
   border: none !important;
 }
 .table .thead-darkCoffeetable {
@@ -235,69 +261,52 @@ body {
 }
 /*Vinyl*/
 .btnVinylButtons {
-  background-color: #fab83c !important;
+  background-color: var(--vinyl-color) !important;
   border: none !important;
 }
 .table .thead-darkVinyltable {
-  background-color: #c2905e !important;
+  background-color: #475e61 !important;
   border: none !important;
 }
 .table-stripedVinylPot tbody tr:nth-of-type(odd) {
-  background-color: #fef6e3 !important;
+  background-color: #b47573 !important;
   border: none !important;
 }
 .table-stripedVinylPot tbody tr:nth-of-type(even) {
-  background-color: #fee7c8 !important;
+  background-color: #605559 !important;
   border: none !important;
 }
 /*Beer*/
 .btnBeerButtons {
-  background-color: #fab83c !important;
+  background-color: var(--beer-color) !important;
   border: none !important;
 }
 .table .thead-darkBeertable {
-  background-color: #c2905e !important;
+  background-color: #77ae36 !important;
   border: none !important;
 }
 .table-stripedBeerPot tbody tr:nth-of-type(odd) {
-  background-color: #fef6e3 !important;
+  background-color: #f1e8a8 !important;
   border: none !important;
 }
 .table-stripedBeerPot tbody tr:nth-of-type(even) {
-  background-color: #fee7c8 !important;
+  background-color: #cfda48 !important;
   border: none !important;
 }
 /*Holiday*/
 .btnHolidayButtons {
-  background-color: #fab83c !important;
+  background-color: var(--holiday-color) !important;
   border: none !important;
 }
 .table .thead-darkHolidaytable {
-  background-color: #c2905e !important;
+  background-color: #aabbe9 !important;
   border: none !important;
 }
 .table-stripedHolidayPot tbody tr:nth-of-type(odd) {
-  background-color: #fef6e3 !important;
+  background-color: #dce3f7 !important;
   border: none !important;
 }
 .table-stripedHolidayPot tbody tr:nth-of-type(even) {
-  background-color: #fee7c8 !important;
-  border: none !important;
-}
-/*Holiday*/
-.btnActivityButtons {
-  background-color: #fab83c !important;
-  border: none !important;
-}
-.table .thead-darkActivitytable {
-  background-color: #c2905e !important;
-  border: none !important;
-}
-.table-stripedActivityPot tbody tr:nth-of-type(odd) {
-  background-color: #fef6e3 !important;
-  border: none !important;
-}
-.table-stripedActivityPot tbody tr:nth-of-type(even) {
-  background-color: #fee7c8 !important;
+  background-color: #f8e6d8 !important;
   border: none !important;
 }
