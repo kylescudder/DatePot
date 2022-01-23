@@ -1,0 +1,27 @@
+﻿@model List<DatePot.Areas.ActivityPot.Models.Activitys.RandomActivity>
+@if (Model.Count > 0)
+{
+    <div class="modal-body">
+    @foreach (var item in Model)
+        {
+
+            <input value="@item.ActivityID" type="hidden" name="ActivityID" />
+            <p>
+                        Today you guys are going to <strong>@item.ActivityName</strong> in @item.Location. It is @item.ExpenseText. Enjoy! 🌲💃⛳
+            </p>
+        }
+    </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-danger" onclick="return RandomActivity();">No, another!!</button>
+    <button type="button" class="btn btn-danger btnActivityButtons" data-dismiss="modal">Let's do it!</button>
+</div>
+}
+else
+{
+    <div class="modal-body">
+    <p>Looks like you are out of that type of activity. Add more to activities to the list and try again!</p>
+</div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Will do boss</button>
+</div>
+}

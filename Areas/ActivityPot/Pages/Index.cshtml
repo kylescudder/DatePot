@@ -8,8 +8,8 @@
         <div class="col-12">
             <button type="button" class="btn btn-primary btnAddActivityModal btnActivityButtons" data-toggle="modal"
                 data-target="#AddActivityModal">Add Activity</button>
-            <button type="button" class="btn btn-primary float-right btnRandomActivity btnActivityButtons" data-toggle="modal"
-                data-target="#RandomActivityModal">Give me a Activity</button>
+            <button type="button" class="btn btn-primary float-right btnRandomActivity btnActivityButtons"
+                data-toggle="modal" data-target="#RandomActivityModal">Give me a Activity</button>
         </div>
     </div>
     <div class="row pt-2">
@@ -76,6 +76,10 @@
                 </button>
             </div>
             <div class="modal-body">
+                <label>Pick an activity type</label>
+                <select asp-items="Model.ActivityType" class="form-control ddlTypeRandomActivity"
+                    onchange="return RandomActivity()" data-placeholder="Choose a type..." required="required"></select>
+                <div class="divRandomActivity"></div>
             </div>
         </div>
     </div>
@@ -372,6 +376,10 @@
             },
             stateSave: true
         });
+    }
+    function RandomActivity() {
+        var ActivityTypeID = $(".ddlTypeRandomActivity").val();
+        $('.divRandomActivity').load('?handler=RandomActivity', "ActivityTypeID=" + ActivityTypeID);
     }
 </script>
 }

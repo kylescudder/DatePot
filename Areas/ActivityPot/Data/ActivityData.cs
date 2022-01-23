@@ -15,6 +15,7 @@ namespace DatePot.Areas.ActivityPot.Data
 		{
 			_dataAccess = dataAccess;
 		}
+		public List<RandomActivity> RandomActivitys { get; set; }
 		public async Task<List<ActivityDetails>> GetActivityDetails(int ActivityID)
 		{
 			var recs = await _dataAccess.LoadData<ActivityDetails, dynamic>(
@@ -90,14 +91,6 @@ namespace DatePot.Areas.ActivityPot.Data
 				new { DirectorText },
 				"Default");
 		}
-		public async Task<List<RandomActivity>> GetRandomActivity(int? UserGroupID)
-		{
-			var recs = await _dataAccess.LoadData<RandomActivity, dynamic>(
-				"scud97_kssu.spRandomActivity",
-				new { UserGroupID },
-				"Default");
-			return recs;
-		}
 		public Task<int> ActivityWatched(int ActivityID)
 		{
 			return _dataAccess.SaveData(
@@ -153,6 +146,17 @@ namespace DatePot.Areas.ActivityPot.Data
 				new { ActivityxTypeID },
 				"Default");
 		}
+		public async Task<List<RandomActivity>> GetRandomActivity(int ActivityTypeID, int? UserGroupID)
+		{
+			DynamicParameters p = new DynamicParameters();
+			p.Add("ActivityTypeID", ActivityTypeID);
+			p.Add("UserGroupID", UserGroupID);
 
+			var recs = await _dataAccess.LoadData<RandomActivity, dynamic>(
+					"scud97_kssu.spRandomActivity",
+					p,
+					"Default");
+			return recs;
+		}
 	}
 }

@@ -62,6 +62,7 @@ namespace DatePot.Areas.ActivityPot.Models
             public string Description { get; set; }
             [Display(Name = "Expense")]
             public int ExpenseID { get; set; }
+            public string ExpenseText { get; set; }
             [Display(Name = "Activity Type")]
             public int ActivityTypeID { get; set; }
             public bool Prebook { get; set; }

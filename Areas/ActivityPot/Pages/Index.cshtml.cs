@@ -15,6 +15,7 @@ using DatePot.Areas.Identity.Data;
 using DatePot.Data;
 using Microsoft.AspNetCore.Http;
 using Serilog;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace DatePot.Areas.ActivityPot.Pages
 {
@@ -47,7 +48,7 @@ namespace DatePot.Areas.ActivityPot.Pages
 		[BindProperty]
 		public NewActivity NewActivity { get; set; }
 		public NewActivityType NewActivityType { get; set; }
-		public List<RandomActivity> RandomActivity { get; set; }
+		public List<RandomActivity> RandomActivitys { get; set; }
 		public List<PotAccess> PotAccess { get; set; }
 		public async Task<ActionResult> OnGet()
 		{
@@ -81,9 +82,6 @@ namespace DatePot.Areas.ActivityPot.Pages
 				{
 					Expense.Add(new SelectListItem { Value = x.ExpenseID.ToString(), Text = x.ExpenseText });
 				});
-
-
-				RandomActivity = _activityData.GetRandomActivity(UserGroupID).Result;
 
 				return Page();
 			}
@@ -145,5 +143,24 @@ namespace DatePot.Areas.ActivityPot.Pages
 				throw new Exception(ex.ToString());
 			}
 		}
+		public PartialViewResult OnGetRandomActivity(int ActivityTypeID)
+		{
+			try
+			{
+				int? UserGroupID = HttpContext.Session.GetInt32("UserGroupID");
+				RandomActivitys = _activityData.GetRandomActivity(ActivityTypeID, UserGroupID).Result;
+				return new PartialViewResult
+				{
+					ViewName = "_RandomActivity",
+					ViewData = new ViewDataDictionary<List<RandomActivity>>(ViewData, RandomActivitys)
+				};
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex.ToString());
+				throw new Exception(ex.ToString());
+			}
+		}
+
 	}
 }
