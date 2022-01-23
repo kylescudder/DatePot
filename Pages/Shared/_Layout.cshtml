@@ -35,10 +35,11 @@
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">The @ViewBag.PotName Pot
                     @if (ViewBag.Icon != "images/BeerLogo.svg") {
-                        <img src="~/images/@ViewBag.Icon" class="@(ViewBag.Icon == "CoffeeLogo.svg" || ViewBag.Icon == "RestaurantLogo.svg" ? "headerImage" : "headerImageBS")">   
+                        <img src="~/images/@ViewBag.Icon" class="@(ViewBag.Icon == "CoffeeLogo.svg" || ViewBag.Icon == "RestaurantLogo.svg" ? "headerImage ml-3" : "headerImageBS ml-3")">   
                     } else {
-                        <img src="~/images/@ViewBag.Icon" class="headerImageBeer">
+                        <img src="~/images/@ViewBag.Icon" class="headerImageBeer ml-3">
                     }
+                </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -46,7 +47,6 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                         <partial name="_LoginPartial" />
                     </div>
-                </a>
             </div>
         </nav>
     </header>
