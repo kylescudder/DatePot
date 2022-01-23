@@ -33,19 +33,20 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">The @ViewBag.PotName Pot</a>
-                @if (ViewBag.Icon != "images/BeerLogo.svg") {
-                    <img src="~/images/@ViewBag.Icon" class="@(ViewBag.Icon == "CoffeeLogo.svg" || ViewBag.Icon == "RestaurantLogo.svg" ? "headerImage" : "headerImageBS")">   
-                } else {
-                    <img src="~/images/@ViewBag.Icon" class="headerImageBeer">
-                }
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                </div>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">The @ViewBag.PotName Pot
+                    @if (ViewBag.Icon != "images/BeerLogo.svg") {
+                        <img src="~/images/@ViewBag.Icon" class="@(ViewBag.Icon == "CoffeeLogo.svg" || ViewBag.Icon == "RestaurantLogo.svg" ? "headerImage" : "headerImageBS")">   
+                    } else {
+                        <img src="~/images/@ViewBag.Icon" class="headerImageBeer">
+                    }
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                        <partial name="_LoginPartial" />
+                    </div>
+                </a>
             </div>
         </nav>
     </header>
